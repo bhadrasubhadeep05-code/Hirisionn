@@ -21,8 +21,8 @@ const IndustryInsights = () => {
 
   // Industry Categories
   const industries = [
-    { id: 0, name: "Blogs", icon: "📝" },
-    { id: 1, name: "Videos", icon: "📽️" },
+    { id: 0, name: "Blogs" },
+    { id: 1, name: "Videos"},
   ];
 
   useEffect(() => {

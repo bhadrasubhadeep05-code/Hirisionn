@@ -25,84 +25,72 @@ const insightSections = [
   {
     id: "salary",
     title: "Salary Benchmarking",
-    icon: "💰",
     insight: "2026 has seen a shift from 'Flat Salary' to 'Value-Based Compensation.'",
     data: "Hybrid roles now command a 15% premium over traditional on-site roles."
   },
   {
     id: "regional",
     title: "Regional Employment",
-    icon: "📍",
     insight: "While Tier-1 cities lead in volume, Tier-2 cities are seeing exponential growth.",
     data: "Ranchi and Gaya are seeing a 22% surge in 'Remote-First' hiring for tech and back-office operations."
   },
   {
     id: "talent",
     title: "Talent Mapping",
-    icon: "🗺️",
     insight: "Use 'Heat Maps' to identify where the highest density of specialized talent resides.",
     data: "Identifying talent pockets before competitors reduces sourcing costs by up to 30%."
   },
   {
     id: "careergrowth",
     title: "Career Progression",
-    icon: "📈",
     insight: "The 'Middle Management Gap' persists. Companies are accelerating leadership pipelines.",
     data: "High-Potential entry-level talent are now being fast-tracked into leadership within 18 months."
   },
   {
     id: "hiringchallenges",
     title: "Hiring Challenges",
-    icon: "⚠️",
     insight: "\"Ghosting\" and \"Time-to-Hire\" are the top 2026 hurdles.",
     data: "AI-driven screening and transparent feedback loops keep candidate engagement at 90%+."
   },
   {
     id: "futurework",
     title: "Future of Work",
-    icon: "🤖",
     insight: "The 'Agentic AI' Era. Roles are shifting from executing tasks to managing AI agents.",
     data: "12% of Indian startups are trialing 4-day work weeks to combat burnout."
   },
   {
     id: "internshipconversion",
     title: "Internship Conversion",
-    icon: "🎯",
     insight: "Structured internship programs deliver significantly better long-term retention.",
     data: "40% higher retention rate in the first 3 years compared to lateral hires."
   },
   {
     id: "campushiring",
     title: "Campus Hiring",
-    icon: "🎓",
     insight: "Move away from 'Day 1' placement towards continuous evaluation models.",
     data: "Year-round 'Hack-a-Hiring' and project-based evaluation replaces traditional campus drives."
   },
   {
     id: "diversity",
     title: "Diversity & Inclusion",
-    icon: "🌍",
     insight: "DEI is no longer a metric; it's a growth driver.",
     data: "Gender-diverse teams in Indian tech sectors reported 19% higher innovation revenue in 2025-26."
   },
   {
     id: "attrition",
     title: "Attrition Trends",
-    icon: "📊",
     insight: "\"Career Stagnation\" has overtaken \"Salary\" as the #1 reason for attrition.",
     data: "35% Lack of Growth | 30% Salary | 25% Work-Life Balance | 10% Other"
   },
   {
     id: "upskilling",
     title: "Upskilling Demand",
-    icon: "📚",
     insight: "60% of the current workforce requires reskilling by 2027.",
     data: "Highest demand: Prompt Engineering, Sustainable Tech, Cross-Platform Mobile Development."
   },
   {
     id: "jobseeker",
     title: "Job Seeker Behavior",
-    icon: "🧑💼",
     insight: "The 'Meaningful Work' movement defines Gen Z career choices.",
     data: "78% prioritize social impact and ethical AI policies over higher pay with poor culture."
   }

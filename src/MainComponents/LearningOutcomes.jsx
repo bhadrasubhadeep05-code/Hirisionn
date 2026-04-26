@@ -37,19 +37,16 @@ const pulseAnimation = {
 /* ---------------- Data ---------------- */
 const benefitCards = [
   {
-    icon: "🎓",
     title: "Students",
     description:
       "Undergraduate & Postgraduate students across all disciplines.",
   },
   {
-    icon: "🚀",
     title: "Career Aspirants",
     description:
       "Job seekers and early-career professionals ready to level up.",
   },
   {
-    icon: "⭐",
     title: "Future Leaders",
     description:
       "Individuals seeking unstoppable confidence and elite workplace conduct.",
