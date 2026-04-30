@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import NavBar2 from './NavBar2';
 import Footer from './Footer';
-import Loading from './Loading';
 import { register, completeProfile } from '../services/user.api';
 import AppContext from '../context/AppContext';
 

@@ -1,7 +1,6 @@
 import React from 'react'
 import './App.css'
 import LandingPage from './MainComponents/LandingPage'
-import Loading from './MainComponents/Loading'
 import { Routes, Route } from "react-router-dom"; 
 import Blog from './MainComponents/Blog';
 import Video from './MainComponents/Video';
