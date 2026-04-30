@@ -12,7 +12,7 @@ const Screen1 = () => {
       <div className='absolute inset-0 w-full h-full sm:w-screen sm:h-screen'>
         {/* Video Container with Blur Effect */}
         <motion.div 
-          className='relative w-full h-full sm:w-full sm:h-full mx-auto sm:mx-0 rounded-b-2xl  sm:rounded-none overflow-hidden shadow-2xl sm:shadow-none'
+          className='relative w-full h-full sm:w-full sm:h-full mx-auto sm:mx-0 rounded-2xl sm:rounded-none overflow-hidden shadow-2xl sm:shadow-none'
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1 }}

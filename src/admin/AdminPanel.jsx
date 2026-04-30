@@ -87,6 +87,28 @@ const AdminPanel = () => {
       color: "from-[#EC4899] to-[#DB2777]",
       action: () => navigate('/admin/internships'),
     },
+    {
+      title: "Placement Applicants",
+      count: "0",
+      icon: <BriefcaseIcon />,
+      color: "from-[#F97316] to-[#EA580C]",
+      action: () => navigate('/admin/placements'),
+    },
+    {
+      title: "Live Project Applicants",
+      count: "0",
+      icon: <BriefcaseIcon />,
+      color: "from-[#8B5CF6] to-[#7C3AED]",
+      action: () => navigate('/admin/liveprojects'),
+    },
+    {
+      title: "Soft Skill Applicants",
+      count: "0",
+      icon: <BriefcaseIcon />,
+      color: "from-[#06B6D4] to-[#0891B2]",
+      action: () => navigate('/admin/soft-skill'),
+    },
+     
   ];
 
   return (

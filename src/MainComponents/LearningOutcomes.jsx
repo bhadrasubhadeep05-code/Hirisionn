@@ -1,9 +1,10 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import AppContext from "../context/AppContext";
 import video from "../assets/video11.mp4";
 import NavBar2 from "./NavBar2";
+import { softSkillsApply } from "../services/user.api";
 
 /* ---------------- Animations ---------------- */
 const fadeUp = {
@@ -23,16 +24,7 @@ const staggerContainer = {
   },
 };
 
-const pulseAnimation = {
-  pulse: {
-    scale: [1, 1.03, 1],
-    transition: {
-      duration: 2,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  },
-};
+
 
 /* ---------------- Data ---------------- */
 const benefitCards = [
@@ -56,6 +48,7 @@ const benefitCards = [
 const LearningOutcomes = () => {
   const { ProfileComplete } = useContext(AppContext);
   const navigate = useNavigate();
+      const [loading, setLoading] = useState(false)
 
   /* ✅ FIX: proper refs */
   const heroRef = useRef(null);
@@ -63,6 +56,26 @@ const LearningOutcomes = () => {
 
   const heroInView = useInView(heroRef, { once: true, amount: 0.2 });
   const benefitsInView = useInView(benefitsRef, { once: true, amount: 0.2 });
+
+  const handleClick = async ()=>{
+            try {
+              setLoading(true)
+            const res = await softSkillsApply({
+              applied: true
+            });
+      
+            alert(res.message);
+      
+          } catch (err) {
+            alert(
+              err.response?.data?.message ||
+              "Something went wrong"
+            );
+          }
+          finally{
+            setLoading(false)
+          }
+        }
 
   return (
     <div className="w-full overflow-x-hidden bg-[#F8FAFC] min-h-screen">
@@ -109,28 +122,16 @@ const LearningOutcomes = () => {
           </motion.div>
 
           {/* ✅ FIX: merged animations properly */}
-          <motion.button
-            variants={fadeUp}
-            animate="pulse"
-            initial="hidden"
-            whileInView="visible"
-            {...pulseAnimation}
-            whileHover={
-              !ProfileComplete
-                ? { scale: 1.08, boxShadow: "0 0 45px rgba(34,211,238,0.8)" }
-                : {}
-            }
-            whileTap={!ProfileComplete ? { scale: 0.97 } : {}}
-            onClick={() => navigate("/register")}
-            disabled={ProfileComplete}
-            className={`px-16 py-5 text-xl font-bold rounded-xl ${
-              ProfileComplete
-                ? "bg-gray-600 text-gray-300 cursor-not-allowed"
-                : "bg-orange-500 hover:bg-orange-600 text-white font-heading  text-xs sm:text-base rounded-lg shadow-orange-500 shadow-sm"
-            }`}
-          >
-            {ProfileComplete ? "You have already registered" : "Register"}
-          </motion.button>
+           <motion.button
+                   variants={fadeUp}
+                   onClick={() =>
+                     ProfileComplete?
+                     handleClick():
+                  navigate("/register") }
+                   className={`px-14 py-5 text-xl font-bold rounded-xl bg-[#22D3EE] text-[#0F172A]`}
+                 >
+                    {loading ? "Applying..." : "Apply"}
+                 </motion.button>
         </div>
       </motion.section>
 

@@ -1,11 +1,7 @@
 import React from 'react'
 import './App.css'
 import LandingPage from './MainComponents/LandingPage'
-import IndustriesUpdateBlog from './MainComponents/IndustriesUpdateBlog'
 import { Routes, Route } from "react-router-dom"; 
-import IndustriesUpdateVideo from './MainComponents/IndustriesUpdateVideo';
-import InterviewPrepVideo from './MainComponents/InterviewPrepVideo';
-import InterveiwPrepBlog from './MainComponents/InterveiwPrepBlog';
 import Blog from './MainComponents/Blog';
 import Video from './MainComponents/Video';
 import AdminPanel from './admin/AdminPanel';
@@ -38,6 +34,9 @@ import AboutUs from './MainComponents/AboutUs';
 import CreateAudio from './admin/CreateAudio';
 import ViewAudios from './admin/ViewAudios';
 import AdminInternship from './admin/AdminInternship';
+import AdminPlacements from './admin/AdminPlacements';
+import AdminLiveProject from './admin/AdminLiveProject';
+import AdminSoftSkill from './admin/AdminSoftSkill';
 
 
 function App() {
@@ -47,9 +46,6 @@ function App() {
     <>
     <Routes>  
       <Route path="/" element={<LandingPage />} />
-      <Route path="/industries-update-blog" element={<IndustriesUpdateBlog />} />
-      <Route path="/industries-update-video" element={<IndustriesUpdateVideo />} />
-      <Route path="/interview-prep-video" element={<InterviewPrepVideo />} />
        <Route path="/blog-page" element={<BlogPage />} />
        <Route path="/video-page" element={<VideoPage />} />
        <Route path="/audio-library" element={<AudioLibrary />} />
@@ -68,6 +64,9 @@ function App() {
       <Route path="/admin/users" element={<AdminViewUser />} />
       <Route path="/admin/create-blog" element={<CreateBlog />} />
       <Route path="/admin/internships" element={<AdminInternship />} />
+      <Route path="/admin/placements" element={<AdminPlacements />} />
+      <Route path="/admin/live-project" element={<AdminLiveProject />} />
+      <Route path="/admin/soft-skill" element={<AdminSoftSkill />} />
       <Route path="/admin/create-video" element={<CreateVideo />} />
       <Route path="/admin/create-audio" element={<CreateAudio />} />
       <Route path="/register" element={<Register/>}/>

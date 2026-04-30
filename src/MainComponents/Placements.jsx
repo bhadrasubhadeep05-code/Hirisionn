@@ -6,6 +6,8 @@ import video from "../assets/video4.mp4";
 import NavBar2 from "./NavBar2";
 import image from  "../assets/HandShake.png";
 import CountUp from "./CountUp";
+import {placementUpdate} from "../services/user.api"
+import { useState } from "react";
 
 /* ---------------- Animations ---------------- */
 const fadeUp = {
@@ -37,6 +39,7 @@ const countAnimation = {
 const Placements = () => {
   const { ProfileComplete } = useContext(AppContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   /* ✅ FIX: Proper refs */
   const problemRef = useRef(null);
@@ -46,6 +49,28 @@ const Placements = () => {
   const problemInView = useInView(problemRef, { once: true, amount: 0.2 });
   const solutionInView = useInView(solutionRef, { once: true, amount: 0.2 });
   const ctaInView = useInView(ctaRef, { once: true, amount: 0.3 });
+  
+  const handleClick = async ()=>{
+      try {
+        setLoading(true)
+      const res = await placementUpdate({
+        applied: true
+      });
+
+      alert(res.message);
+
+    } catch (err) {
+      alert(
+        err.response?.data?.message ||
+        "Something went wrong"
+      );
+    }
+    finally{
+      setLoading(false)
+    }
+  }
+
+  
 
   return (
     <div className="w-full overflow-x-hidden bg-[#F8FAFC] min-h-screen font-body">
@@ -203,17 +228,13 @@ const Placements = () => {
 
           <motion.button
             variants={fadeUp}
-            onClick={() => navigate("/register")}
-            disabled={ProfileComplete}
-            className={`px-14 py-5 text-xl font-bold rounded-xl ${
-              ProfileComplete
-                ? "bg-gray-600 text-gray-300"
-                : "bg-[#22D3EE] text-[#0F172A]"
-            }`}
+            onClick={() =>
+              ProfileComplete?
+              handleClick():
+           navigate("/register") }
+            className={`px-14 py-5 text-xl font-bold rounded-xl bg-[#22D3EE] text-[#0F172A]`}
           >
-            {ProfileComplete
-              ? "Already Registered"
-              : "Register"}
+             {loading ? "Applying..." : "Apply"}
           </motion.button>
         </div>
       </motion.section>

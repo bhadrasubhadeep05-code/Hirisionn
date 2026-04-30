@@ -6,15 +6,15 @@ export const createAudio = async (audioData) =>{
 };
 
 
-export const getAllInterviewAudio = async (page = 1) =>{
-    const res = await api.get(`/createaudio/interview?page=${page}`);
+export const getAudio = async () =>{
+    const res = await api.get("/audio/BlogData");
     return res.data
-}
-export const getAllIndustryAudio = async (page = 1) =>{
-    const res = await api.get(`/createaudio/industry?page=${page}`);
+};
+export const getworkforceAudio = async () =>{
+    const res = await api.get("/audio/workforce");
     return res.data
-}
-export const getAllOtherAudioCon = async (page = 1) =>{
-    const res = await api.get(`/createaudio/other?page=${page}`);
+};
+export const getIndustryAudio = async () =>{
+    const res = await api.get("/audio/industry");
     return res.data
 }

@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import NavBar2 from './NavBar2';
-import video from '../assets/video2.mp4';
-
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import NavBar2 from "./NavBar2";
+import { enquiry } from "../services/business.api";
 const BusinessEnquiry = () => {
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    organization: '',
-    designation: '',
-    phone: '',
-    location: '',
-    enquiryFor: '',
-    message: ''
+    fullName: "",
+    email: "",
+    organization: "",
+    designation: "",
+    phone: "",
+    location: "",
+    enquiryFor: "",
+    message: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,33 +28,53 @@ const BusinessEnquiry = () => {
     "Knowledge Process Outsourcing (KPO)",
     "Bachelor of Technology (B.Tech) Recruitment",
     "Bachelor of Engineering (B.E.) Recruitment",
-    "Diploma (DIP) Talent Sourcing"
+    "Diploma (DIP) Talent Sourcing",
   ];
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    // API call will go here
-    setTimeout(() => setIsSubmitting(false), 2000);
-  };
 
+    try {
+        setIsSubmitting(true);
+
+        const data = {
+            fullname: formData.fullName,
+            email: formData.email,
+            organizationName: formData.organization,
+            designation: formData.designation,
+            phoneNumber: formData.phone,
+            location: formData.location,
+            enquiryFor: formData.enquiryFor,
+            message: formData.message,
+        };
+
+        const res = await enquiry(data);
+
+        console.log(res);
+        alert(res.message);
+
+    } catch (error) {
+        console.log(error);
+        alert(error.response?.data?.message || "Something went wrong");
+    } finally {
+        setIsSubmitting(false);
+    }
+};
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       <NavBar2 progress={1} />
-      
-      {/* Hero Section */}
-      
-      <div className="relative h-[400px] overflow-hidden mt-24">
-    
 
+      {/* Hero Section */}
+
+      <div className="relative h-[400px] overflow-hidden mt-24">
         <div className="absolute inset-0 bg-[#0F172A] backdrop-blur-md" />
 
         <div className="relative z-10 h-full flex flex-col justify-center items-center px-6 text-center">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -63,30 +82,29 @@ const BusinessEnquiry = () => {
           >
             Tailored Workforce Solutions for Your Enterprise
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             className="text-lg text-slate-300 max-w-2xl"
           >
-            Connect with our experts to bridge your organization's talent and skill gaps.
+            Connect with our experts to bridge your organization's talent and
+            skill gaps.
           </motion.p>
         </div>
       </div>
 
       {/* Form Section */}
       <div className="max-w-4xl mx-auto px-4 pb-24 -mt-20 relative z-20">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
           className="bg-white rounded-[2rem] shadow-2xl p-8 md:p-12 hover:shadow-[0_35px_60px_-15px_rgba(34,211,238,0.15)] transition-all duration-500"
         >
           <form onSubmit={handleSubmit} className="space-y-8">
-            
             {/* 2 Column Grid Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
               {/* Full Name */}
               <div className="group">
                 <label className="block text-sm text-[#818CF8] uppercase tracking-wider mb-2 group-focus-within:text-[#22D3EE] transition-colors">
@@ -191,7 +209,9 @@ const BusinessEnquiry = () => {
               >
                 <option value="">Select service category</option>
                 {enquiryOptions.map((option, index) => (
-                  <option key={index} value={option}>{option}</option>
+                  <option key={index} value={option}>
+                    {option}
+                  </option>
                 ))}
               </select>
             </div>
@@ -223,15 +243,28 @@ const BusinessEnquiry = () => {
                 {isSubmitting ? (
                   <span className="flex items-center justify-center gap-2">
                     <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
                     </svg>
                     Processing Enquiry
                   </span>
-                ) : "Submit Enquiry"}
+                ) : (
+                  "Submit Enquiry"
+                )}
               </button>
             </div>
-
           </form>
         </motion.div>
       </div>

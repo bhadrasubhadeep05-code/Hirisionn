@@ -5,24 +5,14 @@ export const createVideo = async (videodata) =>{
     return res.data;
 };
 
-export const getLetastInterviewVideo = async () =>{
-    const res = await api.get("/getlatestvideo/interview");
-    return res.data.data
-}
-
-export const getLetastIndustryVideo = async () =>{
-    const res = await api.get("/getlatestvideo/industry");
-    return res.data.data
-}
-export const getAllInterviewVideos = async (page = 1) =>{
-    const res = await api.get(`/getallvideos/interview?page=${page}`);
+export const getVideo = async () =>{
+    const res = await api.get("/video/BlogData");
     return res.data
-}
-export const getAllIndustryVideos = async (page = 1) =>{
-    const res = await api.get(`/getallvideos/industry?page=${page}`);
+};
+export const getworkforceVideo = async () =>{
+    const res = await api.get("/video/workforce");
     return res.data
-}
-export const getAllOtherVideoCon = async (page = 1) =>{
-    const res = await api.get(`/getallvideos/other?page=${page}`);
+};export const getIndustryVideo = async () =>{
+    const res = await api.get("/video/industry");
     return res.data
 }

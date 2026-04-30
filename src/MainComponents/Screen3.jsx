@@ -60,7 +60,7 @@ const Screen3 = () => {
            <div>
             <CountUp to={50} suffix="+" />
             </div>
-          <span>Tier 1 Industry Associates</span>
+          <span>Tier 1 Industry Partnerships</span>
         </div>
       </div>
     </section>

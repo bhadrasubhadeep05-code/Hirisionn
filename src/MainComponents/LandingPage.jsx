@@ -1,7 +1,4 @@
 
-import AppForm from './AppForm'
-import InterviewPrep from './InterviewPrep'
-import IndustriesUpdate from './IndustriesUpdate'
 import Footer from './Footer'
 import NavBar2 from './NavBar2'
 import Screen1 from './Screen1'

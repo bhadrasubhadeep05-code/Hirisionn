@@ -47,5 +47,19 @@ export const internshipUpdate = async(data)=>{
     const res = await api.post("/user/apply-internship", data);
     return res.data
 }
-
+//placement
+export const placementUpdate = async(data)=>{
+    const res = await api.put("/admin/jobplacement", data);
+    return res.data
+}
+//liveproject
+export const liveProjectApply = async(data)=>{
+    const res = await api.put("/admin/liveproject", data);
+    return res.data
+}
+//soft Skill
+export const softSkillsApply = async(data)=>{
+    const res = await api.put("/admin/softskills", data);
+    return res.data
+}
 

@@ -1,9 +1,10 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import AppContext from "../context/AppContext";
 import NavBar2 from "./NavBar2";
-import video from "../assets/video8.mp4";;
+import video from "../assets/video8.mp4";
+import { softSkillsApply } from "../services/user.api";
 
 /* ---------------- Animations ---------------- */
 const fadeUp = {
@@ -38,6 +39,7 @@ const curriculumItems = [
 const Curriculum = () => {
   const { ProfileComplete } = useContext(AppContext);
   const navigate = useNavigate();
+    const [loading, setLoading] = useState(false)
 
   /* ✅ FIX: proper refs */
   const curriculumRef = useRef(null);
@@ -52,6 +54,25 @@ const Curriculum = () => {
     amount: 0.15,
   });
 
+   const handleClick = async ()=>{
+          try {
+            setLoading(true)
+          const res = await softSkillsApply({
+            applied: true
+          });
+    
+          alert(res.message);
+    
+        } catch (err) {
+          alert(
+            err.response?.data?.message ||
+            "Something went wrong"
+          );
+        }
+        finally{
+          setLoading(false)
+        }
+      }
 
   return (
     <div className="w-full overflow-x-hidden bg-[#F8FAFC] min-h-screen font-body">
@@ -151,19 +172,16 @@ const Curriculum = () => {
                 >
                   Ready to start your journey to professional excellence?
                 </motion.h2>
-      
-                <motion.button
-                  variants={fadeUp}
-                  onClick={() => navigate("/register")}
-                  disabled={ProfileComplete}
-                  className={`px-14 py-5 text-xl font-bold rounded-xl ${
-                    ProfileComplete
-                      ? "bg-gray-600 text-gray-300"
-                      : "bg-[#22D3EE] text-[#0F172A]"
-                  }`}
-                >
-                  {ProfileComplete ? "Already Registered" : "Register Now"}
-                </motion.button>
+        <motion.button
+                         variants={fadeUp}
+                         onClick={() =>
+                           ProfileComplete?
+                           handleClick():
+                        navigate("/register") }
+                         className={`px-14 py-5 text-xl font-bold rounded-xl bg-[#22D3EE] text-[#0F172A]`}
+                       >
+                          {loading ? "Applying..." : "Apply"}
+                       </motion.button>
               </div>
             </motion.section>
      

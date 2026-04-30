@@ -5,24 +5,14 @@ export const createBlog = async (blogData) =>{
     return res.data;
 };
 
-export const getLetastInterviewBlog = async () =>{
-    const res = await api.get("/getlatestblog/interview");
-    return res.data.data
-}
-
-export const getLetastIndustryBlog = async () =>{
-    const res = await api.get("/getlatestblog/industry");
-    return res.data.data
-}
-export const getAllInterviewBlogs = async (page = 1) =>{
-    const res = await api.get(`/getallblogs/interview?page=${page}` );
+export const getBlog = async () =>{
+    const res = await api.get("/blog/BlogData");
     return res.data
-}
-export const getAllIndustryBlogs = async (page = 1) =>{
-    const res = await api.get(`/getallblogs/industry?page=${page}`);
+};
+export const getworkforce = async () =>{
+    const res = await api.get("/blog/workforce");
     return res.data
-}
-export const getAllOtherBlogs = async (page = 1) =>{
-    const res = await api.get(`/getallblogs/other?page=${page}`);
+};export const getIndustry = async () =>{
+    const res = await api.get("/blog/industry");
     return res.data
 }

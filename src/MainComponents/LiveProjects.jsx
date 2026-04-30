@@ -4,7 +4,8 @@ import { motion, useInView } from "framer-motion";
 import AppContext from "../context/AppContext";
 import video from "../assets/video2.mp4";
 import NavBar2 from "./NavBar2";
-
+import { liveProjectApply } from "../services/user.api";
+import { useState } from "react";
 /* ---------------- Animation Variants ---------------- */
 const fadeUp = {
   hidden: { opacity: 0, y: 60 },
@@ -60,6 +61,7 @@ const comparisonData = [
 const LiveProjects = () => {
   const { ProfileComplete } = useContext(AppContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
 
   /* ---------------- FIXED ERROR ----------------
      useInView requires refs, not direct object syntax
@@ -83,6 +85,26 @@ const LiveProjects = () => {
     once: true,
     amount: 0.3,
   });
+
+  const handleClick = async ()=>{
+     try {
+            setLoading(true)
+          const res = await liveProjectApply({
+            applied: true
+          });
+    
+          alert(res.message);
+    
+        } catch (err) {
+          alert(
+            err.response?.data?.message ||
+            "Something went wrong"
+          );
+        }
+        finally{
+          setLoading(false)
+        }
+  }
 
   return (
     <div className="w-full overflow-x-hidden bg-[#F8FAFC] min-h-screen font-body">
@@ -199,22 +221,16 @@ const LiveProjects = () => {
       {/* ================= APPLY BUTTON SECTION ================= */}
       <motion.section className="py-16 px-6">
         <div className="max-w-xl mx-auto text-center">
-          <motion.button
-            variants={fadeUp}
-            whileHover={!ProfileComplete ? { scale: 1.08 } : {}}
-            whileTap={!ProfileComplete ? { scale: 0.97 } : {}}
-            onClick={() => navigate("/register")}
-            disabled={ProfileComplete}
-            className={`w-full py-4 px-8 text-xl font-bold rounded-xl transition-all duration-300 ${
-              ProfileComplete
-                ? "bg-gray-600 text-gray-300 cursor-not-allowed"
-                : "bg-[#22D3EE] text-[#0F172A] hover:shadow-[0_0_35px_rgba(34,211,238,0.7)]"
-            }`}
-          >
-            {ProfileComplete
-              ? "You have already registered"
-              : "Apply For Live Projects"}
-          </motion.button>
+         <motion.button
+                     variants={fadeUp}
+                     onClick={() =>
+                       ProfileComplete?
+                       handleClick():
+                    navigate("/register") }
+                     className={`px-14 py-5 text-xl font-bold rounded-xl bg-[#22D3EE] text-[#0F172A]`}
+                   >
+                      {loading ? "Applying..." : "Apply"}
+                   </motion.button>
         </div>
       </motion.section>
 

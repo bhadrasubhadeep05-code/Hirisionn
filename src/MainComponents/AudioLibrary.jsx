@@ -3,25 +3,17 @@ import { motion } from 'framer-motion';
 import NavBar2 from './NavBar2';
 import AudioCard from './AudioCard';
 import video from '../assets/video4.mp4'
-import { getAllOtherAudioCon } from '../services/audio';
+import { getAudio } from '../services/audio';
 
-// Audio Categories Data
+// BlogSubcategories for Audio
 const audioCategories = [
-  { id: 1, name: "All", description: "View all audio", isLive: false },
-  { id: 2, name: "HR", description: "Career & workplace advice", isLive: true },
-  { id: 3, name: "Marketing", description: "Brand & growth strategies", isLive: false },
-  { id: 4, name: "Finance", description: "Compensation & budgeting", isLive: true },
-  { id: 5, name: "Digital", description: "Digital transformation", isLive: false },
-  { id: 6, name: "Retail", description: "Retail industry insights", isLive: false },
-  { id: 7, name: "International Affairs", description: "Global market updates", isLive: true },
-  { id: 8, name: "Advertisement", description: "Advertising best practices", isLive: false },
-  { id: 9, name: "Mechanical", description: "Mechanical engineering", isLive: false },
-  { id: 10, name: "Electronics", description: "Electronics guides", isLive: true },
-  { id: 11, name: "Electrical", description: "Electrical engineering", isLive: false },
-  { id: 12, name: "Civil", description: "Civil infrastructure", isLive: false },
-  { id: 13, name: "Automation", description: "Process automation", isLive: true },
-  { id: 14, name: "AI", description: "Artificial Intelligence", isLive: true },
-  { id: 15, name: "IT", description: "Technology & development", isLive: true },
+  { id: 1, name: "All Audio", description: "View all podcast episodes", isLive: false },
+  { id: 2, name: "Company Updates", description: "Announcements & behind-the-scenes", isLive: true },
+  { id: 3, name: "Leadership Perspectives", description: "Founder & executive insights", isLive: true },
+  { id: 4, name: "Opinion Pieces", description: "Trends & industry opinions", isLive: false },
+  { id: 5, name: "Case Studies", description: "Success stories & learnings", isLive: true },
+  { id: 6, name: "Event Recaps", description: "Partnerships, milestones & events", isLive: false },
+  { id: 7, name: "Problem Solving", description: "How we solved challenges", isLive: true },
 ];
 
 
@@ -35,7 +27,7 @@ const AudioLibrary = () => {
   const fetchAudios = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await getAllOtherAudioCon(page);
+      const response = await getAudio(page);
       setAudios(response.data || []);
       setTotalPages(response.totalPages || 1);
     } catch (err) {
@@ -50,9 +42,20 @@ const AudioLibrary = () => {
     fetchAudios();
   }, [fetchAudios]);
 
-  useEffect(() => {
-    fetchAudios();
-  }, [fetchAudios]);
+  // Filter audios based on selected subcategory
+  const filteredAudios = activeCategory === 1 
+    ? audios 
+    : audios.filter(audio => {
+        const subcategoryMap = {
+          2: "Company Updates & Announcements",
+          3: "Leadership Perspectives",
+          4: "Opinion Pieces & Trends",
+          5: "Case Studies & Success Stories",
+          6: "Event Recaps & Milestones",
+          7: "Problem Solving Narratives"
+        };
+        return audio.subCategory === subcategoryMap[activeCategory];
+      });
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -135,6 +138,7 @@ const AudioLibrary = () => {
                 )}
                 
                 <div className="flex items-center gap-3">
+                  <span className="text-lg">{category.icon}</span>
                   <div>
                     <p className={`font-medium ${activeCategory === category.id ? 'text-[#0F172A] font-bold' : 'text-slate-700'}`}>
                       {category.name}
@@ -189,7 +193,7 @@ const AudioLibrary = () => {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 justify-items-center">
-                {audios.map((item, index) => (
+                {filteredAudios.map((item, index) => (
                   <motion.div
                     key={item._id}
                     initial={{ opacity: 0 }}

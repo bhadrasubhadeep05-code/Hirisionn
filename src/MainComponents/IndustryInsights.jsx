@@ -1,64 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import NavBar2 from './NavBar2';
 import Card from './Card';
 import VideoCard from './VideoCard';
+import AudioCard from './AudioCard';
 import video from '../assets/video2.mp4';
-import { getLetastIndustryBlog } from '../services/blog.api';
-import { getLetastIndustryVideo } from '../services/video.api';
-import { getAllIndustryBlogs } from '../services/blog.api';
-import { getAllIndustryVideos } from '../services/video.api';
+import { getIndustry } from '../services/blog.api'
+import { getIndustryVideo } from '../services/video.api';
+import { getIndustryAudio } from '../services/audio';
 
 const IndustryInsights = () => {
-  const [activeIndustry, setActiveIndustry] = useState(0);
+  const [activeSubCategory, setActiveSubCategory] = useState(0);
   const [blogs, setBlogs] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [audios, setAudios] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [blogPage, setBlogPage] = useState(1);
-  const [videoPage, setVideoPage] = useState(1);
-  const [blogTotalPages, setBlogTotalPages] = useState(1);
-  const [videoTotalPages, setVideoTotalPages] = useState(1);
 
-  // Industry Categories
-  const industries = [
-    { id: 0, name: "Blogs" },
-    { id: 1, name: "Videos"},
+  // Industry Insights Subcategories (exactly as specified)
+  const subCategories = [
+    { id: 0, name: "All Content" },
+    { id: 1, name: "Industry Reports", description: "Industry reports and forecasts" },
+    { id: 2, name: "Market Trends", description: "Market trends and emerging technologies" },
+    { id: 3, name: "Competitor Analysis", description: "Competitor or ecosystem analysis" },
+    { id: 4, name: "Regulatory Updates", description: "Regulatory or policy updates" },
+    { id: 5, name: "Economic Factors", description: "Economic factors impacting sector" },
+    { id: 6, name: "Vertical Deep Dives", description: "Fintech, Healthcare, Manufacturing etc." },
   ];
 
-  useEffect(() => {
-    fetchData();
-  }, [blogPage, videoPage]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      
-      
-      // Fetch all with pagination
-      const [allBlogsRes, allVideosRes] = await Promise.all([
-        getAllIndustryBlogs(blogPage),
-        getAllIndustryVideos(videoPage)
+      const [blogsRes, videosRes, audiosRes] = await Promise.all([
+        getIndustry(),
+        getIndustryVideo(),
+        getIndustryAudio()
       ]);
       
-      setBlogs(allBlogsRes.data || []);
-      setVideos(allVideosRes.data || []);
-      setBlogTotalPages(allBlogsRes.totalPages || 1);
-      setVideoTotalPages(allVideosRes.totalPages || 1);
+      setBlogs(blogsRes.data || []);
+      setVideos(videosRes.data || []);
+      setAudios(audiosRes.data || []);
     } catch (err) {
-      console.error('Error fetching data:', err);
+      console.error('Error fetching industry content:', err);
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // Filter all content types by selected subcategory
+  const filterBySubCategory = (items) => {
+    if (activeSubCategory === 0) return items;
+    
+    const subcategoryMap = {
+      1: "Industry Reports & Forecasts",
+      2: "Market Trends & Emerging Technologies",
+      3: "Competitor & Ecosystem Analysis",
+      4: "Regulatory & Policy Updates",
+      5: "Economic Factor Analysis",
+      6: "Vertical Deep Dives (Fintech, Healthcare, etc.)"
+    };
+    
+    return items.filter(item => item.subCategory === subcategoryMap[activeSubCategory]);
   };
 
-  // Filter both content types simultaneously
-  const filteredBlogs = activeIndustry === 0 
-    ? blogs 
-    : blogs;
-
-  const filteredVideos = activeIndustry === 0 
-    ? videos 
-    : videos;
+  const filteredBlogs = filterBySubCategory(blogs);
+  const filteredVideos = filterBySubCategory(videos);
+  const filteredAudios = filterBySubCategory(audios);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -88,7 +98,7 @@ const IndustryInsights = () => {
             transition={{ delay: 0.2 }}
             className="text-4xl md:text-6xl font-bold text-white mb-4"
           >
-            Industry Insights: The 2026 Roadmap
+            Industry Insights
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -96,7 +106,7 @@ const IndustryInsights = () => {
             transition={{ delay: 0.4 }}
             className="text-lg text-slate-300 max-w-2xl mb-10"
           >
-            Where data meets strategy. Explore deep-dive articles and visual masterclasses across 12+ sectors.
+            Data-driven and outward-looking. Industry reports, market trends, regulatory updates and economic analysis.
           </motion.p>
 
           {/* Unified Search Bar */}
@@ -108,7 +118,7 @@ const IndustryInsights = () => {
           >
             <input 
               type="text"
-              placeholder="Search across all articles and videos..."
+              placeholder="Search across all industry content..."
               className="w-full px-8 py-5 bg-white/10 backdrop-blur-md border border-[#22D3EE]/50 rounded-full text-white placeholder-slate-400
                         focus:outline-none focus:border-[#22D3EE] focus:shadow-[0_0_40px_rgba(34,211,238,0.25)] transition-all shadow-xl text-lg"
             />
@@ -123,24 +133,27 @@ const IndustryInsights = () => {
       <div className="max-w-7xl mx-auto px-4 md:px-8 pb-24 pt-16">
         <div className="flex flex-col lg:flex-row gap-16">
           
-          {/* Sticky Industry Sidebar Filter */}
-          <div className="hidden lg:block w-56 sticky top-32 self-start">
-            <h3 className="text-[#0F172A] font-bold text-lg mb-6">Global Industries</h3>
+          {/* Sticky Sidebar Filter */}
+          <div className="hidden lg:block w-64 sticky top-32 self-start">
+            <h3 className="text-[#0F172A] font-bold text-lg mb-6">Industry Categories</h3>
             <div className="flex flex-col gap-3">
-              {industries.map((industry) => (
+              {subCategories.map((category) => (
                 <button
-                  key={industry.id}
-                  onClick={() => setActiveIndustry(industry.id)}
+                  key={category.id}
+                  onClick={() => setActiveSubCategory(category.id)}
                   className={`text-left py-3 px-4 rounded-xl transition-all duration-300 group ${
-                    activeIndustry === industry.id 
+                    activeSubCategory === category.id 
                       ? 'bg-white shadow-md text-[#22D3EE] border-l-2 border-[#22D3EE]' 
                       : 'text-slate-700 hover:bg-white/50'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-xl">{industry.icon}</span>
-                    <span className="font-medium">{industry.name}</span>
-                    {activeIndustry === industry.id && (
+                    <span className="text-xl">{category.icon}</span>
+                    <div>
+                      <span className="font-medium">{category.name}</span>
+                      <p className="text-xs text-slate-400 mt-0.5">{category.description}</p>
+                    </div>
+                    {activeSubCategory === category.id && (
                       <span className="ml-auto w-2 h-2 rounded-full bg-[#22D3EE] shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
                     )}
                   </div>
@@ -149,122 +162,138 @@ const IndustryInsights = () => {
             </div>
           </div>
 
-          {/* Main Content Feed */}
-          <div className="flex-1 space-y-24">
+          {/* Mobile Horizontal Scrollable Categories */}
+          <div className="lg:hidden overflow-x-auto py-4 -mx-4 px-4 scrollbar-hide mb-6">
+            <div className="flex gap-3 w-max">
+              {subCategories.map((category) => (
+                <motion.button
+                  key={category.id}
+                  onClick={() => setActiveSubCategory(category.id)}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-5 py-3 rounded-full whitespace-nowrap transition-all ${
+                    activeSubCategory === category.id 
+                      ? 'bg-[#22D3EE] text-[#0F172A] font-medium shadow-md' 
+                      : 'bg-white text-slate-700 border border-slate-200'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    {category.icon} {category.name}
+                  </span>
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Main Content Feed - 3 Sections */}
+          <div className="flex-1 space-y-20">
             
-            {/* Section 1: Insights in Detail (Blogs) */}
+            {/* Section 1: Blogs / Written Analysis */}
             <section>
-              <h2 className="text-[#0F172A] text-2xl font-bold mb-8">Latest Analysis & Reports</h2>
+              <h2 className="text-[#0F172A] text-2xl font-bold mb-8 flex items-center gap-3">
+                <span className="text-3xl">📝</span> Analysis & Reports
+              </h2>
               {loading ? (
                 <div className="flex justify-center items-center py-20">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22D3EE]"></div>
                 </div>
               ) : filteredBlogs.length === 0 ? (
-                <div className="text-center py-20 text-slate-500">
-                  No blogs found
+                <div className="text-center py-16 text-slate-500 bg-white/50 rounded-2xl">
+                  No industry blogs available
                 </div>
               ) : (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {filteredBlogs.map((blog, index) => (
-                      <motion.div
-                        key={blog._id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 * index }}
-                      >
-                        <Card 
-                          id={blog._id}
-                          title={blog.title}
-                          img={blog.thumbnail || blog.img}
-                          itm={blog}
-                        />
-                      </motion.div>
-                    ))}
-                  </div>
-                  {blogTotalPages > 1 && (
-                    <div className="flex justify-center items-center gap-4 mt-12">
-                      <button
-                        onClick={() => setBlogPage(p => Math.max(1, p - 1))}
-                        disabled={blogPage === 1}
-                        className="px-4 py-2 rounded-lg bg-white shadow-md text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50"
-                      >
-                        Previous
-                      </button>
-                      <span className="text-slate-600 font-medium">
-                        Page {blogPage} of {blogTotalPages}
-                      </span>
-                      <button
-                        onClick={() => setBlogPage(p => Math.min(blogTotalPages, p + 1))}
-                        disabled={blogPage === blogTotalPages}
-                        className="px-4 py-2 rounded-lg bg-white shadow-md text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  )}
-                </>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {filteredBlogs.map((blog, index) => (
+                    <motion.div
+                      key={blog._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 * index }}
+                    >
+                      <Card 
+                        id={blog._id}
+                        title={blog.title}
+                        img={blog.thumbnail?.url || blog.img}
+                        itm={blog}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
               )}
             </section>
 
             {/* Section Divider */}
             <div className="h-px bg-gradient-to-r from-transparent via-[#818CF8]/20 to-transparent" />
 
-            {/* Section 2: Insights in Motion (Videos) */}
+            {/* Section 2: Video Content */}
             <section className="pt-4">
-              <h2 className="text-[#0F172A] text-2xl font-bold mb-8">Expert Masterclasses & Briefs</h2>
+              <h2 className="text-[#0F172A] text-2xl font-bold mb-8 flex items-center gap-3">
+                <span className="text-3xl">🎬</span> Video Insights
+              </h2>
               {loading ? (
                 <div className="flex justify-center items-center py-20">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22D3EE]"></div>
                 </div>
               ) : filteredVideos.length === 0 ? (
-                <div className="text-center py-20 text-slate-500">
-                  No videos found
+                <div className="text-center py-16 text-slate-500 bg-white/50 rounded-2xl">
+                  No industry videos available
                 </div>
               ) : (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    {filteredVideos.map((item, index) => (
-                      <motion.div
-                        key={item._id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 * index }}
-                        className="overflow-visible"
-                      >
-                        <VideoCard 
-                          title={item.title}
-                          author={item.author}
-                          category={item.category}
-                          duration={item.duration}
-                          date={item.date}
-                          youtubeLink={item.vid_link}
-                        />
-                      </motion.div>
-                    ))}
-                  </div>
-                  {videoTotalPages > 1 && (
-                    <div className="flex justify-center items-center gap-4 mt-12">
-                      <button
-                        onClick={() => setVideoPage(p => Math.max(1, p - 1))}
-                        disabled={videoPage === 1}
-                        className="px-4 py-2 rounded-lg bg-white shadow-md text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50"
-                      >
-                        Previous
-                      </button>
-                      <span className="text-slate-600 font-medium">
-                        Page {videoPage} of {videoTotalPages}
-                      </span>
-                      <button
-                        onClick={() => setVideoPage(p => Math.min(videoTotalPages, p + 1))}
-                        disabled={videoPage === videoTotalPages}
-                        className="px-4 py-2 rounded-lg bg-white shadow-md text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  )}
-                </>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  {filteredVideos.map((item, index) => (
+                    <motion.div
+                      key={item._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 * index }}
+                      className="overflow-visible"
+                    >
+                      <VideoCard 
+                        title={item.title}
+                        author={item.author}
+                        category={item.category}
+                        youtubeLink={item.vid_link}
+                        createdAt={item.createdAt}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {/* Section Divider */}
+            <div className="h-px bg-gradient-to-r from-transparent via-[#10B981]/20 to-transparent" />
+
+            {/* Section 3: Audio / Podcast Content */}
+            <section className="pt-4">
+              <h2 className="text-[#0F172A] text-2xl font-bold mb-8 flex items-center gap-3">
+                <span className="text-3xl">🎧</span> Podcast & Audio
+              </h2>
+              {loading ? (
+                <div className="flex justify-center items-center py-20">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22D3EE]"></div>
+                </div>
+              ) : filteredAudios.length === 0 ? (
+                <div className="text-center py-16 text-slate-500 bg-white/50 rounded-2xl">
+                  No industry audio available
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                  {filteredAudios.map((item, index) => (
+                    <motion.div
+                      key={item._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 * index }}
+                    >
+                      <AudioCard 
+                        title={item.title}
+                        description={item.description}
+                        author={item.author}
+                        youtubeLink={item.vid_link}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
               )}
             </section>
 

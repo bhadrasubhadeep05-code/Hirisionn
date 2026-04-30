@@ -4,6 +4,8 @@ import { motion, useInView } from "framer-motion";
 import AppContext from "../context/AppContext";
 import video from "../assets/video2.mp4";
 import NavBar2 from "./NavBar2";
+import { useState } from "react";
+import { softSkillsApply } from "../services/user.api";
 
 /* ---------------- Animations ---------------- */
 const fadeUp = {
@@ -50,6 +52,7 @@ const skillPillars = [
 const SoftSkills = () => {
   const { ProfileComplete } = useContext(AppContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
 
   /* ✅ FIX: Proper refs */
   const heroRef = useRef(null);
@@ -61,6 +64,26 @@ const SoftSkills = () => {
   const stakesInView = useInView(stakesRef, { once: true, amount: 0.2 });
   const pillarsInView = useInView(pillarsRef, { once: true, amount: 0.15 });
   const ctaInView = useInView(ctaRef, { once: true, amount: 0.3 });
+
+    const handleClick = async ()=>{
+        try {
+          setLoading(true)
+        const res = await softSkillsApply({
+          applied: true
+        });
+  
+        alert(res.message);
+  
+      } catch (err) {
+        alert(
+          err.response?.data?.message ||
+          "Something went wrong"
+        );
+      }
+      finally{
+        setLoading(false)
+      }
+    }
 
   return (
     <div className="w-full overflow-x-hidden bg-[#F8FAFC] min-h-screen font-body">
@@ -175,7 +198,8 @@ const SoftSkills = () => {
                 whileHover={{ y: -6 }}
                 className="bg-white shadow-md rounded-xl p-8 border-t-4 border-[#22D3EE] hover:shadow-xl transition-all"
               >
-                <h3 className="text-2xl font-bold text-[#0F172A] mb-4 font-heading">
+                <div className="text-4xl mb-6">{pillar.icon}</div>
+                <h3 className="text-xl font-bold text-[#0F172A] mb-4 font-heading">
                   {pillar.title}
                 </h3>
                 <p className="text-gray-600">{pillar.description}</p>
@@ -201,18 +225,16 @@ const SoftSkills = () => {
             Ready to secure your role in the 2026 market?
           </motion.h2>
 
-          <motion.button
-            variants={fadeUp}
-            onClick={() => navigate("/register")}
-            disabled={ProfileComplete}
-            className={`px-14 py-5 text-xl font-bold rounded-xl ${
-              ProfileComplete
-                ? "bg-gray-600 text-gray-300"
-                : "bg-[#22D3EE] text-[#0F172A]"
-            }`}
-          >
-            {ProfileComplete ? "Already Registered" : "Register Now"}
-          </motion.button>
+        <motion.button
+                   variants={fadeUp}
+                   onClick={() =>
+                     ProfileComplete?
+                     handleClick():
+                  navigate("/register") }
+                   className={`px-14 py-5 text-xl font-bold rounded-xl bg-[#22D3EE] text-[#0F172A]`}
+                 >
+                    {loading ? "Applying..." : "Apply"}
+                 </motion.button>
         </div>
       </motion.section>
     </div>

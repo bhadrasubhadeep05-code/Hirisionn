@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import NavBar2 from "../MainComponents/NavBar2";
 import Footer from "../MainComponents/Footer";
-import { getInternships, getInternshipsFulfilled, fulfillInternship  } from "../services/admin.api";
+import { getLiveProject, updateLiveProject  } from "../services/admin.api";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -13,7 +13,7 @@ const fadeUp = {
   }
 };
 
-const AdminInternship = () => {
+const AdminLiveProject = () => {
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
@@ -25,23 +25,9 @@ const AdminInternship = () => {
   const fetchApplicants = async () => {
     try {
       setLoading(true);
-      
-      // Fetch both pending and fulfilled applications
-      const [appliedRes, fulfilledRes] = await Promise.all([
-        getInternships(),
-        getInternshipsFulfilled()
-      ]);
-
-      console.log("Applied:", appliedRes.users);
-      console.log("Fulfilled:", fulfilledRes.users);
-      
-      // Combine both sets
-      const applied = appliedRes.users || [];
-      const fulfilled = fulfilledRes.users || [];
-      
-      // Merge and mark status
-      const allUsers = [...applied, ...fulfilled];
-      setApplicants(allUsers);
+      const res = await getLiveProject();
+      console.log("Live Project applicants:", res.users)
+      setApplicants(res.users);
     } catch (err) {
       console.error(err);
     } finally {
@@ -49,51 +35,49 @@ const AdminInternship = () => {
     }
   };
 
-  // Get all applications with status
+  // Get all live project applications with status
   const getAllApplications = () => {
     if (!applicants || !Array.isArray(applicants)) return [];
     const allApps = [];
     
     applicants.forEach(user => {
-      user.internshipInterests?.forEach(interest => {
+      if (user.liveProject) {
         allApps.push({
           user,
-          interest
+          project: user.liveProject
         });
-      });
+      }
     });
     
     return allApps;
   };
 
   const totalApplications = getAllApplications().length;
-  const appliedCount = getAllApplications().filter(app => !app.interest.fulfilled).length;
-  const fulfilledCount = getAllApplications().filter(app => app.interest.fulfilled).length;
+  const appliedCount = getAllApplications().filter(app => app.project.status === "Applied").length;
+  const fulfilledCount = getAllApplications().filter(app => app.project.status === "Fulfilled").length;
 
   // Filter applications based on selected status
   const filteredApplications = getAllApplications().filter(app => {
     if (filter === "all") return true;
-    if (filter === "applied") return !app.interest.fulfilled;
-    if (filter === "fulfilled") return app.interest.fulfilled;
+    if (filter === "applied") return app.project.status === "Applied";
+    if (filter === "fulfilled") return app.project.status === "Fulfilled";
     return true;
   });
 
-  const handleClick = async (id, category, subCategory) => {
+  const handleClick = async (id) => {
     try {
-      const res = await fulfillInternship({
-        userId: id,
-        category: category,
-        subCategory: subCategory
+      const res = await updateLiveProject({
+        userId: id
       });
 
       console.log(res);
       alert(res.message);
       
-      // Refresh applicants list after successful fulfillment
+      // Refresh applicants list after successful update
       fetchApplicants();
     } catch (err) {
-      console.error("Error fulfilling internship:", err);
-      alert(err.response?.data?.message || "Failed to fulfill internship. Please try again.");
+      console.error("Error updating live project:", err);
+      alert(err.response?.data?.message || "Failed to update project. Please try again.");
     }
   }
 
@@ -112,11 +96,11 @@ const AdminInternship = () => {
           >
             <h1 className="text-4xl md:text-5xl font-extrabold mb-3">
               <span className="bg-clip-text text-transparent bg-gradient-to-b from-[#0F172A] via-[#475569] to-[#0F172A]">
-                Internship Applicants
+                Live Project Applicants
               </span>
             </h1>
             <p className="text-slate-500 font-medium text-lg">
-              Manage and track internship application statuses
+              Manage and track live project application statuses
             </p>
           </motion.div>
 
@@ -140,7 +124,7 @@ const AdminInternship = () => {
             
             <div className="backdrop-blur-2xl bg-white/70 rounded-2xl p-6 border border-white/50 shadow-lg">
               <p className="text-3xl font-bold text-[#10B981]">{fulfilledCount}</p>
-              <p className="text-slate-600 font-medium">Fulfilled Applications</p>
+              <p className="text-slate-600 font-medium">Completed Projects</p>
             </div>
           </motion.div>
 
@@ -174,7 +158,7 @@ const AdminInternship = () => {
                 filter === "fulfilled" ? "bg-[#10B981] text-white" : "bg-white text-slate-600 hover:bg-gray-100"
               }`}
             >
-              Fulfilled
+              Completed
             </button>
           </motion.div>
 
@@ -197,8 +181,7 @@ const AdminInternship = () => {
                     <tr className="bg-[#0F172A] text-white">
                       <th className="px-6 py-4 text-left font-bold">User</th>
                       <th className="px-6 py-4 text-left font-bold">Email</th>
-                      <th className="px-6 py-4 text-left font-bold">Category</th>
-                      <th className="px-6 py-4 text-left font-bold">Domain</th>
+                      <th className="px-6 py-4 text-left font-bold">Phone</th>
                       <th className="px-6 py-4 text-left font-bold">Applied On</th>
                       <th className="px-6 py-4 text-left font-bold">Status</th>
                       <th className="px-6 py-4 text-left font-bold">Action</th>
@@ -209,23 +192,14 @@ const AdminInternship = () => {
                       <tr key={idx} className={`border-b border-gray-100 ${idx % 2 === 0 ? "bg-white" : "bg-[#F8FAFC]"}`}>
                         <td className="px-6 py-4 font-semibold text-[#0F172A]">{app.user.fullName}</td>
                         <td className="px-6 py-4 text-slate-600">{app.user.email}</td>
-                        <td className="px-6 py-4">
-                          <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                            app.interest.category === "IT & Technology" 
-                              ? "bg-[#22D3EE]/20 text-[#06b6d4]" 
-                              : "bg-[#818CF8]/20 text-[#6366F1]"
-                          }`}>
-                            {app.interest.category}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 font-medium text-slate-700">{app.interest.subCategory}</td>
+                        <td className="px-6 py-4 text-slate-600">{app.user.phoneNo}</td>
                         <td className="px-6 py-4 text-sm">
-                          {new Date(app.interest.appliedAt).toLocaleDateString()}
+                          {new Date(app.project.appliedAt).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4">
-                          {app.interest.status ? (
+                          {app.project.status === "Fulfilled" ? (
                             <span className="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-700">
-                              Fulfilled
+                              Completed
                             </span>
                           ) : (
                             <span className="px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-700">
@@ -234,12 +208,12 @@ const AdminInternship = () => {
                           )}
                         </td>
                         <td className="px-6 py-4">
-                          {!app.interest.status ? (
+                          {app.project.status === "Applied" ? (
                             <button
-                              onClick={()=> handleClick(app.user._id, app.interest.category, app.interest.subCategory)} 
+                              onClick={()=> handleClick(app.user._id)} 
                               className="bg-blue-500 text-white px-6 py-2 rounded-lg text-sm hover:bg-blue-600 transition-colors"
                             >
-                              Full Fill
+                              Mark Completed
                             </button>
                           ) : (
                             <span className="text-slate-400 text-sm font-medium">Completed</span>
@@ -260,4 +234,4 @@ const AdminInternship = () => {
   );
 };
 
-export default AdminInternship;
+export default AdminLiveProject;

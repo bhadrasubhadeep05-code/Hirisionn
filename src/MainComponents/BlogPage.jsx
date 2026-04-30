@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Card from './Card'
 import Video from '../assets/video3.mp4'
 import NavBar2 from './NavBar2'
-import { getAllOtherBlogs } from '../services/blog.api';
+import { getBlog } from '../services/blog.api';
 
 const BlogPage = () => {
   const [activeCategory, setActiveCategory] = useState(1);
@@ -12,29 +12,21 @@ const BlogPage = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Blog Categories Data
+  // Blogs Category Subcategories (exactly as specified)
   const categories = [
-    { id: 1, name: "All", description: "View all articles", isLive: false },
-    { id: 2, name: "HR", description: "Career & workplace advice", isLive: true },
-    { id: 3, name: "Marketing", description: "Brand & growth strategies", isLive: false },
-    { id: 4, name: "Finance", description: "Compensation & budgeting", isLive: true },
-    { id: 5, name: "Digital", description: "Digital transformation", isLive: false },
-    { id: 6, name: "Retail", description: "Retail industry insights", isLive: false },
-    { id: 7, name: "International Affairs", description: "Global market updates", isLive: true },
-    { id: 8, name: "Advertisement", description: "Advertising best practices", isLive: false },
-    { id: 9, name: "Mechanical", description: "Mechanical engineering", isLive: false },
-    { id: 10, name: "Electronics", description: "Electronics guides", isLive: true },
-    { id: 11, name: "Electrical", description: "Electrical engineering", isLive: false },
-    { id: 12, name: "Civil", description: "Civil infrastructure", isLive: false },
-    { id: 13, name: "Automation", description: "Process automation", isLive: true },
-    { id: 14, name: "AI", description: "Artificial Intelligence", isLive: true },
-    { id: 15, name: "IT", description: "Technology & development", isLive: true },
+    { id: 1, name: "All Blogs", description: "View all blog articles", isLive: false },
+    { id: 2, name: "Company Updates", description: "Announcements & behind-the-scenes", isLive: true },
+    { id: 3, name: "Leadership Perspectives", description: "Founder & executive insights", isLive: true },
+    { id: 4, name: "Opinion Pieces", description: "Trends & industry opinions", isLive: false },
+    { id: 5, name: "Case Studies", description: "Success stories & learnings", isLive: true },
+    { id: 6, name: "Event Recaps", description: "Partnerships, milestones & events", isLive: false },
+    { id: 7, name: "Problem Solving", description: "How we solved challenges", isLive: true },
   ];
 
   const fetchBlogs = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await getAllOtherBlogs(page);
+      const response = await getBlog(page);
       setBlogs(response.data || []);
       setTotalPages(response.totalPages || 1);
     } catch (err) {
@@ -53,8 +45,20 @@ const BlogPage = () => {
     fetchBlogs();
   }, [fetchBlogs]);
 
-  // Filter blogs based on selected category
-  const filteredBlogs = blogs;
+  // Filter blogs based on selected subcategory
+  const filteredBlogs = activeCategory === 1 
+    ? blogs 
+    : blogs.filter(blog => {
+        const subcategoryMap = {
+          2: "Company Updates & Announcements",
+          3: "Leadership Perspectives",
+          4: "Opinion Pieces & Trends",
+          5: "Case Studies & Success Stories",
+          6: "Event Recaps & Milestones",
+          7: "Problem Solving Narratives"
+        };
+        return blog.subCategory === subcategoryMap[activeCategory];
+      });
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -72,12 +76,12 @@ const BlogPage = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 h-full flex flex-col justify-center items-center px-4 text-center">
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            Voices of the Future Workforce
-          </h1>
-          <p className="text-white/80 max-w-2xl mb-8 leading-relaxed">
-            Modern employees seek more than just a job—they value balance, inclusion, and innovation. We keep you ahead of the trends redefining how organizations operate.
-          </p>
+            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
+              Blogs & Thought Leadership
+            </h1>
+            <p className="text-white/80 max-w-2xl mb-8 leading-relaxed">
+              This is your most flexible, conversational space. Company updates, leadership perspectives, trend analysis and real world stories.
+            </p>
           
           {/* Search Bar */}
           <div className="w-full max-w-md">
@@ -116,6 +120,7 @@ const BlogPage = () => {
                     )}
                     
                     <div className="flex items-center gap-3">
+                      <span className="text-lg">{category.icon}</span>
                       <div>
                         <p className={`font-medium transition-colors ${activeCategory === category.id ? 'text-[#0F172A] font-bold' : 'text-slate-700 hover:text-[#22D3EE]'}`}>
                           {category.name}

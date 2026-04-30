@@ -3,25 +3,17 @@ import { motion } from 'framer-motion';
 import NavBar2 from './NavBar2';
 import VideoCard from './VideoCard';
 import video from '../assets/videoPage.mp4';
-import { getAllOtherVideoCon } from '../services/video.api';
+import { getVideo } from '../services/video.api';
 
-// Video Categories Data
+// Blogs Category Subcategories for Video
 const videoCategories = [
-  { id: 1, name: "All", description: "View all videos", isLive: false },
-  { id: 2, name: "HR", description: "Career & workplace advice", isLive: true },
-  { id: 3, name: "Marketing", description: "Brand & growth strategies", isLive: false },
-  { id: 4, name: "Finance", description: "Compensation & budgeting", isLive: true },
-  { id: 5, name: "Digital", description: "Digital transformation", isLive: false },
-  { id: 6, name: "Retail", description: "Retail industry insights", isLive: false },
-  { id: 7, name: "International Affairs", description: "Global market updates", isLive: true },
-  { id: 8, name: "Advertisement", description: "Advertising best practices", isLive: false },
-  { id: 9, name: "Mechanical", description: "Mechanical engineering", isLive: false },
-  { id: 10, name: "Electronics", description: "Electronics guides", isLive: true },
-  { id: 11, name: "Electrical", description: "Electrical engineering", isLive: false },
-  { id: 12, name: "Civil", description: "Civil infrastructure", isLive: false },
-  { id: 13, name: "Automation", description: "Process automation", isLive: true },
-  { id: 14, name: "AI", description: "Artificial Intelligence", isLive: true },
-  { id: 15, name: "IT", description: "Technology & development", isLive: true },
+  { id: 1, name: "All Videos",  description: "View all video content", isLive: false },
+  { id: 2, name: "Company Updates",  description: "Announcements & behind-the-scenes", isLive: true },
+  { id: 3, name: "Leadership Perspectives",  description: "Founder & executive insights", isLive: true },
+  { id: 4, name: "Opinion Pieces",  description: "Trends & industry opinions", isLive: false },
+  { id: 5, name: "Case Studies",  description: "Success stories & learnings", isLive: true },
+  { id: 6, name: "Event Recaps",  description: "Partnerships, milestones & events", isLive: false },
+  { id: 7, name: "Problem Solving",  description: "How we solved challenges", isLive: true },
 ];
 
 const VideoPage = () => {
@@ -34,7 +26,7 @@ const VideoPage = () => {
   const fetchVideos = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await getAllOtherVideoCon(page);
+      const response = await getVideo(page);
       setVideos(response.data || []);
       setTotalPages(response.totalPages || 1);
     } catch (err) {
@@ -45,15 +37,24 @@ const VideoPage = () => {
     }
   }, [page]);
 
-  // All categories use the same API
   useEffect(() => {
     fetchVideos();
   }, [fetchVideos]);
 
-  useEffect(() => {
-    fetchVideos();
-  }, [fetchVideos]);
-console.log(videos)
+  // Filter videos based on selected subcategory
+  const filteredVideos = activeCategory === 1 
+    ? videos 
+    : videos.filter(video => {
+        const subcategoryMap = {
+          2: "Company Updates & Announcements",
+          3: "Leadership Perspectives",
+          4: "Opinion Pieces & Trends",
+          5: "Case Studies & Success Stories",
+          6: "Event Recaps & Milestones",
+          7: "Problem Solving Narratives"
+        };
+        return video.subCategory === subcategoryMap[activeCategory];
+      });
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       <NavBar2 progress={1} />
@@ -191,7 +192,7 @@ console.log(videos)
             ) : (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  {videos.map((item, index) => (
+                  {filteredVideos.map((item, index) => (
                     <motion.div
                       key={item._id}
                       initial={{ opacity: 0, y: 20 }}
