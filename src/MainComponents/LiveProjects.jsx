@@ -221,6 +221,7 @@ const LiveProjects = () => {
       {/* ================= APPLY BUTTON SECTION ================= */}
       <motion.section className="py-16 px-6">
         <div className="max-w-xl mx-auto text-center">
+          
          <motion.button
                      variants={fadeUp}
                      onClick={() =>
@@ -229,7 +230,7 @@ const LiveProjects = () => {
                     navigate("/register") }
                      className={`px-14 py-5 text-xl font-bold rounded-xl bg-[#22D3EE] text-[#0F172A]`}
                    >
-                      {loading ? "Applying..." : "Apply"}
+                      {loading ? "Applying..." : "Apply Now"}
                    </motion.button>
         </div>
       </motion.section>
@@ -264,7 +265,7 @@ const LiveProjects = () => {
           >
             Ready to work on real industry projects?
           </motion.h2>
-
+{/* 
           <motion.button
             variants={fadeUp}
             whileHover={!ProfileComplete ? { scale: 1.08 } : {}}
@@ -279,8 +280,22 @@ const LiveProjects = () => {
           >
             {ProfileComplete
               ? "You have already registered"
-              : "Apply Now"}
-          </motion.button>
+              : "Register"}
+          </motion.button> */}
+             {/* Hire Talent Button */}
+                    <motion.button 
+                    variants={fadeUp}
+            whileHover={!ProfileComplete ? { scale: 1.08 } : {}}
+            whileTap={!ProfileComplete ? { scale: 0.97 } : {}}
+                      className='px-14 sm:px-8 py-5 sm:py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg sm:text-base rounded-lg transition-all duration-300 shadow-lg transform'
+                      onClick={()=>navigate("/register")}
+                      disabled={ProfileComplete}
+                    >
+                      {ProfileComplete
+              ? "You have already registered"
+              : "Register Now"}
+                    </motion.button>
+          
         </div>
       </motion.section>
     </div>

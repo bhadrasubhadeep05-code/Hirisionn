@@ -1,19 +1,38 @@
 import React from "react";
 import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
+  
   const footerLinks = [
     {
-      title: "Interview Prep",
-      links: ["Blog Articles", "Video Tutorials"]
+      title: "Our Services",
+      links: [
+        { label: "Create Your Resume", path: "/resume-builder" },
+        { label: "Internship", path: "/internship" },
+        { label: "Live Projects", path: "/live-projects" },
+        { label: "Job Placements", path: "/job-placements" },
+        { label: "Soft Skills Training", path: "/soft-skills-training" }
+      ]
     },
     {
-      title: "Industries",
-      links: ["Blog Articles", "Video Tutorials"]
+      title: "Resources",
+      links: [
+        { label: "WorkForce Insights", path: "/workforce-insights" },
+        { label: "Podcast Library", path: "/audio-library" },
+        { label: "Blogs", path: "/blog-page" },
+        { label: "Videos Library", path: "/video-page" },
+        { label: "Industry Insights", path: "/industry-insights" }
+      ]
     },
     {
       title: "Company",
-      links: ["About Us", "Contact"]
+      links: [
+        { label: "About Us", path: "/about-us" },
+        { label: "Business Enquiry", path: "/business-enquiry" },
+        { label: "Contact Us", path: "/contact-us" }
+      ]
     }
   ];
 
@@ -124,9 +143,9 @@ const Footer = () => {
                     <ul className="space-y-3 mt-6">
                       {section.links.map((link, i) => (
                         <li key={i}>
-                          <motion.a
-                            href="#"
-                            className="text-[#4A5568] hover:text-[#22D3EE] text-sm font-medium transition-all duration-300 flex items-center gap-2 group/link"
+                          <motion.button
+                            onClick={() => navigate(link.path)}
+                            className="text-[#4A5568] hover:text-[#22D3EE] text-sm font-medium transition-all duration-300 flex items-center gap-2 group/link w-full text-left"
                             whileHover={{ x: 4 }}
                           >
                             <motion.span
@@ -134,8 +153,8 @@ const Footer = () => {
                               animate={{ scale: [1, 1.3, 1] }}
                               transition={{ duration: 0.6, repeat: Infinity }}
                             />
-                            {link}
-                          </motion.a>
+                            {link.label}
+                          </motion.button>
                         </li>
                       ))}
                     </ul>

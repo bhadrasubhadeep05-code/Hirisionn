@@ -146,7 +146,7 @@ const Placements = () => {
 
               <motion.p
                 variants={fadeUp}
-                className="text-[#818CF8] text-lg font-medium"
+                className="text-[#22D3EE] text-lg font-medium"
               >
                 The gap between education and industry requirements is the core issue.
               </motion.p>
@@ -234,7 +234,7 @@ const Placements = () => {
            navigate("/register") }
             className={`px-14 py-5 text-xl font-bold rounded-xl bg-[#22D3EE] text-[#0F172A]`}
           >
-             {loading ? "Applying..." : "Apply"}
+             {loading ? "Applying..." : "Apply Now"}
           </motion.button>
         </div>
       </motion.section>

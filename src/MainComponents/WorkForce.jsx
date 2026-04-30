@@ -112,7 +112,7 @@ const WorkForce = () => {
           </motion.p>
 
           {/* Search Bar */}
-          <motion.div 
+          {/* <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6 }}
@@ -127,7 +127,7 @@ const WorkForce = () => {
             <svg className="absolute right-6 top-1/2 -translate-y-1/2 w-6 h-6 text-[#818CF8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-          </motion.div>
+          </motion.div> */}
         </div>
       </div>
 

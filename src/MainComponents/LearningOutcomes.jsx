@@ -113,13 +113,7 @@ const LearningOutcomes = () => {
             Transform Your Potential into Professional Reality.
           </motion.h1>
 
-          <motion.div variants={fadeUp} className="mb-8">
-            <span  className='px-5 sm:px-8 py-2.5 sm:py-4 bg-transparent border-2 border-white hover:bg-white/10 text-white font-bold text-xs sm:text-base rounded-lg transition-all duration-300'
-            whileHover={{ scale: 1.05, borderColor: '#f97316', backgroundColor: 'rgba(255,255,255,0.15)' }}
-            whileTap={{ scale: 0.95 }}>
-              Next Batch Starting Soon
-            </span>
-          </motion.div>
+      
 
           {/* ✅ FIX: merged animations properly */}
            <motion.button
@@ -130,7 +124,7 @@ const LearningOutcomes = () => {
                   navigate("/register") }
                    className={`px-14 py-5 text-xl font-bold rounded-xl bg-[#22D3EE] text-[#0F172A]`}
                  >
-                    {loading ? "Applying..." : "Apply"}
+                    {loading ? "Applying..." : "Apply Now"}
                  </motion.button>
         </div>
       </motion.section>

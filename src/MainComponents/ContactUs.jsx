@@ -135,7 +135,7 @@ const ContactUs = () => {
                     />
                   </svg>
                   <p className="text-[#22D3EE] font-bold text-lg">
-                    +91 797077798
+                    +91 7970777984
                   </p>
                 </div>
 

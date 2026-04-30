@@ -71,15 +71,7 @@ const ResumeMasterclass = () => {
 
         <div className="relative z-10 h-full flex flex-col justify-center items-center px-6 text-center">
           
-          {/* Urgency Badge */}
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-[#22D3EE] text-[#0F172A] px-5 py-2 rounded-full text-sm font-bold mb-6 shadow-[0_0_30px_rgba(34,211,238,0.4)]"
-          >
-             Limited Time Offer: ₹199 only
-          </motion.div>
+        
 
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}

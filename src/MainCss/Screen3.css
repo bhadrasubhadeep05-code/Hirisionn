@@ -2,7 +2,7 @@
   position: relative;
   min-height: 120vh;
   padding-top: var(--navbar-height);
-  background: #ffffff;
+  background: #F8FAFC;
   overflow: hidden;
 }
 
@@ -10,13 +10,6 @@
 .screen3-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    #ffffff 0%,
-    #0a192f 60%,
-    #0a192f 95%,
-    #F8FAFC 100%
-  );
   z-index: 0;
 }
 
@@ -50,7 +43,7 @@
   font-family: "Playfair Display", serif;
   font-style: italic;
   font-size: 28px;
-  color: #f9f9f9;
+  color: #d4af37;
 }
 
 /* LEGACY TREE */
@@ -102,7 +95,7 @@
 
 .stat-card {
   backdrop-filter: blur(14px);
-  background: rgba(255, 255, 255, 0.12);
+  background: #0F172A;
   border-radius: 20px;
   padding: 32px;
   text-align: center;

@@ -99,7 +99,7 @@ const AdminPanel = () => {
       count: "0",
       icon: <BriefcaseIcon />,
       color: "from-[#8B5CF6] to-[#7C3AED]",
-      action: () => navigate('/admin/liveprojects'),
+      action: () => navigate('/admin/live-project'),
     },
     {
       title: "Soft Skill Applicants",

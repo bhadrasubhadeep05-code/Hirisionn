@@ -9,6 +9,9 @@ import AppContext from '../context/AppContext';
 const Login = () => {
   const { setToken, fetchUser } = useContext(AppContext);
   const navigate = useNavigate();
+
+ 
+
   const [formData, setFormData] = useState({
     phoneNo: "",
     password: "",
@@ -25,7 +28,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!formData.phoneNo || !formData.password) {
       setError("Please enter both phone number and password!");
       return;
@@ -59,8 +61,11 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#F8FAFC] flex flex-col relative overflow-hidden">
-      <NavBar2 progress={1} />
+    <>
+
+     
+        <div className="min-h-screen w-full bg-[#F8FAFC] flex flex-col relative overflow-hidden">
+          <NavBar2 progress={1} />
       
       <main className="flex-grow relative flex items-center justify-center px-4 py-20 mt-20">
         {/* --- STUDIO LIGHTING BACKGROUND --- */}
@@ -178,8 +183,10 @@ const Login = () => {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          <Footer />
+        </div>
+      
+    </>
   );
 };
 

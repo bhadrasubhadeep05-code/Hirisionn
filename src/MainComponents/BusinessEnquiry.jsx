@@ -131,7 +131,7 @@ const handleSubmit = async (e) => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full border-b border-slate-200 py-3 focus:border-[#22D3EE] outline-none transition-colors text-[#0F172A]"
-                  placeholder="john@company.com"
+                  placeholder="john@gmail.com"
                 />
               </div>
 

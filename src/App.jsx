@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css'
 import LandingPage from './MainComponents/LandingPage'
+import Loading from './MainComponents/Loading'
 import { Routes, Route } from "react-router-dom"; 
 import Blog from './MainComponents/Blog';
 import Video from './MainComponents/Video';
@@ -40,12 +41,26 @@ import AdminSoftSkill from './admin/AdminSoftSkill';
 
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Auto hide loading screen after animation completes
+  useEffect(() => {
+    const loadingTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(loadingTimer);
+  }, []);
 
   return (
     <>
     <Routes>  
-      <Route path="/" element={<LandingPage />} />
+      <Route path="/" element={
+        <>
+          {isLoading && <Loading />}
+          <LandingPage isVisible={!isLoading} />
+        </>
+      } />
        <Route path="/blog-page" element={<BlogPage />} />
        <Route path="/video-page" element={<VideoPage />} />
        <Route path="/audio-library" element={<AudioLibrary />} />

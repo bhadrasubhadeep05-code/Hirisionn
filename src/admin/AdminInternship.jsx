@@ -67,14 +67,15 @@ const AdminInternship = () => {
   };
 
   const totalApplications = getAllApplications().length;
-  const appliedCount = getAllApplications().filter(app => !app.interest.fulfilled).length;
-  const fulfilledCount = getAllApplications().filter(app => app.interest.fulfilled).length;
+  const appliedCount = getAllApplications().filter(app => app.interest.status === "Applied" ).length;
+  const fulfilledCount = getAllApplications().filter(app => app.interest.status === "Fulfilled").length;
+  console.log(getAllApplications())
 
   // Filter applications based on selected status
   const filteredApplications = getAllApplications().filter(app => {
     if (filter === "all") return true;
-    if (filter === "applied") return !app.interest.fulfilled;
-    if (filter === "fulfilled") return app.interest.fulfilled;
+    if (filter === "applied") return app.interest.status === "Applied";
+    if (filter === "fulfilled") return app.interest.status === "Fulfilled";
     return true;
   });
 
@@ -223,7 +224,7 @@ const AdminInternship = () => {
                           {new Date(app.interest.appliedAt).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4">
-                          {app.interest.status ? (
+                          {app.interest.status === "Fulfilled" ? (
                             <span className="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-700">
                               Fulfilled
                             </span>
@@ -234,7 +235,7 @@ const AdminInternship = () => {
                           )}
                         </td>
                         <td className="px-6 py-4">
-                          {!app.interest.status ? (
+                          {app.interest.status === "Applied" ? (
                             <button
                               onClick={()=> handleClick(app.user._id, app.interest.category, app.interest.subCategory)} 
                               className="bg-blue-500 text-white px-6 py-2 rounded-lg text-sm hover:bg-blue-600 transition-colors"

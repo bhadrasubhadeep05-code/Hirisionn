@@ -48,7 +48,7 @@ const AboutUs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen min-w-screen bg-[#F8FAFC]">
       <NavBar2 progress={1} />
       
       {/* DNA Hero Section */}
@@ -157,7 +157,7 @@ const AboutUs = () => {
                   <img 
                     src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800&h=600"
                     alt="Hirisionn Team"
-                    className="relative z-10 rounded-3xl shadow-2xl border-4 border-white transform -translate-y-6 translate-x-6"
+                    className="relative z-10 rounded-3xl shadow-2xl border-4 border-white transform -translate-y-6 translate-x-0"
                   />
                 </motion.div>
               </div>
@@ -175,7 +175,7 @@ const AboutUs = () => {
               </motion.h2>
 
               <div className="relative">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Mission Card */}
                   <motion.div
                     initial={{ opacity: 0, x: -30 }}
@@ -192,16 +192,18 @@ const AboutUs = () => {
 
                   {/* Vision Card */}
                   <motion.div
-                    initial={{ opacity: 0, x: 30 }}
+                    initial={{ opacity: 0, x: -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="bg-white p-8 rounded-r-[2rem] shadow-xl -ml-4 mt-8 relative z-20"
+                    className="bg-white p-8 rounded-l-[2rem] shadow-xl relative z-10 "
                   >
-                    <h3 className="text-2xl font-bold text-[#0F172A] mb-4">Our Vision</h3>
-                    <p className="text-slate-600">
-                      A world where your potential is the only currency that matters. Where geography, network, and background never limit what you can achieve.
+                    <div className="absolute left-0 top-8 bottom-8 w-1 bg-[#22D3EE]" />
+                    <h3 className="text-2xl font-bold text-[#0F172A] mb-4 pl-4">Our Vision</h3>
+                    <p className="text-slate-600 pl-4">
+                     A world where your potential is the only currency that matters. Where geography, network, and background never limit what you can achieve.
                     </p>
                   </motion.div>
+              
                 </div>
               </div>
             </section>

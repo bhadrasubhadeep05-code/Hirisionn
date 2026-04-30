@@ -233,7 +233,7 @@ const SoftSkills = () => {
                   navigate("/register") }
                    className={`px-14 py-5 text-xl font-bold rounded-xl bg-[#22D3EE] text-[#0F172A]`}
                  >
-                    {loading ? "Applying..." : "Apply"}
+                    {loading ? "Applying..." : "Apply Now"}
                  </motion.button>
         </div>
       </motion.section>

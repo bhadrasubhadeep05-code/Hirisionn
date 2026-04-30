@@ -3,14 +3,18 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import NavBar2 from './NavBar2';
 import Footer from './Footer';
+import Loading from './Loading';
 import { register, completeProfile } from '../services/user.api';
 import AppContext from '../context/AppContext';
 
 const Register = () => {
-const { setToken, fetchUser, token } = useContext(AppContext);
-  const navigate = useNavigate();
-  // If token exists already, start directly on Form 2 (profile completion), else show Form 1 (account creation)
-  const [currentStep, setCurrentStep] = useState(token ? 2 : 1);
+ const { setToken, fetchUser, token } = useContext(AppContext);
+   const navigate = useNavigate();
+
+  
+
+   // If token exists already, start directly on Form 2 (profile completion), else show Form 1 (account creation)
+   const [currentStep, setCurrentStep] = useState(token ? 2 : 1);
 
   // Update step when token changes after component mount (fix for async context loading)
   React.useEffect(() => {
@@ -160,8 +164,12 @@ const { setToken, fetchUser, token } = useContext(AppContext);
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#F8FAFC] flex flex-col relative overflow-hidden">
-      <NavBar2 progress={currentStep} />
+    <>
+   
+
+     
+        <div className="min-h-screen w-full bg-[#F8FAFC] flex flex-col relative overflow-hidden">
+          <NavBar2 progress={currentStep} />
       
       <main className="flex-grow relative flex items-center justify-center px-4 py-20 mt-20">
         {/* --- STUDIO LIGHTING BACKGROUND --- */}
@@ -544,8 +552,9 @@ const { setToken, fetchUser, token } = useContext(AppContext);
         </div>
       </main>
 
-      <Footer />
-    </div>
+          <Footer />
+        </div>
+    </>
   );
 };
 
