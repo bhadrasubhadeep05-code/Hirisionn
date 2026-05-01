@@ -19,17 +19,18 @@ const NavBar2 = ({ progress }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Hide / show navbar based on scroll direction
-  // useMotionValueEvent(scrollY, "change", (latest) => {
-  //   const previous = scrollY.getPrevious();
-  //   if (previous === undefined) return;
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious();
+    if (previous === undefined) return;
 
-  //   if (latest > previous && latest > 80) {
-  //     setHidden(true);
-  //     setOpenDropdown(null);
-  //   } else {
-  //     setHidden(false);
-  //   }
-  // });
+    if (latest > previous && latest > 80) {
+      setHidden(true);
+      console.log("changed")
+      setOpenDropdown(null);
+    } else {
+      setHidden(false);
+    }
+  });
 
   // Fade in effect based on the landing page progress
   const navbarProgress = Math.max(0, Math.min((progress - 0.3) / 0.7, 1));

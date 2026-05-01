@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react'
 import ProblemStatement from './ProblemStatement'
 import { motion, AnimatePresence } from 'motion/react'
 
-const LandingPage = ({ isVisible = true }) => {
+const LandingPage = () => {
     const [progress, SetProgress] = useState(0);
   
     useEffect(()=>{
@@ -22,7 +22,6 @@ const LandingPage = ({ isVisible = true }) => {
     
     return (
     <AnimatePresence mode="wait">
-      {isVisible && (
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -30,8 +29,8 @@ const LandingPage = ({ isVisible = true }) => {
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="fixed inset-0 z-40 overflow-auto bg-white"
         >
-          <Screen1 progress={progress} />
-          <NavBar2 progress={progress} />
+          <Screen1  />
+          <NavBar2  />
           <ProblemStatement />
           <Screen2 />
           <Screen3 />
@@ -39,7 +38,6 @@ const LandingPage = ({ isVisible = true }) => {
             <Footer />
           </footer>
         </motion.div>
-      )}
     </AnimatePresence>
   )
 }
