@@ -202,7 +202,7 @@ const VideoPage = () => {
                     >
                       <VideoCard 
                         title={item.title}
-                        category={item.category}
+                        category={item.subCategory}
                         youtubeLink={item.vid_link}
                         createdAt={item.createdAt}
                       />

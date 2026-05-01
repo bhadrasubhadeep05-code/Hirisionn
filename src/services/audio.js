@@ -7,7 +7,7 @@ export const createAudio = async (audioData) =>{
 
 
 export const getAudio = async () =>{
-    const res = await api.get("/audio/BlogData");
+    const res = await api.get("/audio/audioData");
     return res.data
 };
 export const getworkforceAudio = async () =>{

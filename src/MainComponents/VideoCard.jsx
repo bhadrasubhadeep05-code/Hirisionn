@@ -41,12 +41,12 @@ const VideoCard = ({ youtubeLink, title,  category,  createdAt}) => {
   return (
     <div className="group relative bg-white p-6 pt-10 rounded-[2rem] shadow-xl
                     hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 ease-out
-                    w-full max-w-md">
+                    w-[320px] min-w-[320px] max-w-[320px]">
 
       {/* Category Tag */}
-      <div className="absolute -left-3 top-10 z-20 bg-[#22D3EE] text-[#0F172A] px-4 py-1
+      <div className="absolute left-4 top-4 z-20 bg-[#22D3EE] text-[#0F172A] px-4 py-1
                       text-[10px] font-black uppercase tracking-widest shadow-md
-                      group-hover:-left-5 transition-all duration-500">
+                      transition-all duration-500">
         {category || "General"}
       </div>
 
@@ -74,8 +74,8 @@ const VideoCard = ({ youtubeLink, title,  category,  createdAt}) => {
         )}
       </div>
 
-      {/* Content */}
-      <div className="mt-8">
+      {/* Content - Fixed height container */}
+      <div className="mt-8 min-h-[80px]">
         <h3 className="text-[#0F172A] text-lg font-bold line-clamp-2">
           {title || "Untitled Video"}
         </h3>

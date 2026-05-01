@@ -24,7 +24,6 @@ const CreateVideo = () => {
       "Case Studies & Success Stories",
       "Event Recaps & Milestones",
       "Problem Solving Narratives",
-      "Behind The Scenes Stories"
     ],
     "Marketing": [
       "Hiring Trends & Talent Insights",

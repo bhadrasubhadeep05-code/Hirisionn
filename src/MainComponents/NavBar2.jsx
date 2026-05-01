@@ -5,7 +5,7 @@ import AppContext from "../context/AppContext";
 import { motion, AnimatePresence } from "motion/react";
 
 const NavBar2 = () => {
-  const { user } = useContext(AppContext);
+  const { user, ProfileComplete } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -67,7 +67,7 @@ const NavBar2 = () => {
 >
     
       {/* --- TOP HEADER SECTION --- */}
-      <div className="relative h-20 md:h-24 w-full bg-white/80 backdrop-blur-md flex items-center justify-between md:justify-center px-4 md:px-12 border-b border-slate-200">
+      <div className="relative h-24 md:h-24 w-full bg-white/80 backdrop-blur-md flex items-center justify-between md:justify-center px-4 md:px-12 border-b border-slate-200">
         
         {/* LEFT: Hamburger Menu (MOBILE ONLY) */}
         <button 
@@ -88,9 +88,9 @@ const NavBar2 = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate("/")}
-          className="md:static absolute left-[160px]  md:transform-none"
+          className="md:static absolute left-[150px]  md:transform-none"
         >
-          <img src={logo} alt="Logo" className="h-16 md:h-28 w-auto cursor-pointer object-contain" />
+          <img src={logo} alt="Logo" className="h-20 md:h-28 w-auto cursor-pointer object-contain" />
         </motion.div>
 
         {/* RIGHT: User Icon - Always on right edge */}
@@ -99,9 +99,9 @@ const NavBar2 = () => {
             className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-gradient-to-br from-[#22D3EE] to-[#818CF8] flex items-center justify-center text-white shadow-lg border border-white/30"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate("/profile")}
+            onClick={() => ProfileComplete? navigate("/profile"): navigate("/register")}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
             </svg>
           </motion.button>

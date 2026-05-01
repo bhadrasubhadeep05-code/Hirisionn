@@ -1,6 +1,7 @@
 import React from "react";
 
 const AudioCard = ({ youtubeLink, title, description, author }) => {
+  console.log(author)
   // Convert youtube watch/live links to embed format
   const getEmbedUrl = (url) => {
     if (!url || typeof url !== 'string' || !url.trim()) {
@@ -23,7 +24,7 @@ const AudioCard = ({ youtubeLink, title, description, author }) => {
   const embedUrl = getEmbedUrl(youtubeLink);
 
   return (
-    <div className="relative bg-white p-4 pb-6 rounded-[2rem] shadow-xl w-full max-w-md
+    <div className="relative bg-white p-4 pb-6 rounded-[2rem] shadow-xl w-[320px] min-w-[320px] max-w-[320px]
                     hover:scale-[1.02] hover:shadow-[0_25px_50px_-12px_rgba(34,211,238,0.15)]
                     transition-all duration-500 ease-out">
 
@@ -53,8 +54,8 @@ const AudioCard = ({ youtubeLink, title, description, author }) => {
         )}
       </div>
 
-      {/* Content Area */}
-      <div className="mt-5 px-2">
+      {/* Content Area - Fixed height container */}
+      <div className="mt-5 px-2 min-h-[90px]">
         <h2 className="text-[#0F172A] text-lg font-bold line-clamp-1">{title}</h2>
         <p className="text-[#818CF8] text-[10px] uppercase tracking-wider mt-2 line-clamp-2">
           {description}

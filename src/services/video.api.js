@@ -6,7 +6,7 @@ export const createVideo = async (videodata) =>{
 };
 
 export const getVideo = async () =>{
-    const res = await api.get("/video/BlogData");
+    const res = await api.get("/video/videoData");
     return res.data
 };
 export const getworkforceVideo = async () =>{

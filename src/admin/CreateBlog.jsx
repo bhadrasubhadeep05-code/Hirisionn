@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
-import NavBar2 from '../MainComponents/NavBar2';
-import Footer from '../MainComponents/Footer';
-import { uploadImage } from '../services/image.api';
-import { createBlog } from '../services/blog.api';
-import { convertToBase64 } from '../services/convertToBase64';
+import React, { useState } from "react";
+import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
+import NavBar2 from "../MainComponents/NavBar2";
+import Footer from "../MainComponents/Footer";
+import { uploadImage } from "../services/image.api";
+import { createBlog } from "../services/blog.api";
+import { convertToBase64 } from "../services/convertToBase64";
+import RichTextEditor from "../MainComponents/RichTextEditor";
 
 const CreateBlog = () => {
   const navigate = useNavigate();
@@ -20,32 +21,31 @@ const CreateBlog = () => {
 
   // Category to Subcategory mapping
   const categorySubcategories = {
-    "Blog": [
+    Blog: [
       "Company Updates & Announcements",
       "Leadership Perspectives",
       "Opinion Pieces & Trends",
       "Case Studies & Success Stories",
       "Event Recaps & Milestones",
       "Problem Solving Narratives",
-      "Behind The Scenes Stories"
     ],
-    "Marketing": [
+    Marketing: [
       "Hiring Trends & Talent Insights",
       "Employee Engagement & Retention",
       "Remote/Hybrid Work Strategies",
       "Leadership & Management Best Practices",
       "DEI Initiatives",
       "Upskilling & Training Programs",
-      "Compensation & Workplace Expectations"
+      "Compensation & Workplace Expectations",
     ],
-    "Finance": [
+    Finance: [
       "Industry Reports & Forecasts",
       "Market Trends & Emerging Technologies",
       "Competitor & Ecosystem Analysis",
       "Regulatory & Policy Updates",
       "Economic Factor Analysis",
-      "Vertical Deep Dives (Fintech, Healthcare, etc.)"
-    ]
+      "Vertical Deep Dives (Fintech, Healthcare, etc.)",
+    ],
   };
 
   const [image, setImage] = useState(null);
@@ -62,13 +62,13 @@ const CreateBlog = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Reset subcategory when main category changes
     if (name === "category") {
       setFormData((prev) => ({
         ...prev,
         [name]: value,
-        subCategory: "" // Clear subcategory selection
+        subCategory: "", // Clear subcategory selection
       }));
     } else {
       setFormData((prev) => ({
@@ -85,7 +85,7 @@ const CreateBlog = () => {
       setLoading(true);
 
       let thumbnailData = null;
-      
+
       // If file image was uploaded
       if (image) {
         // 1️⃣ Convert image to Base64
@@ -94,17 +94,17 @@ const CreateBlog = () => {
         // 2️⃣ Upload image
         const imageRes = await uploadImage(base64Image);
         // imageRes = { url, public_id }
-        
+
         thumbnailData = {
           url: imageRes.url,
           public_id: imageRes.public_id,
         };
-      } 
+      }
       // If direct image url was provided
       else if (formData.imageUrl && formData.imageUrl.trim()) {
         thumbnailData = {
           url: formData.imageUrl.trim(),
-          public_id: null
+          public_id: null,
         };
       }
 
@@ -145,7 +145,7 @@ const CreateBlog = () => {
   return (
     <div className="min-h-screen w-full bg-[#F8FAFC] flex flex-col relative overflow-hidden">
       <NavBar2 progress={1} />
-      
+
       <main className="flex-grow relative flex items-center justify-center px-4 py-20 mt-20">
         {/* Background Effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -155,7 +155,7 @@ const CreateBlog = () => {
 
         <div className="relative z-10 w-full max-w-3xl">
           {/* Header */}
-          <motion.div 
+          <motion.div
             className="text-center mb-10"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -182,13 +182,17 @@ const CreateBlog = () => {
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#818CF8] via-[#6366F1] to-[#818CF8] rounded-t-[3rem]" />
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              
               {/* Title */}
               <div className="space-y-2">
-                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Blog Title</label>
-                <input 
-                  type="text" name="title" required
-                  value={formData.title} onChange={handleChange}
+                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">
+                  Blog Title
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  required
+                  value={formData.title}
+                  onChange={handleChange}
                   placeholder="Enter blog title"
                   className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#818CF8] focus:border-transparent focus:bg-white shadow-sm"
                 />
@@ -196,21 +200,30 @@ const CreateBlog = () => {
 
               {/* Blog Content */}
               <div className="space-y-2">
-                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Blog Content</label>
-                <textarea 
-                  name="content" required rows={8}
-                  value={formData.content} onChange={handleChange}
-                  placeholder="Write your blog content here..."
-                  className="w-full px-5 py-4 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#818CF8] focus:border-transparent focus:bg-white shadow-sm resize-none"
+                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">
+                  Blog Content
+                </label>
+                <RichTextEditor
+                  value={formData.content}
+                  onChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      content: value,
+                    }))
+                  }
                 />
               </div>
 
               {/* Author Name */}
               <div className="space-y-2">
-                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Author Name</label>
-                <input 
-                  type="text" name="authorName"
-                  value={formData.authorName} onChange={handleChange}
+                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">
+                  Author Name
+                </label>
+                <input
+                  type="text"
+                  name="authorName"
+                  value={formData.authorName}
+                  onChange={handleChange}
                   placeholder="Enter author name"
                   className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#818CF8] focus:border-transparent focus:bg-white shadow-sm"
                 />
@@ -218,7 +231,9 @@ const CreateBlog = () => {
 
               {/* Category */}
               <div className="space-y-2">
-                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Category</label>
+                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">
+                  Category
+                </label>
                 <select
                   name="category"
                   value={formData.category}
@@ -227,15 +242,23 @@ const CreateBlog = () => {
                   className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#818CF8] focus:border-transparent focus:bg-white shadow-sm appearance-none"
                 >
                   <option value="">-- Select a category --</option>
-                  <option value="Blog">Blogs (General Thought Leadership & Updates)</option>
-                  <option value="Marketing">Workforce Insights (People, Hiring, Culture)</option>
-                  <option value="Finance">Industry Insights (Market Trends & Analysis)</option>
+                  <option value="Blog">
+                    Blogs (General Thought Leadership & Updates)
+                  </option>
+                  <option value="Marketing">
+                    Workforce Insights (People, Hiring, Culture)
+                  </option>
+                  <option value="Finance">
+                    Industry Insights (Market Trends & Analysis)
+                  </option>
                 </select>
               </div>
 
-             {/* subCategory */}
+              {/* subCategory */}
               <div className="space-y-2">
-                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Sub Category</label>
+                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">
+                  Sub Category
+                </label>
                 <select
                   name="subCategory"
                   value={formData.subCategory}
@@ -245,41 +268,64 @@ const CreateBlog = () => {
                   className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#818CF8] focus:border-transparent focus:bg-white shadow-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value="">
-                    {formData.category ? "-- Select a subcategory --" : "-- First select category above --"}
+                    {formData.category
+                      ? "-- Select a subcategory --"
+                      : "-- First select category above --"}
                   </option>
-                  {formData.category && categorySubcategories[formData.category]?.map((subcat, index) => (
-                    <option key={index} value={subcat}>{subcat}</option>
-                  ))}
+                  {formData.category &&
+                    categorySubcategories[formData.category]?.map(
+                      (subcat, index) => (
+                        <option key={index} value={subcat}>
+                          {subcat}
+                        </option>
+                      ),
+                    )}
                 </select>
               </div>
 
               {/* Thumbnail: Direct Image URL */}
               <div className="space-y-2">
-                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Thumbnail Image URL</label>
-                <input 
-                  type="url" name="imageUrl"
-                  value={formData.imageUrl} onChange={handleChange}
+                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">
+                  Thumbnail Image URL
+                </label>
+                <input
+                  type="url"
+                  name="imageUrl"
+                  value={formData.imageUrl}
+                  onChange={handleChange}
                   placeholder="Enter direct image URL (optional)"
                   className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#818CF8] focus:border-transparent focus:bg-white shadow-sm"
                 />
-                <p className="text-xs text-slate-400 ml-1 mt-1">OR upload image file below</p>
+                <p className="text-xs text-slate-400 ml-1 mt-1">
+                  OR upload image file below
+                </p>
               </div>
 
               {/* Thumbnail Upload */}
               <div className="space-y-2">
-                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Upload Thumbnail File</label>
+                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">
+                  Upload Thumbnail File
+                </label>
                 <div className="relative">
-                  <input 
-                    type="file" accept="image/*" onChange={handleImageChange}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
                     className="w-full px-5 py-4 rounded-2xl bg-white/50 border border-slate-200 border-dashed text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#818CF8] focus:border-transparent focus:bg-white shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-[#818CF8] file:text-white file:font-medium hover:file:bg-[#6366F1]"
                   />
                 </div>
                 {previewUrl && (
                   <div className="mt-3 rounded-2xl overflow-hidden border border-slate-200">
-                    <img src={previewUrl} alt="Preview" className="w-full h-48 object-cover" />
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="w-full h-48 object-cover"
+                    />
                   </div>
                 )}
-                <p className="text-xs text-slate-400 ml-1 mt-1">Both image options are optional</p>
+                <p className="text-xs text-slate-400 ml-1 mt-1">
+                  Both image options are optional
+                </p>
               </div>
 
               {/* Action Buttons */}
@@ -288,12 +334,12 @@ const CreateBlog = () => {
                   type="button"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate('/admin/dashboard')}
+                  onClick={() => navigate("/admin/dashboard")}
                   className="flex-1 py-4 rounded-2xl font-bold text-lg text-slate-600 bg-white/70 border border-slate-200 transition-all duration-300"
                 >
                   Cancel
                 </motion.button>
-                
+
                 <motion.button
                   type="submit"
                   whileHover={{ scale: 1.02 }}
@@ -307,7 +353,6 @@ const CreateBlog = () => {
                   </span>
                 </motion.button>
               </div>
-
             </form>
           </motion.div>
         </div>

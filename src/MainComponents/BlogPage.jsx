@@ -96,52 +96,72 @@ const BlogPage = () => {
       </section>
 
       {/* Blog Content Layout */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="flex flex-col lg:flex-row gap-12">
-          
-          {/* Sticky Sidebar Navigation */}
-          <aside className="lg:w-64 shrink-0">
-            <div className="sticky top-32 self-start">
-              <h3 className="text-[#0F172A] font-bold text-lg mb-6">Blog Categories</h3>
-              <div className="space-y-2">
-                {categories.map((category) => (
-                  <motion.button
-                    key={category.id}
-                    onClick={() => setActiveCategory(category.id)}
-                    whileHover={{ x: 4 }}
-                    className={`w-full text-left p-4 rounded-xl transition-all relative overflow-hidden ${
-                      activeCategory === category.id 
-                        ? 'bg-white shadow-md' 
-                        : 'bg-transparent hover:bg-white/50'
-                    }`}
-                  >
-                    {activeCategory === category.id && (
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#22D3EE] rounded-l-xl" />
-                    )}
-                    
-                    <div className="flex items-center gap-3">
-                      <span className="text-lg">{category.icon}</span>
-                      <div>
-                        <p className={`font-medium transition-colors ${activeCategory === category.id ? 'text-[#0F172A] font-bold' : 'text-slate-700 hover:text-[#22D3EE]'}`}>
-                          {category.name}
-                        </p>
-                        <p className="text-xs text-slate-400 mt-1">{category.description}</p>
-                      </div>
-                      {category.isLive && (
-                        <span className="ml-auto flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#22D3EE] opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22D3EE]"></span>
-                        </span>
-                      )}
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-          </aside>
+      <div className="flex flex-col lg:flex-row px-4 md:px-8 pb-16 pt-8">
+        
+        {/* Desktop Sticky Sidebar */}
+        <div className="hidden lg:block w-1/5 sticky top-32 h-fit pr-8">
+          <h3 className="text-[#0F172A] font-bold text-lg mb-6">Blog Categories</h3>
+          <div className="space-y-2">
+            {categories.map((category) => (
+              <motion.button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                whileHover={{ x: 4 }}
+                className={`w-full text-left p-4 rounded-xl transition-all relative ${
+                  activeCategory === category.id 
+                    ? 'bg-white shadow-md' 
+                    : 'bg-transparent hover:bg-white/50'
+                }`}
+              >
+                {activeCategory === category.id && (
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#22D3EE] rounded-l-xl" />
+                )}
+                
+                <div className="flex items-center gap-3">
+                  <span className="text-lg">{category.icon}</span>
+                  <div>
+                    <p className={`font-medium ${activeCategory === category.id ? 'text-[#0F172A] font-bold' : 'text-slate-700'}`}>
+                      {category.name}
+                    </p>
+                    <p className="text-xs text-slate-400 mt-1">{category.description}</p>
+                  </div>
+                  {category.isLive && (
+                    <span className="ml-auto flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#22D3EE] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22D3EE]"></span>
+                    </span>
+                  )}
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </div>
 
-          {/* Blog Cards Grid */}
-          <main className="flex-1">
+        {/* Mobile Horizontal Scrollable Categories */}
+        <div className="lg:hidden overflow-x-auto py-4 -mx-4 px-4 scrollbar-hide mb-6">
+          <div className="flex gap-3 w-max">
+            {categories.map((category) => (
+              <motion.button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                whileTap={{ scale: 0.95 }}
+                className={`px-5 py-3 rounded-full whitespace-nowrap transition-all ${
+                  activeCategory === category.id 
+                    ? 'bg-[#22D3EE] text-[#0F172A] font-medium shadow-md' 
+                    : 'bg-white text-slate-700 border border-slate-200'
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  {category.icon} {category.name}
+                  {category.isLive && <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>}
+                </span>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+
+        {/* Blog Cards Grid */}
+        <div className="lg:w-4/5">
             {loading ? (
               <div className="flex justify-center items-center py-20">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22D3EE]"></div>
@@ -152,7 +172,7 @@ const BlogPage = () => {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-8 gap-x-0 md:ml-10">
                   {filteredBlogs.map((blog) => (
                     <Card 
                       key={blog._id || blog.id}
@@ -188,8 +208,6 @@ const BlogPage = () => {
                 )}
               </>
             )}
-          </main>
-
         </div>
       </div>
 

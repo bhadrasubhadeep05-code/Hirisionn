@@ -56,7 +56,6 @@ const AudioLibrary = () => {
         };
         return audio.subCategory === subcategoryMap[activeCategory];
       });
-
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       <NavBar2 progress={1} />
@@ -194,6 +193,7 @@ const AudioLibrary = () => {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 justify-items-center">
                 {filteredAudios.map((item, index) => (
+              
                   <motion.div
                     key={item._id}
                     initial={{ opacity: 0 }}
@@ -203,7 +203,7 @@ const AudioLibrary = () => {
                     <AudioCard 
                       title={item.title}
                       description={item.description}
-                      author={item.author}
+                      author={item.authorName}
                       youtubeLink={item.vid_link}
                     />
                   </motion.div>

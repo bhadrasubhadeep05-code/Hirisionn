@@ -16,3 +16,7 @@ export const getworkforce = async () =>{
     const res = await api.get("/blog/industry");
     return res.data
 }
+export const getBlogById = async (id) =>{
+    const res = await api.get(`/blog/get-blog/${id}`);
+    return res.data
+};

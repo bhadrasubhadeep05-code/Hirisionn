@@ -250,7 +250,7 @@ const IndustryInsights = () => {
                       <VideoCard 
                         title={item.title}
                         author={item.author}
-                        category={item.category}
+                        category={item.subCategory}
                         youtubeLink={item.vid_link}
                         createdAt={item.createdAt}
                       />
@@ -288,7 +288,7 @@ const IndustryInsights = () => {
                       <AudioCard 
                         title={item.title}
                         description={item.description}
-                        author={item.author}
+                        author={item.authorName}
                         youtubeLink={item.vid_link}
                       />
                     </motion.div>
