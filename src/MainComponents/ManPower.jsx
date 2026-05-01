@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AppContext from '../context/AppContext'
-import video from '../assets/video3.mp4'
+import video from '../assets/video4.mp4'
 import NavBar2 from './NavBar2'
 
 const ManPower = () => {

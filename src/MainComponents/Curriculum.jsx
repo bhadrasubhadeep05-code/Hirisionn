@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import AppContext from "../context/AppContext";
 import NavBar2 from "./NavBar2";
-import video from "../assets/video8.mp4";
+import video from "../assets/video7.mp4";
 import { softSkillsApply } from "../services/user.api";
 
 /* ---------------- Animations ---------------- */

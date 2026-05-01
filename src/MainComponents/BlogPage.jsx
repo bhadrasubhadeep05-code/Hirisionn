@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion';
 import Card from './Card'
-import Video from '../assets/video3.mp4'
+import Video from '../assets/video4.mp4'
 import NavBar2 from './NavBar2'
 import { getBlog } from '../services/blog.api';
 
