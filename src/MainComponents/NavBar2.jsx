@@ -2,38 +2,14 @@ import React, { useState, useContext } from "react";
 import logo from "../assets/logoTeansparent.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import AppContext from "../context/AppContext";
-import {
-  motion,
-  useScroll,
-  useMotionValueEvent,
-  AnimatePresence,
-} from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 
-const NavBar2 = ({ progress }) => {
-  const {user} = useContext(AppContext)
-  const { scrollY } = useScroll();
+const NavBar2 = () => {
+  const { user } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const [hidden, setHidden] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Hide / show navbar based on scroll direction
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious();
-    if (previous === undefined) return;
-
-    if (latest > previous && latest > 80) {
-      setHidden(true);
-      console.log("changed")
-      setOpenDropdown(null);
-    } else {
-      setHidden(false);
-    }
-  });
-
-  // Fade in effect based on the landing page progress
-  const navbarProgress = Math.max(0, Math.min((progress - 0.3) / 0.7, 1));
 
   const toggleDropdown = (name) => {
     setOpenDropdown(openDropdown === name ? null : name);
@@ -87,15 +63,9 @@ const NavBar2 = ({ progress }) => {
 
   return (
     <motion.nav
-      className="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300"
-      animate={{
-        y: hidden ? -250 : 0,
-        opacity: navbarProgress,
-      }}
-      style={{
-        backdropFilter: `blur(${navbarProgress * 10}px)`,
-      }}
-    >
+  className="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 bg-white/90 backdrop-blur-md shadow-lg"
+>
+    
       {/* --- TOP HEADER SECTION --- */}
       <div className="relative h-20 md:h-24 w-full bg-white/80 backdrop-blur-md flex items-center justify-between md:justify-center px-4 md:px-12 border-b border-slate-200">
         
