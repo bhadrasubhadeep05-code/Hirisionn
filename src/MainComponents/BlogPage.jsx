@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import Card from './Card'
 import Video from '../assets/video4.mp4'
 import NavBar2 from './NavBar2'
 import { getBlog } from '../services/blog.api';
+import AppContext from '../context/AppContext';
 
 const BlogPage = () => {
+  const { startLoading, stopLoading } = useContext(AppContext);
   const [activeCategory, setActiveCategory] = useState(1);
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,27 +26,26 @@ const BlogPage = () => {
     { id: 7, name: "Problem Solving", description: "How we solved challenges", isLive: true },
   ];
 
-  const fetchBlogs = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await getBlog(page);
-      setBlogs(response.data || []);
-      setTotalPages(response.totalPages || 1);
-    } catch (err) {
-      console.error('Error fetching blogs:', err);
-      setBlogs([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [page]);
-
   useEffect(() => {
-    fetchBlogs();
-  }, [fetchBlogs]);
+    const loadBlogs = async () => {
+      setLoading(true);
+      startLoading();
 
-  useEffect(() => {
-    fetchBlogs();
-  }, [fetchBlogs]);
+      try {
+        const response = await getBlog(page);
+        setBlogs(response.data || []);
+        setTotalPages(response.totalPages || 1);
+      } catch (err) {
+        console.error('Error fetching blogs:', err);
+        setBlogs([]);
+      } finally {
+        setLoading(false);
+        stopLoading();
+      }
+    };
+
+    loadBlogs();
+  }, [page, startLoading, stopLoading]);
 
   // Filter blogs based on selected subcategory
   const filteredBlogs = activeCategory === 1 

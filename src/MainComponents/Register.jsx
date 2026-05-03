@@ -56,6 +56,7 @@ const Register = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const securityQuestions = [
     "What was your first pet's name?",
@@ -91,60 +92,73 @@ const Register = () => {
       return;
     }
 
-    const userData = {
-      fullName: formData.fullName,
+    setIsLoading(true);
+    try {
+      const userData = {
+        fullName: formData.fullName,
         email: formData.email,
-    phoneNo: formData.phoneNo,
-    password: formData.password, 
-    confirmPassword: formData.confirmPassword,
-    securityQuestion1: formData.securityQuestion1,
-    securityAnswer1: formData.securityAnswer1,
-    securityQuestion2:formData.securityQuestion2,
-    securityAnswer2: formData.securityAnswer2
+        phoneNo: formData.phoneNo,
+        password: formData.password, 
+        confirmPassword: formData.confirmPassword,
+        securityQuestion1: formData.securityQuestion1,
+        securityAnswer1: formData.securityAnswer1,
+        securityQuestion2:formData.securityQuestion2,
+        securityAnswer2: formData.securityAnswer2
+      }
+      const res = await register(userData)
+      setToken(res.token);
+      // ✅ Immediately fetch user data after successful registration
+      await fetchUser(res.token);
+      
+      if(res.succes){
+        setCurrentStep(2); // Move to Form 2
+      }
+    } catch (err) {
+      setError(err.message || "Registration failed, please try again");
+    } finally {
+      setIsLoading(false);
     }
-    const res = await register(userData)
-    setToken(res.token);
-    // ✅ Immediately fetch user data after successful registration
-    await fetchUser(res.token);
-    
-    if(res.succes){
-      setCurrentStep(2); // Move to Form 2
-    }
-    
   };
   
   const handleForm2Submit = async (e) => {
     e.preventDefault();
-    const base64 = await toBase64(formData.resume);
-    const data = {
-    experienceLevel: formData.experienceLevel,
-    job: formData.job,
-    employer: formData.employer,
-    currentCTC: formData.currentCTC,
-    course: formData.course,
-    domain: formData.domain,
-    education: formData.education,
-    linkedin: formData.linkedin,
-    resume: base64
+    setIsLoading(true);
+    try {
+      const base64 = await toBase64(formData.resume);
+      const data = {
+        experienceLevel: formData.experienceLevel,
+        job: formData.job,
+        employer: formData.employer,
+        currentCTC: formData.currentCTC,
+        course: formData.course,
+        domain: formData.domain,
+        education: formData.education,
+        linkedin: formData.linkedin,
+        resume: base64
+      }
+      const res = await completeProfile(data);
+      alert(res.message);
+      
+      // Combine all data
+      const completeUserData = {
+        ...formData,
+        name: formData.fullName,
+        phone: formData.phoneNo
+      };
+      
+      console.log("Complete User Data:", completeUserData);
+      setSubmitted(true);
+      
+      // Redirect to login or dashboard after 3 seconds
+      setTimeout(() => {
+        setSubmitted(false);
+        navigate("/"); 
+      }, 3000);
+    } catch (err) {
+      alert(err.message || "Profile submission failed, please try again");
+    } finally {
+      setIsLoading(false);
     }
-    const res = await completeProfile(data);
-    alert(res.message);
-    
-    // Combine all data
-    const completeUserData = {
-      ...formData,
-      name: formData.fullName,
-      phone: formData.phoneNo
-    };
-    
-    console.log("Complete User Data:", completeUserData);
-    setSubmitted(true);
-    
-    // Redirect to login or dashboard after 3 seconds
-    setTimeout(() => {
-      setSubmitted(false);
-      navigate("/login"); 
-    }, 3000);
   };
 
   const handleSkipForm2 = () => {
@@ -353,13 +367,24 @@ const Register = () => {
                   {/* Submit Button */}
                   <motion.button
                     type="submit"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative w-full py-4 rounded-2xl font-bold text-lg text-white bg-[#0F172A] transition-all duration-300 shadow-xl shadow-[#0F172A]/20 overflow-hidden"
+                    whileHover={!isLoading ? { scale: 1.02 } : {}}
+                    whileTap={!isLoading ? { scale: 0.98 } : {}}
+                    disabled={isLoading}
+                    className={`group relative w-full py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 shadow-xl overflow-hidden ${isLoading ? 'bg-slate-500 cursor-not-allowed shadow-none' : 'bg-[#0F172A] shadow-[#0F172A]/20'}`}
                   >
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                     <span className="relative z-10 flex items-center justify-center gap-2">
-                      Continue →
+                      {isLoading ? (
+                        <>
+                          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Processing...
+                        </>
+                      ) : (
+                        "Continue →"
+                      )}
                     </span>
                     <div className="absolute bottom-0 left-0 w-full h-1 bg-[#22D3EE] shadow-[0_0_10px_#22D3EE]" />
                   </motion.button>
@@ -496,19 +521,27 @@ const Register = () => {
                   <div className="flex flex-col gap-3 pt-4">
                     <motion.button
                       type="submit"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="group relative w-full py-4 rounded-2xl font-bold text-lg text-white bg-gradient-to-r from-[#22D3EE] to-[#818CF8] transition-all duration-300 shadow-xl"
-                      disabled={submitted}
+                      whileHover={!isLoading && !submitted ? { scale: 1.02 } : {}}
+                      whileTap={!isLoading && !submitted ? { scale: 0.98 } : {}}
+                      disabled={isLoading || submitted}
+                      className={`group relative w-full py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 shadow-xl ${isLoading ? 'bg-slate-400 cursor-not-allowed shadow-none' : 'bg-gradient-to-r from-[#22D3EE] to-[#818CF8]'}`}
                     >
-                      {submitted ? "✓ Submitted Successfully" : "Complete Registration"}
+                      {isLoading ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Processing...
+                        </span>
+                      ) : submitted ? "✓ Submitted Successfully" : "Complete Registration"}
                     </motion.button>
 
                     <button
                       type="button"
                       onClick={handleSkipForm2}
                       className="w-full py-3 rounded-2xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all duration-300"
-                      disabled={submitted}
+                      disabled={isLoading || submitted}
                     >
                       Skip for now →
                     </button>

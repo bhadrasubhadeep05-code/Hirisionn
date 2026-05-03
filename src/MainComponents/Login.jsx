@@ -19,6 +19,7 @@ const Login = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,27 +34,32 @@ const Login = () => {
       return;
     }
 
-    const data = {
-      phoneNo:formData.phoneNo,
-       password: formData.password
+    setIsLoading(true);
+    try {
+      const data = {
+        phoneNo:formData.phoneNo,
+        password: formData.password
+      }
+      const res = await login(data);
+      setToken(res.token);
+      // ✅ Immediately fetch user data after login
+      await fetchUser(res.token);
+      
+      if(res.succes){
+        setSubmitted(true);
+        setTimeout(() => {
+          setSubmitted(false);
+          // On successful login navigate to dashboard
+          navigate("/"); 
+        }, 2000);
+      }else{
+        alert(res.message)
+      }
+    } catch (err) {
+      setError(err.message || "Login failed, please try again");
+    } finally {
+      setIsLoading(false);
     }
-    const res = await login(data);
-    setToken(res.token);
-    // ✅ Immediately fetch user data after login
-    await fetchUser(res.token);
-    
-    if(res.succes){
-    setSubmitted(true);
-       setTimeout(() => {
-      setSubmitted(false);
-      // On successful login navigate to dashboard
-      navigate("/"); 
-    }, 2000);
-    }else{
-      alert(res.message)
-    }
-    
- 
   };
 
   const handleForgotPassword = () => {
@@ -154,14 +160,22 @@ const Login = () => {
               {/* Submit Button - Glossy Style */}
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="group relative w-full py-4 rounded-2xl font-bold text-lg text-white bg-[#0F172A] transition-all duration-300 shadow-xl shadow-[#0F172A]/20 overflow-hidden"
-                disabled={submitted}
+                whileHover={!isLoading && !submitted ? { scale: 1.02 } : {}}
+                whileTap={!isLoading && !submitted ? { scale: 0.98 } : {}}
+                disabled={isLoading || submitted}
+                className={`group relative w-full py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 shadow-xl overflow-hidden ${isLoading ? 'bg-slate-500 cursor-not-allowed shadow-none' : 'bg-[#0F172A] shadow-[#0F172A]/20'}`}
               >
                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                 <span className="relative z-10 flex items-center justify-center gap-2">
-                  {submitted ? "Signing In..." : "Sign In"}
+                  {isLoading ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Signing In...
+                    </>
+                  ) : submitted ? "✓ Success" : "Sign In"}
                 </span>
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-[#22D3EE] shadow-[0_0_10px_#22D3EE]" />
               </motion.button>

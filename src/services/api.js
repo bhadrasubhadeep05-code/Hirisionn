@@ -1,5 +1,8 @@
 import axios from "axios";
 
+// Global loading counter to handle parallel requests
+let activeRequests = 0;
+
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true,
@@ -8,7 +11,7 @@ const api = axios.create({
     },
 });
 
-// 🔥 Attach token automatically
+// 🔥 Request Interceptor: Show loading bar when API call starts
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
@@ -16,12 +19,33 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
+  // Start loading bar on first request
+  if (activeRequests === 0) {
+    // Dispatch custom event to trigger loading bar globally
+    window.dispatchEvent(new CustomEvent('startPageLoading'));
+  }
+  activeRequests++;
+
   return config;
 });
 
+// 🔥 Response Interceptor: Hide loading bar when API call completes
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    activeRequests--;
+    // Stop loading bar when all requests complete
+    if (activeRequests === 0) {
+      window.dispatchEvent(new CustomEvent('stopPageLoading'));
+    }
+    return response;
+  },
   (error) => {
+    activeRequests--;
+    // Always stop loading bar even on error
+    if (activeRequests === 0) {
+      window.dispatchEvent(new CustomEvent('stopPageLoading'));
+    }
+
     if (error.response?.status === 401) {
       
       // 🔥 Token expired or invalid

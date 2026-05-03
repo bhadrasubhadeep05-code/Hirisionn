@@ -1,13 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import NavBar2 from './NavBar2';
 import Footer from './Footer';
 import { updateUser } from '../services/user.api';
 import AppContext from '../context/AppContext';
-import { motion  } from 'motion/react';
 
 const Profile = () => {
-  const { user, fetchUser } = useContext(AppContext);
+  const { user, fetchUser, setToken } = useContext(AppContext);
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -28,25 +29,27 @@ const Profile = () => {
     resume: null,
   });
 
-  // Load user data into form when component mounts
-  useEffect(() => {
-    if (user) {
-      setFormData(prev => ({
-        ...prev,
-        fullName: user.fullName || "",
-        email: user.email || "",
-        phoneNo: user.phoneNo || "",
-        experienceLevel: user.experienceLevel || "",
-        job: user.job || "",
-        employer: user.employer || "",
-        currentCTC: user.currentCTC || "",
-        course: user.course || "",
-        domain: user.domain || "",
-        education: user.education || "",
-        linkedin: user.linkedin || "",
-      }));
-    }
-  }, [user]);
+  // Load user data into form when user context changes
+useEffect(() => {
+  if (user) {
+    setFormData({
+      fullName: user.fullName || "",
+      email: user.email || "",
+      phoneNo: user.phoneNo || "",
+
+      experienceLevel: user.profile?.experienceLevel || "",
+      job: user.profile?.job || "",
+      employer: user.profile?.employer || "",
+      currentCTC: user.profile?.currentCTC || "",
+      course: user.profile?.course || "",
+      domain: user.profile?.domain || "",
+      education: user.profile?.education || "",
+      linkedin: user.profile?.linkedin || "",
+
+      resume: null,
+    });
+  }
+}, [user]);
 
   const toBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -373,7 +376,7 @@ const Profile = () => {
                        disabled={!isEditing}
                        className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent disabled:opacity-70 disabled:cursor-not-allowed"
                      />
-                    {user?.resume && !isEditing && (
+                    {user?.profile?.resume && !isEditing && (
                       <p className="text-xs text-slate-500 mt-1">
                         ✅ Resume already uploaded
                       </p>
@@ -420,16 +423,148 @@ const Profile = () => {
                     {submitted ? "✓ Saving Changes..." : "Save Profile Changes"}
                   </motion.button>
                 )}
-              </AnimatePresence>
-              
-            </form>
-          </motion.div>
-        </div>
-      </main>
+               </AnimatePresence>
+               
+             </form>
 
-      <Footer />
-    </div>
-  );
-};
+             {/* ==================== APPLICATION STATUS CARDS ==================== */}
+             <div className="mt-8 space-y-5">
+               
+               {/* Internship Interests */}
+               {user?.internshipInterests && Array.isArray(user.internshipInterests) && user.internshipInterests.length > 0 && (
+                 <motion.div
+                   initial={{ opacity: 0, y: 10 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ delay: 0.3 }}
+                   className="backdrop-blur-2xl bg-white/60 rounded-[2rem] p-6 border border-white/50 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)]"
+                 >
+                   <div className="flex items-center gap-3 mb-4">
+                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#818CF8] to-[#6366F1] flex items-center justify-center">
+                       <span className="text-lg">🎓</span>
+                     </div>
+                     <h3 className="text-sm font-bold uppercase tracking-widest text-[#0F172A]">Internship Applications</h3>
+                   </div>
+                   <div className="flex flex-wrap gap-2">
+                     {user.internshipInterests.map((interest, idx) => (
+                       <span key={idx} className="inline-flex items-center px-4 py-2 rounded-xl bg-[#818CF8]/10 text-[#4F46E5] font-semibold text-sm border border-[#818CF8]/20">
+                         {interest.category || interest}
+                       </span>
+                     ))}
+                   </div>
+                 </motion.div>
+               )}
+
+               {/* Job Placement */}
+               {user?.jobPlacement && user.jobPlacement.applied && (
+                 <motion.div
+                   initial={{ opacity: 0, y: 10 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ delay: 0.4 }}
+                   className="backdrop-blur-2xl bg-white/60 rounded-[2rem] p-6 border border-white/50 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)]"
+                 >
+                   <div className="flex items-center justify-between">
+                     <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#22D3EE] to-[#06B6D4] flex items-center justify-center">
+                         <span className="text-lg">💼</span>
+                       </div>
+                       <div>
+                         <h3 className="text-sm font-bold uppercase tracking-widest text-[#0F172A]">Job Placement</h3>
+                         <p className="text-xs text-slate-500 mt-0.5">Placement Program Application</p>
+                       </div>
+                     </div>
+                     <span className={`px-4 py-2 rounded-xl font-bold text-sm ${user.jobPlacement.status.toLowerCase() === 'fulfilled' ? 'bg-emerald-100 text-emerald-700' : user.jobPlacement.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                       {user.jobPlacement.status.toLowerCase() === 'fulfilled' ? '✅ Fulfilled' : user.jobPlacement.status.toLowerCase() === 'pending' ? '⏳ Pending' : '📝 Applied'}
+                     </span>
+                   </div>
+                 </motion.div>
+               )}
+
+               {/* Live Project */}
+               {user?.liveProject && user.liveProject.applied && (
+                 <motion.div
+                   initial={{ opacity: 0, y: 10 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ delay: 0.5 }}
+                   className="backdrop-blur-2xl bg-white/60 rounded-[2rem] p-6 border border-white/50 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)]"
+                 >
+                   <div className="flex items-center justify-between">
+                     <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#A78BFA] to-[#8B5CF6] flex items-center justify-center">
+                         <span className="text-lg">🚀</span>
+                       </div>
+                       <div>
+                         <h3 className="text-sm font-bold uppercase tracking-widest text-[#0F172A]">Live Project</h3>
+                         <p className="text-xs text-slate-500 mt-0.5">Real Industry Project Access</p>
+                       </div>
+                     </div>
+                     <span className={`px-4 py-2 rounded-xl font-bold text-sm ${user.liveProject.status.toLowerCase() === 'fulfilled' ? 'bg-emerald-100 text-emerald-700' : user.liveProject.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                       {user.liveProject.status.toLowerCase() === 'fulfilled' ? '✅ Fulfilled' : user.liveProject.status.toLowerCase() === 'pending' ? '⏳ Pending' : '📝 Applied'}
+                     </span>
+                   </div>
+                 </motion.div>
+               )}
+
+               {/* Soft Skill */}
+               {user?.softSkill && user.softSkill.applied && (
+                 <motion.div
+                   initial={{ opacity: 0, y: 10 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ delay: 0.6 }}
+                   className="backdrop-blur-2xl bg-white/60 rounded-[2rem] p-6 border border-white/50 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)]"
+                 >
+                   <div className="flex items-center justify-between">
+                     <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#34D399] to-[#10B981] flex items-center justify-center">
+                         <span className="text-lg">⭐</span>
+                       </div>
+                       <div>
+                         <h3 className="text-sm font-bold uppercase tracking-widest text-[#0F172A]">Soft Skill Program</h3>
+                         <p className="text-xs text-slate-500 mt-0.5">Personality Development Program</p>
+                       </div>
+                     </div>
+                     <span className={`px-4 py-2 rounded-xl font-bold text-sm ${user.softSkill.status.toLowerCase() === 'fulfilled' ? 'bg-emerald-100 text-emerald-700' : user.softSkill.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                       {user.softSkill.status.toLowerCase() === 'fulfilled' ? '✅ Fulfilled' : user.softSkill.status.toLowerCase() === 'pending' ? '⏳ Pending' : '📝 Applied'}
+                     </span>
+                   </div>
+                 </motion.div>
+               )}
+
+               {/* Logout Button */}
+               <motion.div
+                 initial={{ opacity: 0, y: 10 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 0.7 }}
+                 className="mt-8"
+               >
+                 <motion.button
+                   onClick={() => {
+                    localStorage.clear();
+                     setToken(null);
+                     navigate("/login");
+                   }}
+                   whileHover={{ scale: 1.02 }}
+                   whileTap={{ scale: 0.98 }}
+                   className="group relative w-full py-4 rounded-2xl font-bold text-lg text-white bg-gradient-to-r from-[#EF4444] to-[#DC2626] transition-all duration-300 shadow-xl shadow-red-500/20 overflow-hidden"
+                 >
+                   <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+                   <span className="relative z-10 flex items-center justify-center gap-2">
+                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                     </svg>
+                     Logout
+                   </span>
+                 </motion.button>
+               </motion.div>
+
+             </div>
+
+           </motion.div>
+         </div>
+       </main>
+
+          <Footer />
+        </div>
+    );
+  };
 
 export default Profile;

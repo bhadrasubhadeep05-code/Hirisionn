@@ -23,6 +23,7 @@ const ForgetPassword = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [userQuestions, setUserQuestions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +39,7 @@ const ForgetPassword = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
       const res = await verifyUserForReset({ phoneNo: formData.phoneNo });
       setUserId(res.userId);
@@ -45,6 +47,8 @@ const ForgetPassword = () => {
       setCurrentStep(2);
     } catch (err) {
       setError(err.response?.data?.message || "User not found with this phone number");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,6 +60,7 @@ const ForgetPassword = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
       const res = await verifySecurityAnswers({
         userId,
@@ -66,6 +71,8 @@ const ForgetPassword = () => {
       setCurrentStep(3);
     } catch (err) {
       setError(err.response?.data?.message || "Security answers are incorrect");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -82,6 +89,7 @@ const ForgetPassword = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
       setSubmitted(true);
       await resetPassword({
@@ -97,6 +105,8 @@ const ForgetPassword = () => {
     } catch (err) {
       setSubmitted(false);
       setError(err.response?.data?.message || "Failed to reset password");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -192,13 +202,24 @@ const ForgetPassword = () => {
                   {/* Submit Button */}
                   <motion.button
                     type="submit"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative w-full py-4 rounded-2xl font-bold text-lg text-white bg-[#0F172A] transition-all duration-300 shadow-xl shadow-[#0F172A]/20 overflow-hidden"
+                    whileHover={!isLoading ? { scale: 1.02 } : {}}
+                    whileTap={!isLoading ? { scale: 0.98 } : {}}
+                    disabled={isLoading}
+                    className={`group relative w-full py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 shadow-xl overflow-hidden ${isLoading ? 'bg-slate-500 cursor-not-allowed shadow-none' : 'bg-[#0F172A] shadow-[#0F172A]/20'}`}
                   >
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                     <span className="relative z-10 flex items-center justify-center gap-2">
-                      Continue →
+                      {isLoading ? (
+                        <>
+                          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Processing...
+                        </>
+                      ) : (
+                        "Continue →"
+                      )}
                     </span>
                     <div className="absolute bottom-0 left-0 w-full h-1 bg-[#22D3EE] shadow-[0_0_10px_#22D3EE]" />
                   </motion.button>
@@ -262,12 +283,23 @@ const ForgetPassword = () => {
                   <div className="flex flex-col gap-3">
                     <motion.button
                       type="submit"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="group relative w-full py-4 rounded-2xl font-bold text-lg text-white bg-[#0F172A] transition-all duration-300 shadow-xl shadow-[#0F172A]/20 overflow-hidden"
+                      whileHover={!isLoading ? { scale: 1.02 } : {}}
+                      whileTap={!isLoading ? { scale: 0.98 } : {}}
+                      disabled={isLoading}
+                      className={`group relative w-full py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 shadow-xl overflow-hidden ${isLoading ? 'bg-slate-500 cursor-not-allowed shadow-none' : 'bg-[#0F172A] shadow-[#0F172A]/20'}`}
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
-                        Verify Answers →
+                        {isLoading ? (
+                          <>
+                            <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Verifying...
+                          </>
+                        ) : (
+                          "Verify Answers →"
+                        )}
                       </span>
                     </motion.button>
 
@@ -350,12 +382,20 @@ const ForgetPassword = () => {
                   <div className="flex flex-col gap-3">
                     <motion.button
                       type="submit"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="group relative w-full py-4 rounded-2xl font-bold text-lg text-white bg-gradient-to-r from-[#22D3EE] to-[#818CF8] transition-all duration-300 shadow-xl"
-                      disabled={submitted}
+                      whileHover={!isLoading && !submitted ? { scale: 1.02 } : {}}
+                      whileTap={!isLoading && !submitted ? { scale: 0.98 } : {}}
+                      disabled={isLoading || submitted}
+                      className={`group relative w-full py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 shadow-xl ${isLoading ? 'bg-slate-400 cursor-not-allowed shadow-none' : 'bg-gradient-to-r from-[#22D3EE] to-[#818CF8]'}`}
                     >
-                      {submitted ? "✓ Password Reset" : "Reset Password"}
+                      {isLoading ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Resetting...
+                        </span>
+                      ) : submitted ? "✓ Password Reset" : "Reset Password"}
                     </motion.button>
 
                     <button

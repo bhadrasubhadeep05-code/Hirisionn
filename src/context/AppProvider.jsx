@@ -8,7 +8,7 @@ const AppProvider = ({ children }) => {
   const [ProfileComplete, setProfileComplete] = useState(false);
   const [user, setUser]= useState({})
   const [loading, setLoading] = useState(true);
-
+  const [isPageLoading, setIsPageLoading] = useState(false);
   // Fetch user data - can be called on app load and after login/register
   const fetchUser = useCallback(async (authToken = token) => {
     if (!authToken) {
@@ -24,8 +24,8 @@ const AppProvider = ({ children }) => {
       localStorage.setItem("token", authToken);
       
       const userData = await getUser();
-      setUser(userData);
-      setProfileComplete(userData.isProfileComplete  || false);
+      setUser(userData.user);
+      setProfileComplete(userData.user.isProfileComplete  || false);
     } catch (error) {
       console.error("Failed to fetch user:", error);
       // Clear invalid token
@@ -51,6 +51,15 @@ const AppProvider = ({ children }) => {
     }
   }, [token]);
 
+  // Loading bar control functions
+  const startLoading = useCallback(() => {
+    setIsPageLoading(true);
+  }, []);
+
+  const stopLoading = useCallback(() => {
+    setIsPageLoading(false);
+  }, []);
+
 
 
   return (
@@ -62,7 +71,10 @@ const AppProvider = ({ children }) => {
       user, 
       setUser,
       loading,
-      fetchUser 
+      fetchUser,
+      isPageLoading,
+      startLoading,
+      stopLoading
     }}>
       {children}
     </AppContext.Provider>
