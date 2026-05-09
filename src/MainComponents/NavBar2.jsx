@@ -132,7 +132,7 @@ const NavBar2 = () => {
       <AnimatePresence>
         {(isPageLoading || progress > 0) && (
           <motion.div
-            className="fixed top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#22D3EE] via-[#818CF8] to-[#22D3EE] shadow-2xl z-[9999]"
+            className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#22D3EE] via-[#818CF8] to-[#22D3EE] shadow-2xl z-[9999]"
             style={{
               boxShadow:
                 "0 0 20px rgba(34, 211, 238, 0.8), 0 0 40px rgba(129, 140, 248, 0.5)",

@@ -14,7 +14,7 @@ const Register = () => {
   
 
    // If token exists already, start directly on Form 2 (profile completion), else show Form 1 (account creation)
-   const [currentStep, setCurrentStep] = useState(ProfileComplete ? 1 : 2);
+   const [currentStep, setCurrentStep] = useState(1);
 
   // Update step when token changes after component mount (fix for async context loading)
   React.useEffect(() => {
