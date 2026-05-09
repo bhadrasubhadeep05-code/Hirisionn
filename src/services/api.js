@@ -13,11 +13,12 @@ const api = axios.create({
 
 // 🔥 Request Interceptor: Show loading bar when API call starts
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  // Production uses HTTP-only cookie auth; Authorization header is not required.
+  // For localhost/dev mode, you can restore the old localStorage fallback by uncommenting:
+  // const token = localStorage.getItem("token");
+  // if (token) {
+  //   config.headers.Authorization = `Bearer ${token}`;
+  // }
 
   // Start loading bar on first request
   if (activeRequests === 0) {
