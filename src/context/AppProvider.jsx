@@ -8,6 +8,7 @@ const AppProvider = ({ children }) => {
     import.meta.env.PROD ? "" : localStorage.getItem("token") || ""
   );
   const [ProfileComplete, setProfileComplete] = useState(false);
+  const [formContext, setFormContext] = useState(true);
   const [user, setUser]= useState({})
   const [loading, setLoading] = useState(true);
   const [isPageLoading, setIsPageLoading] = useState(false);
@@ -30,6 +31,7 @@ const AppProvider = ({ children }) => {
       const userData = await getUser();
       setUser(userData.user);
       setProfileComplete(userData.user.isProfileComplete  || false);
+      setFormContext(userData.user.isProfileComplete)
     } catch (error) {
       console.error("Failed to fetch user:", error);
       // Clear invalid token
@@ -85,7 +87,8 @@ const AppProvider = ({ children }) => {
       fetchUser,
       isPageLoading,
       startLoading,
-      stopLoading
+      stopLoading,
+      formContext
     }}>
       {children}
     </AppContext.Provider>

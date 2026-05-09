@@ -8,20 +8,16 @@ import AppContext from '../context/AppContext';
 
 const Register = () => {
   //setToken, use this in dev
- const {  fetchUser, ProfileComplete } = useContext(AppContext);
+ const {  fetchUser, ProfileComplete, formContext } = useContext(AppContext);
    const navigate = useNavigate();
 
   
 
    // If token exists already, start directly on Form 2 (profile completion), else show Form 1 (account creation)
-   const [currentStep, setCurrentStep] = useState(1);
+   const [currentStep, setCurrentStep] = useState(formContext ? 1 : 2);
 
   // Update step when token changes after component mount (fix for async context loading)
-  React.useEffect(() => {
-    if (!ProfileComplete) {
-      setCurrentStep(2);
-    }
-  }, [ProfileComplete]);
+
 
   const toBase64 = (file) => {
   return new Promise((resolve, reject) => {

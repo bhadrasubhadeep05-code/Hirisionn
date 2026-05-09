@@ -37,7 +37,8 @@ import AdminInternship from './admin/AdminInternship';
 import AdminPlacements from './admin/AdminPlacements';
 import AdminLiveProject from './admin/AdminLiveProject';
 import AdminSoftSkill from './admin/AdminSoftSkill';
-import { Analytics } from "@vercel/analytics/next"
+
+
 
 
 function App() {
@@ -47,7 +48,6 @@ function App() {
   return (
     <>
     <Routes>  
-      <Analytics />
       <Route path="/" element={
         <>
         
