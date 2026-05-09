@@ -37,6 +37,12 @@ export const getUser  = async () =>{
     return res.data;
 }
 
+//logout
+export const logout  = async () =>{
+    const res = await api.post("/user/logout");
+    return res.data;
+}
+
 //update user
 export const updateUser = async(data)=>{
     const res = await api.put("/user/update", data);

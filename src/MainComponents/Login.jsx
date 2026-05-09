@@ -7,7 +7,8 @@ import {login } from '../services/user.api';
 import AppContext from '../context/AppContext';
 
 const Login = () => {
-  const { setToken, fetchUser } = useContext(AppContext);
+  //setToken, use this in dev
+  const { fetchUser } = useContext(AppContext);
   const navigate = useNavigate();
 
  
@@ -41,9 +42,9 @@ const Login = () => {
         password: formData.password
       }
       const res = await login(data);
-      setToken(res.token);
+      // setToken(res.token);
       // ✅ Immediately fetch user data after login
-      await fetchUser(res.token);
+      await fetchUser();
       
       if(res.succes){
         setSubmitted(true);

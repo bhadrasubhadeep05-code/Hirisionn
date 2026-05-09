@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import NavBar2 from '../MainComponents/NavBar2';
 import Footer from '../MainComponents/Footer';
+import { adminLogout } from '../services/admin.api';
 
 // Icons
 const BlogIcon = () => (
@@ -43,6 +44,22 @@ const PlusIcon = () => (
 
 const AdminPanel = () => {
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await adminLogout();
+      if (!import.meta.env.PROD) {
+        localStorage.removeItem('adminToken');
+      }
+      localStorage.removeItem('isAdmin');
+      navigate('/admin');
+    } catch (error) {
+      console.error('Admin logout failed:', error);
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('isAdmin');
+      navigate('/admin');
+    }
+  };
 
   const dashboardCards = [
     {
@@ -138,6 +155,15 @@ const AdminPanel = () => {
             <p className="text-slate-500 font-medium text-lg">
               Manage content, users and job postings from one place.
             </p>
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="inline-flex items-center justify-center rounded-full border border-red-300 bg-red-50 px-5 py-3 text-sm font-semibold text-red-700 transition hover:bg-red-100"
+              >
+                Logout
+              </button>
+            </div>
           </motion.div>
 
           {/* Dashboard Cards Grid */}

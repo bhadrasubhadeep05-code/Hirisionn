@@ -3,11 +3,11 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import NavBar2 from './NavBar2';
 import Footer from './Footer';
-import { updateUser } from '../services/user.api';
+import { updateUser, logout } from '../services/user.api';
 import AppContext from '../context/AppContext';
 
 const Profile = () => {
-  const { user, fetchUser, setToken } = useContext(AppContext);
+  const { user, fetchUser } = useContext(AppContext);
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -538,8 +538,7 @@ useEffect(() => {
                >
                  <motion.button
                    onClick={() => {
-                    localStorage.clear();
-                     setToken(null);
+                    logout();
                      navigate("/login");
                    }}
                    whileHover={{ scale: 1.02 }}

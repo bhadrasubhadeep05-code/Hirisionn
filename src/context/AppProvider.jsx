@@ -29,7 +29,6 @@ const AppProvider = ({ children }) => {
       
       const userData = await getUser();
       setUser(userData.user);
-      console.log(userData.user)
       setProfileComplete(userData.user.isProfileComplete  || false);
     } catch (error) {
       console.error("Failed to fetch user:", error);

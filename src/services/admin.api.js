@@ -104,4 +104,9 @@ export const updateSoftSkill = async (data) => {
     return res.data;
 };
 
+export const adminLogout = async () => {
+    const res = await adminApi.post("/admin/logout");
+    return res.data;
+};
+
 

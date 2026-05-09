@@ -9,11 +9,12 @@ const adminApi = axios.create({
 });
 
 adminApi.interceptors.request.use((config) => {
-  const token = localStorage.getItem("adminToken");
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  // Production uses HTTP-only cookie auth for admin.
+  // For localhost/dev testing, you can restore the localStorage fallback here.
+  // const token = localStorage.getItem("adminToken");
+  // if (token) {
+  //   config.headers.Authorization = `Bearer ${token}`;
+  // }
 
   return config;
 });

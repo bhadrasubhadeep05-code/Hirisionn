@@ -34,8 +34,10 @@ const AdminLogin = () => {
       const res = await adminLogin(formData);
       
       if(res.success || res.succes){
-        // Store admin token in localStorage
-        localStorage.setItem('adminToken', res.adminToken);
+        // Store admin token in localStorage only for localhost/dev testing.
+        if (!import.meta.env.PROD) {
+          localStorage.setItem('adminToken', res.adminToken);
+        }
         localStorage.setItem('isAdmin', 'true');
         
         setTimeout(() => {

@@ -7,20 +7,21 @@ import { register, completeProfile } from '../services/user.api';
 import AppContext from '../context/AppContext';
 
 const Register = () => {
- const { setToken, fetchUser, token } = useContext(AppContext);
+  //setToken, use this in dev
+ const {  fetchUser, ProfileComplete } = useContext(AppContext);
    const navigate = useNavigate();
 
   
 
    // If token exists already, start directly on Form 2 (profile completion), else show Form 1 (account creation)
-   const [currentStep, setCurrentStep] = useState(token ? 2 : 1);
+   const [currentStep, setCurrentStep] = useState(ProfileComplete ? 1 : 2);
 
   // Update step when token changes after component mount (fix for async context loading)
   React.useEffect(() => {
-    if (token) {
+    if (!ProfileComplete) {
       setCurrentStep(2);
     }
-  }, [token]);
+  }, [ProfileComplete]);
 
   const toBase64 = (file) => {
   return new Promise((resolve, reject) => {
@@ -106,9 +107,9 @@ const Register = () => {
         securityAnswer2: formData.securityAnswer2
       }
       const res = await register(userData)
-      setToken(res.token);
+      // setToken(res.token);
       // ✅ Immediately fetch user data after successful registration
-      await fetchUser(res.token);
+      await fetchUser();
       
       if(res.succes){
         setCurrentStep(2); // Move to Form 2
@@ -167,7 +168,7 @@ const Register = () => {
     
     setTimeout(() => {
       setSubmitted(false);
-      navigate("/login"); 
+      navigate("/"); 
     }, 1500);
   };
 
