@@ -96,7 +96,7 @@ const ContactUs = () => {
                       Above Reliance Smart, Sackhi, 831001
                     </p>
                     <p className="text-[#0F172A] font-medium">
-                      Jamshedpur, Jharkhad, India
+                      Jamshedpur, Jharkhand, India
                     </p>
                   </div>
                 </div>
