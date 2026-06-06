@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import NavBar2 from "./NavBar2";
-import video from "../assets/contact.mp4";
+const video = "https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778451/contact_kdvs7m.mp4";
 
 const ContactUs = () => {
 

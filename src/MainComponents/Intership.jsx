@@ -2,7 +2,7 @@ import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import AppContext from "../context/AppContext";
-import video from "../assets/video2.mp4";
+const video = "https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778447/video2_ndpc3f.mp4";
 import NavBar2 from "./NavBar2";
 import { internshipUpdate } from "../services/user.api";
 

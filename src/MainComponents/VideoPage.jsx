@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import NavBar2 from './NavBar2';
 import VideoCard from './VideoCard';
-import video from '../assets/videoPage.mp4';
+const video = 'https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778458/videoPage_yj0iny.mp4';
 import { getVideo } from '../services/video.api';
 
 // Blogs Category Subcategories for Video

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import Card from './Card'
-import Video from '../assets/video4.mp4'
+const Video = 'https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778460/video4_l67mdf.mp4'
 import NavBar2 from './NavBar2'
 import { getBlog } from '../services/blog.api';
 import AppContext from '../context/AppContext';

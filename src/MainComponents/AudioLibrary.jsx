@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import NavBar2 from './NavBar2';
 import AudioCard from './AudioCard';
-import video from '../assets/video4.mp4'
+const video = 'https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778460/video4_l67mdf.mp4'
 import { getAudio } from '../services/audio';
 
 // BlogSubcategories for Audio

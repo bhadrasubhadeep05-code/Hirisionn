@@ -4,7 +4,7 @@ import NavBar2 from './NavBar2';
 import Card from './Card';
 import VideoCard from './VideoCard';
 import AudioCard from './AudioCard';
-import video from '../assets/video2.mp4';
+const video = "https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778447/video2_ndpc3f.mp4";
 import { getIndustry } from '../services/blog.api'
 import { getIndustryVideo } from '../services/video.api';
 import { getIndustryAudio } from '../services/audio';

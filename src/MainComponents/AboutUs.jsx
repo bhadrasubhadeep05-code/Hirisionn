@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useViewportScroll, useTransform } from 'framer-motion';
 import NavBar2 from './NavBar2';
-import video from '../assets/video2.mp4';
+const video = "https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778447/video2_ndpc3f.mp4";
+
 
 const AboutUs = () => {
   const [activeSection, setActiveSection] = useState('story');
@@ -14,29 +15,29 @@ const AboutUs = () => {
     { id: 'milestones', name: 'Our Milestones' },
   ];
 
-  const leadershipTeam = [
-    {
-      id: 1,
-      name: "Rajesh Kumar",
-      designation: "FOUNDER & CEO",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200&h=200"
-    },
-    {
-      id: 2,
-      name: "Priya Sharma",
-      designation: "OPERATIONS HEAD",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200&h=200"
-    },
-    {
-      id: 3,
-      name: "Arjun Patel",
-      designation: "BUSINESS DIRECTOR",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200&h=200"
-    }
-  ];
+  // const leadershipTeam = [
+  //   {
+  //     id: 1,
+  //     name: "Rajesh Kumar",
+  //     designation: "FOUNDER & CEO",
+  //     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200&h=200"
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Priya Sharma",
+  //     designation: "OPERATIONS HEAD",
+  //     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200&h=200"
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Arjun Patel",
+  //     designation: "BUSINESS DIRECTOR",
+  //     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200&h=200"
+  //   }
+  // ];
 
   const stats = [
-    { value: "2000+", label: "Students Empowered" },
+    { value: "2000+", label: "Candidates Empowered" },
     { value: "15+", label: "Industries Covered" },
     { value: "100%", label: "Expert Vetted Resumes" },
     { value: "15+", label: "States Covered" },

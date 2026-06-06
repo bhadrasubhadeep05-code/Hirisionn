@@ -4,7 +4,7 @@ import NavBar2 from './NavBar2';
 import Card from './Card';
 import VideoCard from './VideoCard';
 import AudioCard from './AudioCard';
-import video from '../assets/video9.mp4';
+const video = 'https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778455/video9_cisexs.mp4';
 import { getworkforce } from '../services/blog.api';
 import { getworkforceVideo } from '../services/video.api';
 import { getworkforceAudio } from '../services/audio';

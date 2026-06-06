@@ -43,7 +43,8 @@ const Footer = () => {
         <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M23.9999 2.6665H19.9999C18.2318 2.6665 16.5361 3.36888 15.2859 4.61913C14.0356 5.86937 13.3333 7.56506 13.3333 9.33317V13.3332H9.33325V18.6665H13.3333V29.3332H18.6666V18.6665H22.6666L23.9999 13.3332H18.6666V9.33317C18.6666 8.97955 18.8071 8.64041 19.0571 8.39036C19.3072 8.14031 19.6463 7.99984 19.9999 7.99984H23.9999V2.6665Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-      )
+      ),
+      link: "https://www.facebook.com/share/1BJ82rwhin/",
     },
     {
       name: "Instagram",
@@ -51,7 +52,8 @@ const Footer = () => {
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M14.5834 5.4165H14.5917M5.83341 1.6665H14.1667C16.4679 1.6665 18.3334 3.53198 18.3334 5.83317V14.1665C18.3334 16.4677 16.4679 18.3332 14.1667 18.3332H5.83341C3.53223 18.3332 1.66675 16.4677 1.66675 14.1665V5.83317C1.66675 3.53198 3.53223 1.6665 5.83341 1.6665ZM13.3334 9.47484C13.4363 10.1684 13.3178 10.8767 12.9949 11.499C12.672 12.1213 12.161 12.626 11.5348 12.9412C10.9085 13.2564 10.1988 13.3662 9.50657 13.2548C8.81435 13.1434 8.17488 12.8166 7.67911 12.3208C7.18335 11.825 6.85652 11.1856 6.74514 10.4933C6.63375 9.80113 6.74347 9.09142 7.05869 8.46515C7.3739 7.83888 7.87857 7.32795 8.5009 7.00504C9.12323 6.68212 9.83154 6.56366 10.5251 6.6665C11.2325 6.77141 11.8875 7.10106 12.3932 7.60676C12.8989 8.11246 13.2285 8.7674 13.3334 9.47484Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-      )
+      ),
+      link: "https://www.instagram.com/_hirisionn/",
     },
     {
       name: "LinkedIn",
@@ -61,7 +63,8 @@ const Footer = () => {
           <path d="M12 18H4V42H12V18Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M8 12C10.2091 12 12 10.2091 12 8C12 5.79086 10.2091 4 8 4C5.79086 4 4 5.79086 4 8C4 10.2091 5.79086 12 8 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-      )
+      ),
+      link: "https://www.linkedin.com/in/hirisionn-921261411/",
     },
     {
       name: "YouTube",
@@ -70,7 +73,8 @@ const Footer = () => {
           <path d="M45.0799 12.84C44.8423 11.8908 44.3585 11.0211 43.6772 10.3188C42.996 9.61648 42.1414 9.10637 41.1999 8.84C37.7599 8 23.9999 8 23.9999 8C23.9999 8 10.2399 8 6.79992 8.92C5.85842 9.18637 5.00388 9.69648 4.32262 10.3988C3.64135 11.1011 3.1575 11.9708 2.91992 12.92C2.29035 16.4111 1.98239 19.9526 1.99992 23.5C1.97748 27.0741 2.28546 30.6426 2.91992 34.16C3.18184 35.0797 3.67654 35.9163 4.35621 36.589C5.03589 37.2616 5.87756 37.7476 6.79992 38C10.2399 38.92 23.9999 38.92 23.9999 38.92C23.9999 38.92 37.7599 38.92 41.1999 38C42.1414 37.7336 42.996 37.2235 43.6772 36.5212C44.3585 35.8189 44.8423 34.9492 45.0799 34C45.7046 30.5352 46.0126 27.0207 45.9999 23.5C46.0224 19.9259 45.7144 16.3574 45.0799 12.84Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M19.4999 30.04L30.9999 23.5L19.4999 16.96V30.04Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-      )
+      ),
+      link: "https://www.facebook.com/share/1BJ82rwhin/",
     }
   ];
 
@@ -183,7 +187,9 @@ const Footer = () => {
                   {socialIcons.map((social, idx) => (
                     <motion.a
                       key={idx}
-                      href="#"
+                      href={social.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="group/social relative h-14 rounded-xl bg-gradient-to-br from-[#22D3EE]/25 to-[#818CF8]/25 border-2 border-[#22D3EE]/40 flex items-center justify-center text-[#22D3EE] hover:text-white hover:border-[#22D3EE]/80 overflow-hidden transition-all duration-300"
                       whileHover={{ scale: 1.1, y: -6 }}
                       whileTap={{ scale: 0.92 }}
