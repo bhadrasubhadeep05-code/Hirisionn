@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-const logo = "https://res.cloudinary.com/dtz4htk6y/image/upload/v1780778448/logoTeansparent_zcelh9.png";
+import logo from "../assets/logoNav.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import AppContext from "../context/AppContext";
 // eslint-disable-next-line no-unused-vars

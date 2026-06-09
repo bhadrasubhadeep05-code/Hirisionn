@@ -1,7 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-const logo =
-  "https://res.cloudinary.com/dtz4htk6y/image/upload/v1780778445/logo2_q9wkvb.jpg";
+import logo from "../assets/logo2.jpeg"
 const video =
   "https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778460/video4_l67mdf.mp4";
 import { useNavigate } from "react-router-dom";
