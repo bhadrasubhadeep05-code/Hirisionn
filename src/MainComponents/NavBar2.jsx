@@ -188,7 +188,7 @@ const NavBar2 = () => {
         )}
       </AnimatePresence>
 
-      <nav className="fixed inset-x-0 top-0 z-[999] w-[100vw] border-b-2 border-[#F2A93C] bg-[#F6F8F8]/95 font-body text-[#12171B] backdrop-blur-xl">
+      <nav className="fixed inset-x-0 top-0 z-[999] w-[100vw] border-b-2 border-[#ffffff] bg-[#F6F8F8] font-body text-[#12171B] backdrop-blur-xl">
         <div className="mx-auto flex h-[72px] w-[100vw] md:w-full md:max-w-[1440px] items-center px-4 sm:h-20 sm:px-8 xl:h-[104px] xl:px-14 2xl:px-20">
           <motion.button
             whileHover={{ scale: 1.03 }}
