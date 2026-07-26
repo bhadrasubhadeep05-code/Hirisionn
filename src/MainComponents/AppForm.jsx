@@ -81,8 +81,8 @@ const AppForm = () => {
     <div className="min-h-screen bg-gradient-to-br from-[#F8FAFC] via-[#F1F5F9] to-[#E0F2FE] py-16 px-4 sm:px-2">
       
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 right-10 w-96 h-96 bg-[#22D3EE]/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 left-10 w-96 h-96 bg-[#818CF8]/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-10 right-10 w-96 h-96 bg-[#E8791E]/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 left-10 w-96 h-96 bg-[#F2A93C]/10 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative max-w-2xl mx-auto">
@@ -102,7 +102,7 @@ const AppForm = () => {
         </motion.div>
 
         <motion.div
-          className="backdrop-blur-xl bg-gradient-to-br from-white/80 to-white/40 rounded-3xl p-8 sm:p-12 border-2 border-[#22D3EE]/30 shadow-2xl shadow-[#0F172A]/10"
+          className="backdrop-blur-xl bg-gradient-to-br from-white/80 to-white/40 rounded-3xl p-8 sm:p-12 border-2 border-[#E8791E]/30 shadow-2xl shadow-[#0F172A]/10"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -120,7 +120,7 @@ const AppForm = () => {
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                 />
               </motion.div>
 
@@ -133,7 +133,7 @@ const AppForm = () => {
                   placeholder="+91 98765 43210"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                 />
               </motion.div>
 
@@ -144,7 +144,7 @@ const AppForm = () => {
                   name="experienceLevel"
                   value={formData.experienceLevel}
                   onChange={handleChange}
-                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                 >
                   <option value="">Select Experience Level</option>
                   <option value="experienced">Experienced</option>
@@ -163,7 +163,7 @@ const AppForm = () => {
                       placeholder="e.g. Software Engineer"
                       value={formData.job}
                       onChange={handleChange}
-                      className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                      className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                     />
                   </div>
 
@@ -175,7 +175,7 @@ const AppForm = () => {
                       placeholder="e.g. TCS, Infosys"
                       value={formData.employer}
                       onChange={handleChange}
-                      className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                      className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                     />
                   </div>
 
@@ -187,7 +187,7 @@ const AppForm = () => {
                       placeholder="₹6,00,000"
                       value={formData.currentCTC}
                       onChange={handleChange}
-                      className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                      className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                     />
                   </div>
                 </>
@@ -204,7 +204,7 @@ const AppForm = () => {
                       placeholder="e.g. B.Tech in CSE"
                       value={formData.course}
                       onChange={handleChange}
-                      className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                      className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                     />
                   </div>
 
@@ -216,7 +216,7 @@ const AppForm = () => {
                       placeholder="e.g. Web Development, Data Science"
                       value={formData.domain}
                       onChange={handleChange}
-                      className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                      className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                     />
                   </div>
                 </>
@@ -231,7 +231,7 @@ const AppForm = () => {
                   placeholder="e.g. Bachelor of Technology"
                   value={formData.education}
                   onChange={handleChange}
-                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                 />
               </motion.div>
 
@@ -244,7 +244,7 @@ const AppForm = () => {
                   placeholder="https://linkedin.com/in/yourprofile"
                   value={formData.linkedin}
                   onChange={handleChange}
-                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                 />
               </motion.div>
 
@@ -255,7 +255,7 @@ const AppForm = () => {
                   type="file"
                   name="resume"
                   onChange={handleChange}
-                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#22D3EE]/20"
+                  className="w-full px-5 py-3 rounded-xl bg-white/60 border-2 border-[#E8791E]/20"
                 />
               </div>
 
@@ -263,13 +263,13 @@ const AppForm = () => {
 
             <motion.button
               type="submit"
-              className="w-full py-4 px-8 rounded-xl font-bold text-lg text-white bg-gradient-to-r from-[#22D3EE] to-[#818CF8]"
+              className="w-full py-4 px-8 rounded-xl font-bold text-lg text-white bg-gradient-to-r from-[#F2A93C] to-[#E8791E]"
             >
               {submitted ? "✓ Submitted" : "Register Now"}
             </motion.button>
 
             {submitted && (
-              <div className="p-4 bg-[#22D3EE]/20 border-l-4 border-[#22D3EE] rounded-lg">
+              <div className="p-4 bg-[#E8791E]/20 border-l-4 border-[#E8791E] rounded-lg">
                 ✓ Thank you! A consultant will reach out to you soon.
               </div>
             )}

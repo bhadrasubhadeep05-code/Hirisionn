@@ -2,9 +2,8 @@ import React, { useState, useContext } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import NavBar2 from './NavBar2';
-const video = 'https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778453/video7_onnneq.mp4';
 import resume from '../assets/ResumeProp.png';
-import AppContext from "../context/AppContext";
+import AppContext from '../context/AppContext';
 
 const ResumeMasterclass = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -12,39 +11,32 @@ const ResumeMasterclass = () => {
   const navigate = useNavigate();
   const { ProfileComplete } = useContext(AppContext);
 
-  // This will come from your auth context/global state in production
- 
-
   const features = [
     {
-      title: "ATS-Proof",
-      description: "Built to pass through automated hiring bots"
+      title: 'ATS-Proof',
+      description: 'Built to pass through automated hiring systems with confidence.',
     },
     {
-      title: "Keyword Optimized",
-      description: "Aligned for IT, HR, Marketing, and all sectors"
+      title: 'Keyword Optimized',
+      description: 'Aligned for modern roles across IT, HR, marketing, and more.',
     },
     {
-      title: "Expert Reviewed",
-      description: "Real human professionals polish your draft"
-    }
+      title: 'Expert Reviewed',
+      description: 'Refined by professionals who know what hiring teams notice first.',
+    },
   ];
 
   const handlePurchase = () => {
-    // Check if user is authenticated and profile is complete
     if (!ProfileComplete) {
       navigate('/register');
       return;
     }
 
-    // User is valid - open payment dialog
     setShowPaymentDialog(true);
   };
 
   const handleRazorpayPayment = () => {
     setIsLoading(true);
-    // Razorpay integration will be initialized here
-    // window.Razorpay(options)
     setTimeout(() => {
       setIsLoading(false);
       setShowPaymentDialog(false);
@@ -52,197 +44,172 @@ const ResumeMasterclass = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#F8FAFC] text-slate-800">
       <NavBar2 progress={1} />
-      
-      {/* First Impression Hero Section */}
-      <div className="relative h-[500px] overflow-hidden mt-24">
-        <video 
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src={video} type="video/mp4" />
-        </video>
 
-        <div className="absolute inset-0 bg-[#0F172A]/65 backdrop-blur-md" />
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative mt-24 flex min-h-[500px] items-center justify-center overflow-hidden bg-[radial-gradient(120%_160%_at_100%_0%,#1c5872,#12171B_70%)] px-6 py-24"
+      >
+        <div className="pointer-events-none absolute right-0 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(232,121,30,0.25)_0%,transparent_68%)] blur-[10px] sm:-right-20 sm:-top-20 sm:h-[420px] sm:w-[420px] lg:-right-[6%] lg:-top-[10%] lg:h-[520px] lg:w-[520px]" />
 
-        <div className="relative z-10 h-full flex flex-col justify-center items-center px-6 text-center">
-          
-        
-
-          <motion.h1 
+        <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center text-center">
+          <div className="mb-5 inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-orange-300">
+            Resume masterclass • premium service
+          </div>
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl md:text-6xl font-bold text-white mb-4"
+            className="mb-4 text-4xl font-bold text-white md:text-6xl"
           >
             Your Career, Redesigned
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-lg text-slate-300 max-w-2xl mb-6"
+            className="mb-6 max-w-2xl text-lg text-slate-300"
           >
-            Stop getting ghosted by ATS. Get a resume that doesn't just list your history—it tells your success story.
+            Stop getting ghosted by ATS. Get a resume that does more than list your experience—it tells your success story with clarity and confidence.
           </motion.p>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-[#22D3EE] font-medium"
+            className="font-medium text-[#F2A93C]"
           >
-             Delivered to your email within 24 hours
+            Delivered to your email within 24 hours.
           </motion.p>
         </div>
-      </div>
+      </motion.section>
 
-      {/* Hidden Potential Split Section */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pb-24 pt-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          
-          {/* Left Side - The Pitch */}
-          <motion.div 
+      <div className="mx-auto max-w-7xl px-4 pb-24 pt-20 md:px-8">
+        <div className="grid items-center gap-16 lg:grid-cols-2">
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6 }}
             className="space-y-8"
           >
-            <h2 className="text-3xl font-bold text-[#0F172A]">
-              Expertly Tailored. ATS Optimized. Career Ready.
-            </h2>
-            
-            <p className="text-lg text-slate-600 leading-relaxed">
-              Don't leave your future to a generic template. Our experts manually craft your resume to highlight your unique strengths and align with industry standards.
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.35em] text-[#E8791E]">Why it matters</p>
+              <h2 className="mt-3 text-3xl font-bold text-[#0F172A] md:text-4xl">
+                Expertly tailored. ATS optimized. Career ready.
+              </h2>
+            </div>
+
+            <p className="text-lg leading-8 text-slate-600">
+              Don’t leave your future to a generic template. Our experts manually craft your resume to highlight your strengths, sharpen your positioning, and align with the standards modern hiring teams expect.
             </p>
 
-            {/* Offer Box */}
-            <div className="border-2 border-[#818CF8]/30 rounded-2xl p-8 bg-white shadow-xl">
-              <p className="text-sm text-[#818CF8] uppercase tracking-wider mb-3">Special Launch Offer</p>
-              
-              <div className="flex items-end gap-4 mb-6">
-                <span className="text-slate-400 line-through text-xl">₹399</span>
-                <span className="text-[#22D3EE] text-5xl font-bold">₹199</span>
+            <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.35em] text-[#E8791E]">Special launch offer</p>
+
+              <div className="mb-6 flex items-end gap-4">
+                <span className="text-xl text-slate-400 line-through">₹399</span>
+                <span className="text-5xl font-bold text-[#E8791E]">₹199</span>
               </div>
 
-              <p className="text-slate-500 text-sm mb-6">
-                Get a professionally crafted, ATS optimized resume designed by industry experts.
+              <p className="mb-6 text-sm text-slate-500">
+                Get a professionally crafted, ATS-optimized resume designed by experts who understand what employers notice first.
               </p>
 
               <button
                 onClick={handlePurchase}
                 disabled={isLoading}
-                className="w-full bg-[#22D3EE] text-[#0F172A] py-4 rounded-full font-bold text-lg shadow-xl
-                          hover:shadow-[0_20px_50px_-12px_rgba(34,211,238,0.6)] hover:-translate-y-1
-                          transition-all duration-500 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full rounded-full bg-[#E8791E] py-4 text-lg font-bold text-white shadow-[0_20px_50px_-12px_rgba(232,121,30,0.45)] transition-all duration-500 hover:-translate-y-1 hover:bg-[#F2A93C] disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
                     Processing
                   </span>
-                ) : "Get My Expert Resume Now"}
+                ) : 'Get My Expert Resume Now'}
               </button>
             </div>
 
-            {/* Value Grid */}
-            <div className="grid grid-cols-3 gap-4 pt-4">
+            <div className="grid gap-4 pt-4 md:grid-cols-3">
               {features.map((feature, index) => (
-                <div key={index} className="text-center space-y-2">
-                  <div className="text-3xl">{feature.icon}</div>
+                <div key={index} className="rounded-2xl border border-slate-200 bg-[#F8FAFC] p-4 text-center">
                   <h3 className="font-bold text-[#0F172A]">{feature.title}</h3>
-                  <p className="text-xs text-slate-500">{feature.description}</p>
+                  <p className="mt-2 text-xs leading-6 text-slate-500">{feature.description}</p>
                 </div>
               ))}
             </div>
           </motion.div>
 
-          {/* Right Side - The Peek-a-Boo Resume */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.7 }}
-            className="relative overflow-hidden"
+            className="relative"
           >
-            <div className="relative h-[600px]">
-              <img 
+            <div className="absolute -bottom-6 -left-6 h-full w-full rounded-[2rem] bg-[#E8791E]/10" />
+            <div className="relative z-10 overflow-hidden rounded-[2rem] border border-white bg-white p-4 shadow-2xl">
+              <img
                 src={resume}
                 alt="Professional Resume Preview"
-                className="absolute right-0 top-0 h-full object-cover drop-shadow-2xl 
-                          transform rotate-3 translate-x-1/4 hover:rotate-0 hover:translate-x-0 
-                          transition-all duration-700 ease-out"
+                className="h-full w-full rounded-[1.5rem] object-cover shadow-xl transition-all duration-700 ease-out hover:scale-[1.01]"
               />
-              
-              {/* Glassmorphic Overlay */}
-              <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-white/90 to-transparent backdrop-blur-sm flex items-center">
-                <p className="text-[#0F172A] font-bold opacity-30 rotate-90 whitespace-nowrap text-xl">
-                  Unlock Your Full Profile
-                </p>
-              </div>
             </div>
           </motion.div>
-
         </div>
       </div>
 
-      {/* Sticky Mobile CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md shadow-[0_-10px_30px_rgba(0,0,0,0.1)] z-50">
-        <div className="flex items-center justify-between mb-3">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 p-4 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] backdrop-blur-md lg:hidden">
+        <div className="mb-3 flex items-center justify-between">
           <span className="text-slate-400 line-through">₹399</span>
-          <span className="text-[#22D3EE] text-2xl font-bold">₹199</span>
+          <span className="text-2xl font-bold text-[#E8791E]">₹199</span>
         </div>
         <button
           onClick={handlePurchase}
-          className="w-full bg-[#22D3EE] text-[#0F172A] py-4 rounded-full font-bold shadow-lg"
+          className="w-full rounded-full bg-[#E8791E] py-4 font-bold text-white"
         >
           Get My Expert Resume
         </button>
       </div>
 
-      {/* Payment Modal Dialog */}
       {showPaymentDialog && (
-        <div className="fixed inset-0 bg-[#0F172A]/70 backdrop-blur-sm z-[100] flex items-center justify-center px-4">
-          <motion.div 
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0F172A]/70 px-4 backdrop-blur-sm">
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-[2rem] p-8 max-w-md w-full shadow-2xl relative"
+            className="relative w-full max-w-md rounded-[2rem] bg-white p-8 shadow-2xl"
           >
-            <button 
+            <button
               onClick={() => setShowPaymentDialog(false)}
-              className="absolute right-6 top-6 text-slate-400 hover:text-[#0F172A] transition-colors"
+              className="absolute right-6 top-6 text-slate-400 transition-colors hover:text-[#0F172A]"
             >
               ✕
             </button>
 
-            <h3 className="text-2xl font-bold text-[#0F172A] mb-6">Complete Your Purchase</h3>
-            
-            <div className="bg-[#F8FAFC] rounded-xl p-6 mb-6">
-              <div className="flex justify-between items-center mb-4">
+            <h3 className="mb-6 text-2xl font-bold text-[#0F172A]">Complete Your Purchase</h3>
+
+            <div className="mb-6 rounded-xl bg-[#F8FAFC] p-6">
+              <div className="mb-4 flex items-center justify-between">
                 <span className="text-slate-600">Expert Resume Service</span>
                 <span className="text-slate-400 line-through">₹399</span>
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <span className="font-bold text-[#0F172A]">Special Offer Price</span>
-                <span className="text-[#22D3EE] text-3xl font-bold">₹199</span>
+                <span className="text-3xl font-bold text-[#E8791E]">₹199</span>
               </div>
             </div>
 
             <button
               onClick={handleRazorpayPayment}
               disabled={isLoading}
-              className="w-full bg-[#22D3EE] text-[#0F172A] py-4 rounded-full font-bold text-lg shadow-xl
-                        hover:shadow-[0_20px_50px_-12px_rgba(34,211,238,0.6)] transition-all duration-500
-                        disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#E8791E] py-4 text-lg font-bold text-white transition-all duration-500 hover:shadow-[0_20px_50px_-12px_rgba(232,121,30,0.45)] disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isLoading ? (
                 <>
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
@@ -250,7 +217,7 @@ const ResumeMasterclass = () => {
                 </>
               ) : (
                 <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                   </svg>
                   Pay with Razorpay
@@ -258,13 +225,12 @@ const ResumeMasterclass = () => {
               )}
             </button>
 
-            <p className="text-center text-slate-500 text-xs mt-4">
+            <p className="mt-4 text-center text-xs text-slate-500">
               Secured by Razorpay. Your payment information is encrypted.
             </p>
           </motion.div>
         </div>
       )}
-
     </div>
   );
 };

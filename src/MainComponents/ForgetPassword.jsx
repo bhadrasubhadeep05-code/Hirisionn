@@ -116,81 +116,79 @@ const ForgetPassword = () => {
 
   return (
     <div className="min-h-screen w-full bg-[#F8FAFC] flex flex-col relative overflow-hidden">
-      <NavBar2 progress={currentStep} />
-      
-      <main className="flex-grow relative flex items-center justify-center px-4 py-20 mt-20">
-        {/* --- STUDIO LIGHTING BACKGROUND --- */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#818CF8] opacity-10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#22D3EE] opacity-10 rounded-full blur-[120px]" />
-        </div>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-12%] left-[-10%] h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle,rgba(232,121,30,0.18)_0%,transparent_70%)] blur-3xl" />
+        <div className="absolute bottom-[-10%] right-[-8%] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(15,23,42,0.12)_0%,transparent_70%)] blur-3xl" />
+      </div>
 
+      <NavBar2 progress={currentStep} />
+
+      <main className="relative mt-16 flex flex-grow items-center justify-center overflow-hidden bg-[#F8FAFC] px-4 py-20 md:mt-24">
         <div className="relative z-10 w-full max-w-lg">
-          {/* Header */}
-          <motion.div 
-            className="text-center mb-10"
+          <motion.div
+            className="text-center mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">
-              <span className="bg-clip-text text-transparent bg-gradient-to-b from-[#0F172A] via-[#475569] to-[#0F172A]">
-                Reset Password
-              </span>
+            <div className="inline-flex items-center justify-center rounded-full border border-[#E8791E]/20 bg-[#E8791E]/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.25em] text-[#E8791E] mb-5">
+              Account Recovery
+            </div>
+            <h1 className="mb-3 text-4xl font-bold tracking-tight text-[#0F172A] md:text-5xl">
+              Reset Password
             </h1>
-            <p className="text-slate-500 font-medium">
+            <p className="text-slate-600 font-medium">
               Verify your identity to reset your password.
             </p>
 
-            {/* Progress Steps Indicator */}
-            <div className="flex items-center justify-center gap-4 mt-6">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${currentStep >= 1 ? 'bg-[#22D3EE] text-white' : 'bg-slate-200 text-slate-500'}`}>1</div>
-              <div className={`w-16 h-1 rounded-full ${currentStep >= 2 ? 'bg-[#22D3EE]' : 'bg-slate-200'}`} />
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${currentStep >= 2 ? 'bg-[#22D3EE] text-white' : 'bg-slate-200 text-slate-500'}`}>2</div>
-              <div className={`w-16 h-1 rounded-full ${currentStep >= 3 ? 'bg-[#22D3EE]' : 'bg-slate-200'}`} />
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${currentStep >= 3 ? 'bg-[#22D3EE] text-white' : 'bg-slate-200 text-slate-500'}`}>3</div>
+            <div className="mt-6 flex items-center justify-center gap-4">
+              <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${currentStep >= 1 ? 'bg-[#E8791E] text-white' : 'bg-slate-200 text-slate-500'}`}>1</div>
+              <div className={`h-1 w-16 rounded-full ${currentStep >= 2 ? 'bg-[#E8791E]' : 'bg-slate-200'}`} />
+              <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${currentStep >= 2 ? 'bg-[#E8791E] text-white' : 'bg-slate-200 text-slate-500'}`}>2</div>
+              <div className={`h-1 w-16 rounded-full ${currentStep >= 3 ? 'bg-[#E8791E]' : 'bg-slate-200'}`} />
+              <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${currentStep >= 3 ? 'bg-[#E8791E] text-white' : 'bg-slate-200 text-slate-500'}`}>3</div>
             </div>
           </motion.div>
 
-          {/* Glass-Morphism Card */}
           <motion.div
-            className="backdrop-blur-2xl bg-white/60 rounded-[2.5rem] p-8 md:p-12 border border-white/50 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] relative"
+            className="relative rounded-[2.5rem] border border-white/70 bg-white/80 p-8 shadow-[0_30px_70px_-20px_rgba(15,23,42,0.25)] backdrop-blur-2xl md:p-12"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            {/* Metallic Top Accent Bar */}
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#22D3EE] via-[#818CF8] to-[#22D3EE] rounded-t-[3rem]" />
+            <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#F2A93C] via-[#E8791E] to-[#F2A93C]" />
 
             <AnimatePresence mode="wait">
-              {/* ========== STEP 1: PHONE VERIFICATION ========== */}
               {currentStep === 1 && (
-                <motion.form 
+                <motion.form
                   key="step1"
-                  onSubmit={handlePhoneSubmit} 
+                  onSubmit={handlePhoneSubmit}
                   className="space-y-6"
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 30 }}
                   transition={{ duration: 0.4 }}
                 >
-                  {/* Phone Number */}
                   <div className="space-y-2">
-                    <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Registered Phone Number</label>
-                    <input 
-                      type="tel" name="phoneNo" required
-                      value={formData.phoneNo} onChange={handleChange}
+                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                      Registered Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      name="phoneNo"
+                      required
+                      value={formData.phoneNo}
+                      onChange={handleChange}
                       placeholder="+91 98765 43210"
-                      className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent focus:bg-white shadow-sm"
+                      className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:border-[#E8791E] focus:bg-white focus:ring-2 focus:ring-[#E8791E]/20"
                     />
                   </div>
 
-                  {/* Error Message */}
                   <AnimatePresence>
                     {error && (
-                      <motion.p 
+                      <motion.p
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
+                        animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         className="text-red-500 text-sm font-semibold text-center"
                       >
@@ -199,13 +197,12 @@ const ForgetPassword = () => {
                     )}
                   </AnimatePresence>
 
-                  {/* Submit Button */}
                   <motion.button
                     type="submit"
                     whileHover={!isLoading ? { scale: 1.02 } : {}}
                     whileTap={!isLoading ? { scale: 0.98 } : {}}
                     disabled={isLoading}
-                    className={`group relative w-full py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 shadow-xl overflow-hidden ${isLoading ? 'bg-slate-500 cursor-not-allowed shadow-none' : 'bg-[#0F172A] shadow-[#0F172A]/20'}`}
+                    className={`group relative w-full overflow-hidden rounded-2xl py-4 text-lg font-bold text-white transition-all duration-300 shadow-xl ${isLoading ? 'cursor-not-allowed bg-slate-500 shadow-none' : 'bg-[#0F172A] shadow-[#0F172A]/20'}`}
                   >
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                     <span className="relative z-10 flex items-center justify-center gap-2">
@@ -218,59 +215,65 @@ const ForgetPassword = () => {
                           Processing...
                         </>
                       ) : (
-                        "Continue →"
+                        'Continue →'
                       )}
                     </span>
-                    <div className="absolute bottom-0 left-0 w-full h-1 bg-[#22D3EE] shadow-[0_0_10px_#22D3EE]" />
+                    <div className="absolute bottom-0 left-0 h-1 w-full bg-[#E8791E]" />
                   </motion.button>
                 </motion.form>
               )}
 
-              {/* ========== STEP 2: SECURITY QUESTIONS ========== */}
               {currentStep === 2 && (
-                <motion.form 
+                <motion.form
                   key="step2"
-                  onSubmit={handleSecuritySubmit} 
+                  onSubmit={handleSecuritySubmit}
                   className="space-y-6"
                   initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -30 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <div className="bg-[#818CF8]/5 rounded-2xl p-5 border border-[#818CF8]/20 mb-4">
-                    <p className="text-sm text-slate-600 font-medium">
-                      📋 Please answer the security questions you selected during registration.
+                  <div className="mb-4 rounded-2xl border border-[#E8791E]/20 bg-[#E8791E]/10 p-5">
+                    <p className="text-sm font-medium text-slate-700">
+                      Please answer the security questions you selected during registration.
                     </p>
                   </div>
 
-                  {/* Security Question 1 */}
                   <div className="space-y-2">
-                    <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">{userQuestions[0]}</label>
-                    <input 
-                      type="text" name="securityAnswer1" required
-                      value={formData.securityAnswer1} onChange={handleChange}
+                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                      {userQuestions[0]}
+                    </label>
+                    <input
+                      type="text"
+                      name="securityAnswer1"
+                      required
+                      value={formData.securityAnswer1}
+                      onChange={handleChange}
                       placeholder="Your answer"
-                      className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent focus:bg-white shadow-sm"
+                      className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:border-[#E8791E] focus:bg-white focus:ring-2 focus:ring-[#E8791E]/20"
                     />
                   </div>
 
-                  {/* Security Question 2 */}
                   <div className="space-y-2">
-                    <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">{userQuestions[1]}</label>
-                    <input 
-                      type="text" name="securityAnswer2" required
-                      value={formData.securityAnswer2} onChange={handleChange}
+                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                      {userQuestions[1]}
+                    </label>
+                    <input
+                      type="text"
+                      name="securityAnswer2"
+                      required
+                      value={formData.securityAnswer2}
+                      onChange={handleChange}
                       placeholder="Your answer"
-                      className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent focus:bg-white shadow-sm"
+                      className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:border-[#E8791E] focus:bg-white focus:ring-2 focus:ring-[#E8791E]/20"
                     />
                   </div>
 
-                  {/* Error Message */}
                   <AnimatePresence>
                     {error && (
-                      <motion.p 
+                      <motion.p
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
+                        animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         className="text-red-500 text-sm font-semibold text-center"
                       >
@@ -279,15 +282,15 @@ const ForgetPassword = () => {
                     )}
                   </AnimatePresence>
 
-                  {/* Action Buttons */}
                   <div className="flex flex-col gap-3">
                     <motion.button
                       type="submit"
                       whileHover={!isLoading ? { scale: 1.02 } : {}}
                       whileTap={!isLoading ? { scale: 0.98 } : {}}
                       disabled={isLoading}
-                      className={`group relative w-full py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 shadow-xl overflow-hidden ${isLoading ? 'bg-slate-500 cursor-not-allowed shadow-none' : 'bg-[#0F172A] shadow-[#0F172A]/20'}`}
+                      className={`group relative w-full overflow-hidden rounded-2xl py-4 text-lg font-bold text-white transition-all duration-300 shadow-xl ${isLoading ? 'cursor-not-allowed bg-slate-500 shadow-none' : 'bg-[#0F172A] shadow-[#0F172A]/20'}`}
                     >
+                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         {isLoading ? (
                           <>
@@ -298,7 +301,7 @@ const ForgetPassword = () => {
                             Verifying...
                           </>
                         ) : (
-                          "Verify Answers →"
+                          'Verify Answers →'
                         )}
                       </span>
                     </motion.button>
@@ -306,7 +309,7 @@ const ForgetPassword = () => {
                     <button
                       type="button"
                       onClick={() => setCurrentStep(1)}
-                      className="w-full py-2 text-slate-500 hover:text-slate-700 transition-all text-sm font-medium"
+                      className="w-full py-2 text-slate-500 transition-all text-sm font-medium hover:text-slate-700"
                     >
                       ← Go back
                     </button>
@@ -314,51 +317,57 @@ const ForgetPassword = () => {
                 </motion.form>
               )}
 
-              {/* ========== STEP 3: NEW PASSWORD ========== */}
               {currentStep === 3 && (
-                <motion.form 
+                <motion.form
                   key="step3"
-                  onSubmit={handlePasswordReset} 
+                  onSubmit={handlePasswordReset}
                   className="space-y-6"
                   initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -30 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <div className="bg-[#22D3EE]/10 rounded-2xl p-4 mb-4 border border-[#22D3EE]/30">
-                    <p className="text-sm text-slate-700 font-medium">
-                      ✅ Identity verified! Please set your new password.
+                  <div className="mb-4 rounded-2xl border border-[#E8791E]/20 bg-[#E8791E]/10 p-4">
+                    <p className="text-sm font-medium text-slate-700">
+                      Identity verified! Please set your new password.
                     </p>
                   </div>
 
-                  {/* New Password */}
                   <div className="space-y-2">
-                    <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">New Password</label>
-                    <input 
-                      type="password" name="newPassword" required
-                      value={formData.newPassword} onChange={handleChange}
+                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                      New Password
+                    </label>
+                    <input
+                      type="password"
+                      name="newPassword"
+                      required
+                      value={formData.newPassword}
+                      onChange={handleChange}
                       placeholder="••••••••"
-                      className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent focus:bg-white shadow-sm"
+                      className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:border-[#E8791E] focus:bg-white focus:ring-2 focus:ring-[#E8791E]/20"
                     />
                   </div>
 
-                  {/* Confirm New Password */}
                   <div className="space-y-2">
-                    <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Confirm New Password</label>
-                    <input 
-                      type="password" name="confirmNewPassword" required
-                      value={formData.confirmNewPassword} onChange={handleChange}
+                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                      Confirm New Password
+                    </label>
+                    <input
+                      type="password"
+                      name="confirmNewPassword"
+                      required
+                      value={formData.confirmNewPassword}
+                      onChange={handleChange}
                       placeholder="••••••••"
-                      className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent focus:bg-white shadow-sm"
+                      className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:border-[#E8791E] focus:bg-white focus:ring-2 focus:ring-[#E8791E]/20"
                     />
                   </div>
 
-                  {/* Error Message */}
                   <AnimatePresence>
                     {error && (
-                      <motion.p 
+                      <motion.p
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
+                        animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         className="text-red-500 text-sm font-semibold text-center"
                       >
@@ -367,41 +376,42 @@ const ForgetPassword = () => {
                     )}
                   </AnimatePresence>
 
-                  {/* Success Message */}
                   {submitted && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-4 bg-[#22D3EE]/20 border-l-4 border-[#22D3EE] rounded-lg text-center text-slate-700 font-medium"
+                      className="rounded-2xl border-l-4 border-[#E8791E] bg-[#E8791E]/10 p-4 text-center font-medium text-slate-700"
                     >
-                      ✓ Password reset successful! Redirecting to login...
+                      Password reset successful! Redirecting to login...
                     </motion.div>
                   )}
 
-                  {/* Action Buttons */}
                   <div className="flex flex-col gap-3">
                     <motion.button
                       type="submit"
                       whileHover={!isLoading && !submitted ? { scale: 1.02 } : {}}
                       whileTap={!isLoading && !submitted ? { scale: 0.98 } : {}}
                       disabled={isLoading || submitted}
-                      className={`group relative w-full py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 shadow-xl ${isLoading ? 'bg-slate-400 cursor-not-allowed shadow-none' : 'bg-gradient-to-r from-[#22D3EE] to-[#818CF8]'}`}
+                      className={`group relative w-full rounded-2xl py-4 text-lg font-bold text-white transition-all duration-300 shadow-xl ${isLoading ? 'cursor-not-allowed bg-slate-400 shadow-none' : 'bg-[#0F172A] shadow-[#0F172A]/20'}`}
                     >
-                      {isLoading ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Resetting...
-                        </span>
-                      ) : submitted ? "✓ Password Reset" : "Reset Password"}
+                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+                      <span className="relative z-10 flex items-center justify-center gap-2">
+                        {isLoading ? (
+                          <>
+                            <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Resetting...
+                          </>
+                        ) : submitted ? '✓ Password Reset' : 'Reset Password'}
+                      </span>
                     </motion.button>
 
                     <button
                       type="button"
                       onClick={() => setCurrentStep(2)}
-                      className="w-full py-2 text-slate-500 hover:text-slate-700 transition-all text-sm font-medium"
+                      className="w-full py-2 text-slate-500 transition-all text-sm font-medium hover:text-slate-700"
                       disabled={submitted}
                     >
                       ← Go back
@@ -411,13 +421,12 @@ const ForgetPassword = () => {
               )}
             </AnimatePresence>
 
-            {/* Login Link */}
             <div className="mt-8 text-center">
               <p className="text-slate-500 text-sm font-medium">
                 Remember your password?{' '}
-                <button 
+                <button
                   onClick={goBackToLogin}
-                  className="text-[#22D3EE] font-bold hover:underline underline-offset-4 transition-all"
+                  className="font-bold text-[#E8791E] transition-all hover:underline hover:underline-offset-4"
                 >
                   Sign In
                 </button>

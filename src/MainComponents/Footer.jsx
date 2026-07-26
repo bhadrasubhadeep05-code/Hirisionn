@@ -79,19 +79,19 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full relative overflow-hidden bg-[#F8FAFC]">
-      {/* Animated metallic background */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-[#22D3EE] via-[#818CF8] to-transparent rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-[#818CF8] via-[#22D3EE] to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+    <footer className="w-full relative overflow-hidden bg-[#12171B]">
+      {/* Warm glow background */}
+      <div className="absolute inset-0 opacity-[0.12]">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-[#F2A93C] via-[#E8791E] to-transparent rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-[#E8791E] via-[#F2A93C] to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
       </div>
 
       <div className="relative">
-        {/* Top metallic border with glow */}
-        <div className="h-px bg-gradient-to-r from-transparent via-[#22D3EE]/60 to-transparent shadow-lg shadow-[#22D3EE]/20" />
+        {/* Top border glow */}
+        <div className="h-px bg-gradient-to-r from-transparent via-[#F2A93C]/50 to-transparent shadow-lg shadow-[#F2A93C]/20" />
 
-        {/* Main content with backdrop blur */}
-        <div className="bg-gradient-to-b from-white/40 via-[#F8FAFC]/60 to-[#0F172A]/10 backdrop-blur-2xl border-y border-[#22D3EE]/10">
+        {/* Main content */}
+        <div className="bg-gradient-to-b from-[#1A2126]/80 via-[#12171B]/90 to-[#0A0E10] backdrop-blur-2xl border-y border-[#F2A93C]/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24">
             {/* Top Section - 4 Columns */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12 mb-16">
@@ -103,21 +103,21 @@ const Footer = () => {
                 transition={{ duration: 0.6 }}
               >
                 <motion.div whileHover={{ scale: 1.02 }}>
-                  <h3 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-[#0F172A] to-[#22D3EE] bg-clip-text text-transparent mb-3">
-                    Hirisonn
+                  <h3 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-[#F2A93C] to-[#E8791E] bg-clip-text text-transparent mb-3">
+                    Hirisionn
                   </h3>
                 </motion.div>
-                <p className="text-sm text-[#4A5568] leading-relaxed mb-6">
+                <p className="text-sm text-[#AAB5BA] leading-relaxed mb-6">
                   Connecting exceptional talent with career-defining opportunities in staffing and recruitment.
                 </p>
-                {/* Animated metallic bar */}
+                {/* Animated orange bar */}
                 <motion.div
-                  className="h-1.5 bg-gradient-to-r from-[#22D3EE] via-[#818CF8] to-[#22D3EE] rounded-full"
+                  className="h-1.5 bg-gradient-to-r from-[#F2A93C] via-[#E8791E] to-[#F2A93C] rounded-full"
                   animate={{
                     boxShadow: [
-                      "0 0 10px rgba(34, 211, 238, 0.5)",
-                      "0 0 20px rgba(34, 211, 238, 0.8)",
-                      "0 0 10px rgba(34, 211, 238, 0.5)"
+                      "0 0 10px rgba(242, 169, 60, 0.5)",
+                      "0 0 20px rgba(232, 121, 30, 0.8)",
+                      "0 0 10px rgba(242, 169, 60, 0.5)"
                     ]
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
@@ -134,10 +134,10 @@ const Footer = () => {
                   transition={{ duration: 0.6, delay: (idx + 1) * 0.1 }}
                 >
                   <div className="group">
-                    <h4 className="font-bold text-[#0F172A] text-sm uppercase tracking-widest mb-6 relative inline-block">
+                    <h4 className="font-bold text-[#F2A93C] text-sm uppercase tracking-widest mb-6 relative inline-block">
                       {section.title}
                       <motion.div
-                        className="absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-[#22D3EE] to-[#818CF8]"
+                        className="absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-[#F2A93C] to-[#E8791E]"
                         initial={{ width: 0 }}
                         whileInView={{ width: "100%" }}
                         viewport={{ once: true }}
@@ -149,11 +149,11 @@ const Footer = () => {
                         <li key={i}>
                           <motion.button
                             onClick={() => navigate(link.path)}
-                            className="text-[#4A5568] hover:text-[#22D3EE] text-sm font-medium transition-all duration-300 flex items-center gap-2 group/link w-full text-left"
+                            className="text-[#AAB5BA] hover:text-[#F2A93C] text-sm font-medium transition-all duration-300 flex items-center gap-2 group/link w-full text-left"
                             whileHover={{ x: 4 }}
                           >
                             <motion.span
-                              className="w-1 h-1 rounded-full bg-[#22D3EE] opacity-0 group-hover/link:opacity-100"
+                              className="w-1 h-1 rounded-full bg-[#E8791E] opacity-0 group-hover/link:opacity-100"
                               animate={{ scale: [1, 1.3, 1] }}
                               transition={{ duration: 0.6, repeat: Infinity }}
                             />
@@ -173,10 +173,10 @@ const Footer = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                <h4 className="font-bold text-[#0F172A] text-sm uppercase tracking-widest mb-6 relative inline-block">
+                <h4 className="font-bold text-[#F2A93C] text-sm uppercase tracking-widest mb-6 relative inline-block">
                   Connect
                   <motion.div
-                    className="absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-[#22D3EE] to-[#818CF8]"
+                    className="absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-[#F2A93C] to-[#E8791E]"
                     initial={{ width: 0 }}
                     whileInView={{ width: "100%" }}
                     viewport={{ once: true }}
@@ -190,20 +190,20 @@ const Footer = () => {
                       href={social.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group/social relative h-14 rounded-xl bg-gradient-to-br from-[#22D3EE]/25 to-[#818CF8]/25 border-2 border-[#22D3EE]/40 flex items-center justify-center text-[#22D3EE] hover:text-white hover:border-[#22D3EE]/80 overflow-hidden transition-all duration-300"
+                      className="group/social relative h-14 rounded-xl bg-gradient-to-br from-[#F2A93C]/20 to-[#E8791E]/20 border border-[#F2A93C]/30 flex items-center justify-center text-[#F2A93C] hover:text-white hover:border-[#E8791E]/60 overflow-hidden transition-all duration-300"
                       whileHover={{ scale: 1.1, y: -6 }}
                       whileTap={{ scale: 0.92 }}
                       title={social.name}
                     >
-                      {/* Metallic shine effect */}
+                      {/* Shine effect */}
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover/social:opacity-20"
-                        animate={{ x: ["−100%", "100%"] }}
+                        animate={{ x: ["-100%", "100%"] }}
                         transition={{ duration: 2, repeat: Infinity }}
                       />
                       {/* Glow effect on hover */}
                       <motion.div
-                        className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#22D3EE]/30 to-[#818CF8]/30 opacity-0 group-hover/social:opacity-100 blur-xl"
+                        className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#F2A93C]/30 to-[#E8791E]/30 opacity-0 group-hover/social:opacity-100 blur-xl"
                         transition={{ duration: 0.3 }}
                       />
                       <span className="relative z-10 flex items-center justify-center text-xl">
@@ -217,7 +217,7 @@ const Footer = () => {
 
             {/* Divider */}
             <motion.div
-              className="h-px bg-gradient-to-r from-transparent via-[#22D3EE]/30 to-transparent mb-8"
+              className="h-px bg-gradient-to-r from-transparent via-[#F2A93C]/30 to-transparent mb-8"
               initial={{ opacity: 0, scaleX: 0 }}
               whileInView={{ opacity: 1, scaleX: 1 }}
               viewport={{ once: true }}
@@ -232,8 +232,8 @@ const Footer = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <p className="text-xs sm:text-sm text-[#4A5568] font-medium">
-                © <span className="text-[#0F172A] font-bold">Hirisonn</span>. All rights reserved.
+              <p className="text-xs sm:text-sm text-[#AAB5BA] font-medium">
+                © <span className="text-[#F2A93C] font-bold">Hirisionn</span>. All rights reserved.
               </p>
 
               <div className="flex items-center gap-6 text-xs sm:text-sm">
@@ -241,12 +241,12 @@ const Footer = () => {
                   <React.Fragment key={idx}>
                     <motion.a
                       href="#"
-                      className="text-[#4A5568] hover:text-[#22D3EE] font-medium transition-all duration-300"
+                      className="text-[#AAB5BA] hover:text-[#F2A93C] font-medium transition-all duration-300"
                       whileHover={{ scale: 1.07 }}
                     >
                       {item}
                     </motion.a>
-                    {idx < 2 && <div className="w-1 h-1 rounded-full bg-gradient-to-r from-[#22D3EE] to-[#818CF8]" />}
+                    {idx < 2 && <div className="w-1 h-1 rounded-full bg-gradient-to-r from-[#F2A93C] to-[#E8791E]" />}
                   </React.Fragment>
                 ))}
               </div>
@@ -254,8 +254,8 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom metallic border */}
-        <div className="h-px bg-gradient-to-r from-transparent via-[#22D3EE]/60 to-transparent shadow-lg shadow-[#22D3EE]/20" />
+        {/* Bottom border glow */}
+        <div className="h-px bg-gradient-to-r from-transparent via-[#F2A93C]/50 to-transparent shadow-lg shadow-[#F2A93C]/20" />
       </div>
     </footer>
   );

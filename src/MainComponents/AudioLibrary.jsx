@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import NavBar2 from './NavBar2';
 import AudioCard from './AudioCard';
-const video = 'https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778460/video4_l67mdf.mp4'
 import { getAudio } from '../services/audio';
 
 // BlogSubcategories for Audio
@@ -60,29 +59,22 @@ const AudioLibrary = () => {
     <div className="min-h-screen bg-[#F8FAFC]">
       <NavBar2 progress={1} />
       
-      {/* Hero Section with Video Background - LIGHT EDITION */}
-      <div className="relative h-[450px] overflow-hidden mt-24">
-        {/* Background Video */}
-        <video 
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-        >
-          <source src={video} type="video/mp4" />
-        </video>
+      {/* ================= HERO SECTION ================= */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative bg-[radial-gradient(120%_160%_at_100%_0%,#1c5872,#12171B_70%)] min-h-[60vh] flex items-center justify-center px-6 py-24 mt-16 md:mt-24 md:py-52"
+      >
+        {/* Decorative glow */}
+        <div className="pointer-events-none absolute right-0 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(232,121,30,0.25)_0%,transparent_68%)] blur-[10px] sm:-right-20 sm:-top-20 sm:h-[420px] sm:w-[420px] lg:-right-[6%] lg:-top-[10%] lg:h-[520px] lg:w-[520px]" />
 
-        {/* Light Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F8FAFC]/60 via-[#F8FAFC]/70 to-[#F8FAFC]" />
-
-        {/* Hero Content */}
-        <div className="relative z-10 h-full flex flex-col justify-center items-center px-6 text-center">
+        <div className="relative z-10 max-w-5xl mx-auto text-center">
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl md:text-5xl font-bold text-[#0F172A] mb-4"
+            className="text-4xl md:text-5xl font-bold text-white mb-4"
           >
             Hirisionn Podcast: Learning in Motion
           </motion.h1>
@@ -90,7 +82,7 @@ const AudioLibrary = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-lg text-slate-600 max-w-xl mb-10"
+            className="text-lg text-[#AAB5BA] max-w-xl mx-auto mb-10"
           >
             Bite-sized micro-learning and expert interviews designed for the flow of work.
           </motion.p>
@@ -100,19 +92,19 @@ const AudioLibrary = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6 }}
-            className="relative w-full max-w-lg"
+            className="relative w-full max-w-lg mx-auto"
           >
             <input 
               type="text"
               placeholder="Search episodes or speakers..."
-              className="w-full px-6 py-4 bg-white border border-[#818CF8]/30 rounded-full text-[#0F172A] placeholder-slate-400 focus:outline-none focus:border-[#818CF8] focus:shadow-[0_0_20px_rgba(129,140,248,0.2)] transition-all shadow-lg"
+              className="w-full px-6 py-4 bg-white/10 backdrop-blur-md border border-[#F2A93C]/40 rounded-full text-white placeholder-[#AAB5BA] focus:outline-none focus:border-[#F2A93C] focus:shadow-[0_0_20px_rgba(242,169,60,0.2)] transition-all shadow-lg"
             />
-            <svg className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#818CF8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#F2A93C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </motion.div>
         </div>
-      </div>
+      </motion.section>
 
       {/* Main Content Layout */}
       <div className="flex flex-col lg:flex-row px-4 md:px-8 pb-16 pt-8">
@@ -133,7 +125,7 @@ const AudioLibrary = () => {
                 }`}
               >
                 {activeCategory === category.id && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#22D3EE] rounded-l-xl" />
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#E8791E] rounded-l-xl" />
                 )}
                 
                 <div className="flex items-center gap-3">
@@ -146,8 +138,8 @@ const AudioLibrary = () => {
                   </div>
                   {category.isLive && (
                     <span className="ml-auto flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#22D3EE] opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22D3EE]"></span>
+                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#E8791E] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E8791E]"></span>
                     </span>
                   )}
                 </div>
@@ -166,7 +158,7 @@ const AudioLibrary = () => {
                 whileTap={{ scale: 0.95 }}
                 className={`px-5 py-3 rounded-full whitespace-nowrap transition-all ${
                   activeCategory === category.id 
-                    ? 'bg-[#22D3EE] text-[#0F172A] font-medium shadow-md' 
+                    ? 'bg-[#E8791E] text-[#0F172A] font-medium shadow-md' 
                     : 'bg-white text-slate-700 border border-slate-200'
                 }`}
               >
@@ -183,7 +175,7 @@ const AudioLibrary = () => {
         <div className="lg:w-4/5">
           {loading ? (
             <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#818CF8]"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F2A93C]"></div>
             </div>
           ) : audios.length === 0 ? (
             <div className="text-center py-20 text-slate-500">

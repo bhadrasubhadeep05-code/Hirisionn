@@ -35,7 +35,7 @@ const BusinessEnquiry = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -63,22 +63,29 @@ const handleSubmit = async (e) => {
     } finally {
         setIsSubmitting(false);
     }
-};
+  };
+
+  const fieldClassName =
+    "w-full rounded-xl border border-slate-200 bg-[#F8FAFC] px-4 py-3.5 text-[#0F172A] outline-none transition-all placeholder:text-slate-400 focus:border-[#E8791E] focus:bg-white focus:ring-4 focus:ring-[#E8791E]/10";
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen overflow-x-hidden bg-[#F8FAFC]">
       <NavBar2 progress={1} />
 
       {/* Hero Section */}
-
-      <div className="relative h-[400px] overflow-hidden mt-24">
-        <div className="absolute inset-0 bg-[#0F172A] backdrop-blur-md" />
-
-        <div className="relative z-10 h-full flex flex-col justify-center items-center px-6 text-center">
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative mt-16 flex min-h-[52vh] items-center justify-center overflow-hidden bg-[radial-gradient(120%_160%_at_100%_0%,#1c5872,#12171B_70%)] px-6 py-24 md:mt-24 md:py-36"
+      >
+        <div className="pointer-events-none absolute right-0 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(232,121,30,0.25)_0%,transparent_68%)] blur-[10px] sm:-right-20 sm:-top-20 sm:h-[420px] sm:w-[420px]" />
+        <div className="relative z-10 mx-auto max-w-5xl text-center">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl md:text-5xl font-bold text-white mb-4"
+            className="mb-4 text-4xl font-bold text-white md:text-6xl"
           >
             Tailored Workforce Solutions for Your Enterprise
           </motion.h1>
@@ -86,28 +93,40 @@ const handleSubmit = async (e) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-lg text-slate-300 max-w-2xl"
+            className="mx-auto max-w-2xl text-lg leading-relaxed text-[#AAB5BA]"
           >
             Connect with our experts to bridge your organization's talent and
             skill gaps.
           </motion.p>
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: 60 }}
+            transition={{ delay: 0.8, duration: 1.5 }}
+            className="mx-auto mt-8 w-0.5 bg-gradient-to-b from-[#F2A93C] to-[#E8791E]"
+          />
         </div>
-      </div>
+      </motion.section>
 
       {/* Form Section */}
-      <div className="max-w-4xl mx-auto px-4 pb-24 -mt-20 relative z-20">
+      <div className="relative z-20 mx-auto -mt-16 max-w-5xl px-4 pb-24 md:-mt-20 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-white rounded-[2rem] shadow-2xl p-8 md:p-12 hover:shadow-[0_35px_60px_-15px_rgba(34,211,238,0.15)] transition-all duration-500"
+          className="relative overflow-hidden rounded-[2rem] border border-white bg-white p-7 shadow-2xl md:p-12"
         >
+          <div className="absolute left-0 top-10 bottom-10 w-1 bg-gradient-to-b from-[#F2A93C] to-[#E8791E]" />
+          <div className="mb-10 pl-4">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#E8791E]">Let&apos;s build together</p>
+            <h2 className="text-3xl font-bold text-[#0F172A]">Tell us what your team needs</h2>
+            <p className="mt-3 max-w-2xl leading-relaxed text-slate-600">Share your requirements and our workforce specialists will get back to you with the right solution.</p>
+          </div>
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* 2 Column Grid Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Full Name */}
               <div className="group">
-                <label className="block text-sm text-[#818CF8] uppercase tracking-wider mb-2 group-focus-within:text-[#22D3EE] transition-colors">
+                <label className="mb-2 block text-sm font-semibold uppercase tracking-wider text-slate-500 transition-colors group-focus-within:text-[#E8791E]">
                   Full Name
                 </label>
                 <input
@@ -115,14 +134,14 @@ const handleSubmit = async (e) => {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  className="w-full border-b border-slate-200 py-3 focus:border-[#22D3EE] outline-none transition-colors text-[#0F172A]"
+                  className={fieldClassName}
                   placeholder="John Smith"
                 />
               </div>
 
               {/* Email ID */}
               <div className="group">
-                <label className="block text-sm text-[#818CF8] uppercase tracking-wider mb-2 group-focus-within:text-[#22D3EE] transition-colors">
+                <label className="mb-2 block text-sm font-semibold uppercase tracking-wider text-slate-500 transition-colors group-focus-within:text-[#E8791E]">
                   Email ID
                 </label>
                 <input
@@ -130,14 +149,14 @@ const handleSubmit = async (e) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full border-b border-slate-200 py-3 focus:border-[#22D3EE] outline-none transition-colors text-[#0F172A]"
+                  className={fieldClassName}
                   placeholder="john@gmail.com"
                 />
               </div>
 
               {/* Organization Name */}
               <div className="group">
-                <label className="block text-sm text-[#818CF8] uppercase tracking-wider mb-2 group-focus-within:text-[#22D3EE] transition-colors">
+                <label className="mb-2 block text-sm font-semibold uppercase tracking-wider text-slate-500 transition-colors group-focus-within:text-[#E8791E]">
                   Organization Name
                 </label>
                 <input
@@ -145,14 +164,14 @@ const handleSubmit = async (e) => {
                   name="organization"
                   value={formData.organization}
                   onChange={handleChange}
-                  className="w-full border-b border-slate-200 py-3 focus:border-[#22D3EE] outline-none transition-colors text-[#0F172A]"
+                  className={fieldClassName}
                   placeholder="Acme Corporation"
                 />
               </div>
 
               {/* Designation */}
               <div className="group">
-                <label className="block text-sm text-[#818CF8] uppercase tracking-wider mb-2 group-focus-within:text-[#22D3EE] transition-colors">
+                <label className="mb-2 block text-sm font-semibold uppercase tracking-wider text-slate-500 transition-colors group-focus-within:text-[#E8791E]">
                   Designation
                 </label>
                 <input
@@ -160,14 +179,14 @@ const handleSubmit = async (e) => {
                   name="designation"
                   value={formData.designation}
                   onChange={handleChange}
-                  className="w-full border-b border-slate-200 py-3 focus:border-[#22D3EE] outline-none transition-colors text-[#0F172A]"
+                  className={fieldClassName}
                   placeholder="Human Resources Manager"
                 />
               </div>
 
               {/* Phone No */}
               <div className="group">
-                <label className="block text-sm text-[#818CF8] uppercase tracking-wider mb-2 group-focus-within:text-[#22D3EE] transition-colors">
+                <label className="mb-2 block text-sm font-semibold uppercase tracking-wider text-slate-500 transition-colors group-focus-within:text-[#E8791E]">
                   Phone Number
                 </label>
                 <input
@@ -175,14 +194,14 @@ const handleSubmit = async (e) => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full border-b border-slate-200 py-3 focus:border-[#22D3EE] outline-none transition-colors text-[#0F172A]"
+                  className={fieldClassName}
                   placeholder="+91 98765 43210"
                 />
               </div>
 
               {/* Location */}
               <div className="group">
-                <label className="block text-sm text-[#818CF8] uppercase tracking-wider mb-2 group-focus-within:text-[#22D3EE] transition-colors">
+                <label className="mb-2 block text-sm font-semibold uppercase tracking-wider text-slate-500 transition-colors group-focus-within:text-[#E8791E]">
                   Location
                 </label>
                 <input
@@ -190,7 +209,7 @@ const handleSubmit = async (e) => {
                   name="location"
                   value={formData.location}
                   onChange={handleChange}
-                  className="w-full border-b border-slate-200 py-3 focus:border-[#22D3EE] outline-none transition-colors text-[#0F172A]"
+                  className={fieldClassName}
                   placeholder="Mumbai, India"
                 />
               </div>
@@ -198,14 +217,14 @@ const handleSubmit = async (e) => {
 
             {/* Enquiry For - Full Width */}
             <div className="group md:col-span-2">
-              <label className="block text-sm text-[#818CF8] uppercase tracking-wider mb-2 group-focus-within:text-[#22D3EE] transition-colors">
+              <label className="mb-2 block text-sm font-semibold uppercase tracking-wider text-slate-500 transition-colors group-focus-within:text-[#E8791E]">
                 Enquiry For
               </label>
               <select
                 name="enquiryFor"
                 value={formData.enquiryFor}
                 onChange={handleChange}
-                className="w-full border-b border-slate-200 py-3 focus:border-[#22D3EE] outline-none transition-colors text-[#0F172A] bg-transparent"
+                className={fieldClassName}
               >
                 <option value="">Select service category</option>
                 {enquiryOptions.map((option, index) => (
@@ -218,7 +237,7 @@ const handleSubmit = async (e) => {
 
             {/* Message - Full Width */}
             <div className="group md:col-span-2">
-              <label className="block text-sm text-[#818CF8] uppercase tracking-wider mb-2 group-focus-within:text-[#22D3EE] transition-colors">
+              <label className="mb-2 block text-sm font-semibold uppercase tracking-wider text-slate-500 transition-colors group-focus-within:text-[#E8791E]">
                 Your Message
               </label>
               <textarea
@@ -226,7 +245,7 @@ const handleSubmit = async (e) => {
                 value={formData.message}
                 onChange={handleChange}
                 rows="4"
-                className="w-full border-b border-slate-200 py-3 focus:border-[#22D3EE] outline-none transition-colors text-[#0F172A] resize-none"
+                className={`${fieldClassName} resize-none`}
                 placeholder="Tell us about your requirements..."
               />
             </div>
@@ -236,9 +255,7 @@ const handleSubmit = async (e) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#22D3EE] text-[#0F172A] py-5 rounded-full font-bold text-lg shadow-xl
-                          hover:shadow-[0_20px_50px_-12px_rgba(34,211,238,0.5)] hover:-translate-y-1
-                          transition-all duration-500 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full rounded-xl bg-gradient-to-r from-[#F2A93C] to-[#E8791E] py-4 text-lg font-bold text-white shadow-lg shadow-[#E8791E]/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#E8791E]/30 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center gap-2">

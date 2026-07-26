@@ -9,22 +9,37 @@ const Card = ({ id, title, img, itm }) => {
     });
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleClick();
+    }
+  };
+
+  const publishedDate = itm?.createdAt
+    ? new Date(itm.createdAt).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : "Latest insight";
+
   return (
     <div
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       role="button"
       tabIndex="0"
-      className="relative bg-white p-8 pt-12 rounded-2xl shadow-xl w-[320px] min-w-[320px] max-w-[320px] cursor-pointer group hover:shadow-2xl transition-shadow duration-300"
+      className="group relative w-[320px] min-w-[320px] max-w-[320px] cursor-pointer rounded-3xl border border-white bg-white p-7 pt-12 shadow-xl outline-none transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl focus-visible:ring-4 focus-visible:ring-[#E8791E]/30"
     >
       {/* Offset Category Tag */}
-      <div className="absolute -left-3 top-8 max-sm:left-4 bg-[#22D3EE] text-[#0F172A] px-4 py-1 text-xs font-bold uppercase tracking-widest shadow-md z-20">
+      <div className="absolute -left-3 top-8 z-20 bg-gradient-to-r from-[#F2A93C] to-[#E8791E] px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-md max-sm:left-4">
         {itm?.subCategory || "Article"}
       </div>
 
       {/* Floating Offset Image Container */}
-      <div className="relative -mr-12 mb-6 h-48 w-[130%] max-sm:w-full max-sm:mr-0 rounded-xl overflow-hidden shadow-2xl border-4 border-white">
-        {/* Soft Lavender Blue Glow Shadow */}
-        <div className="absolute -top-4 -left-4 w-full h-full bg-[#818CF8]/20 blur-2xl z-0" />
+      <div className="relative -mr-12 mb-6 h-48 w-[130%] overflow-hidden rounded-2xl border-4 border-white shadow-2xl max-sm:mr-0 max-sm:w-full">
+        <div className="absolute -bottom-3 -left-3 h-full w-full rounded-2xl bg-[#E8791E]/15" />
         
         <img
           src={img}
@@ -35,14 +50,14 @@ const Card = ({ id, title, img, itm }) => {
 
       {/* Title - Fixed height container */}
       <div className="min-h-[60px]">
-        <h3 className="text-lg text-[#0F172A] font-medium leading-snug line-clamp-2 mb-4">
+        <h3 className="mb-4 text-lg font-bold leading-snug text-[#0F172A] line-clamp-2">
         {title}
       </h3>
 
       {/* Meta Footer */}
-      <div className="pt-4 border-t border-slate-100 text-xs text-[#818CF8] flex justify-between items-center">
-        <span>{new Date(itm?.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</span>
-        <span>5 min read</span>
+      <div className="flex items-center justify-between border-t border-slate-100 pt-4 text-xs font-medium text-slate-500">
+        <span>{publishedDate}</span>
+        <span className="text-[#E8791E]">5 min read</span>
       </div>
       </div>
 

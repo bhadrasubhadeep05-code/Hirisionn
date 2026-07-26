@@ -2,7 +2,6 @@ import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import AppContext from "../context/AppContext";
-const video = "https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778447/video2_ndpc3f.mp4";
 import NavBar2 from "./NavBar2";
 import { internshipUpdate } from "../services/user.api";
 
@@ -141,54 +140,34 @@ const Internship = () => {
       {/* ================= HERO SECTION ================= */}
       <motion.section
         ref={heroRef}
-        className="relative h-[75vh] overflow-hidden my-16 md:my-40"
+        className="relative mt-16 flex min-h-[60vh] items-center justify-center overflow-hidden bg-[radial-gradient(120%_160%_at_100%_0%,#1c5872,#12171B_70%)] px-6 py-24 md:mt-24 md:py-52"
         variants={staggerContainer}
         initial="hidden"
         animate={heroInView ? "visible" : "hidden"}
       >
-        {/* Video */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src={video} type="video/mp4" />
-        </video>
-
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-md"></div>
+        <div className="pointer-events-none absolute right-0 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(232,121,30,0.25)_0%,transparent_68%)] blur-[10px] sm:-right-20 sm:-top-20 sm:h-[420px] sm:w-[420px]" />
 
         {/* Content */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
           <motion.div
             variants={fadeUp}
-            className="bg-white p-8 md:p-12 rounded-3xl shadow-2xl max-w-4xl mx-auto"
+            className="mx-auto max-w-4xl"
           >
-            <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-[#0F172A] mb-6 leading-tight font-heading">
+            <h1 className="mb-4 text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight text-white font-heading">
               From Classroom Learning to Real-World Impact.
             </h1>
 
-            <p className="text-gray-600 text-[clamp(1.1rem,2vw,1.3rem)] max-w-2xl mx-auto mb-10">
+            <p className="mx-auto mb-8 max-w-2xl text-[clamp(1.1rem,2vw,1.3rem)] text-[#AAB5BA]">
               Gain hands-on experience, build in-demand skills, and launch your
               career with confidence.
             </p>
-
-            <motion.button
-              variants={fadeUp}
-              whileHover={!ProfileComplete ? { scale: 1.08 } : {}}
-              whileTap={!ProfileComplete ? { scale: 0.97 } : {}}
-              onClick={() => navigate("/register")}
-              disabled={ProfileComplete}
-              className={`px-12 py-5 text-xl font-bold rounded-xl transition-all duration-300 ${
-                ProfileComplete
-                  ? "bg-gray-600 text-gray-300 cursor-not-allowed"
-                  : "bg-[#22D3EE] text-[#0F172A] hover:shadow-[0_0_35px_rgba(34,211,238,0.7)]"
-              }`}
-            >
-              {ProfileComplete ? "You have already registered" : "Register Now"}
-            </motion.button>
+               <motion.div
+                          initial={{ height: 0 }}
+                          animate={{ height: 60 }}
+                          transition={{ delay: 0.8, duration: 1.5 }}
+                          className="mx-auto mt-8 w-0.5 bg-gradient-to-b from-[#F2A93C] to-[#E8791E]"
+                        />
+        
           </motion.div>
         </div>
       </motion.section>
@@ -196,7 +175,7 @@ const Internship = () => {
       {/* ================= EXPERTISE SECTION ================= */}
       <motion.section
         ref={gridRef}
-        className="py-24 px-6"
+        className="px-6 py-24"
         variants={staggerContainer}
         initial="hidden"
         animate={gridInView ? "visible" : "hidden"}
@@ -220,7 +199,7 @@ const Internship = () => {
                 variants={fadeUp}
                 whileHover={{ y: -6 }}
                 onClick={() => handleCardClick(category)}
-                className={`bg-white border border-[#818CF8]/30 rounded-xl p-8 shadow-md hover:border-[#22D3EE] hover:shadow-xl transition-all duration-300 flex flex-col justify-between ${
+                className={`flex flex-col justify-between rounded-3xl border border-white bg-white p-8 shadow-md transition-all duration-300 hover:border-[#E8791E]/30 hover:shadow-xl ${
                   index === 6
                     ? "md:col-span-2 lg:col-span-1 lg:col-start-2"
                     : ""
@@ -279,7 +258,7 @@ const Internship = () => {
                           }
                         }
                   }
-                  className="px-6 py-2 bg-[#22D3EE] text-[#0F172A] font-semibold rounded-lg hover:bg-[#06b6d4] hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="rounded-xl bg-gradient-to-r from-[#F2A93C] to-[#E8791E] px-6 py-2.5 font-semibold text-white shadow-md shadow-[#E8791E]/20 transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {loadingApply === index ? "Applying..." : "Apply"}
                 </button>
@@ -311,17 +290,17 @@ const Internship = () => {
               animate="visible"
               exit="exit"
               onClick={(e) => e.stopPropagation()}
-              className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto z-10"
+              className="relative z-10 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-[2rem] bg-white shadow-2xl"
             >
               {/* Modal Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-200 p-6">
+              <div className="sticky top-0 border-b border-slate-100 bg-white p-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-bold text-[#0F172A]">
                     {openModal.title} Categories
                   </h3>
                   <button
                     onClick={closeModal}
-                    className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E8791E]/10 text-[#E8791E] transition-colors hover:bg-[#E8791E]/20"
                   >
                     ✕
                   </button>
@@ -339,7 +318,7 @@ const Internship = () => {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 }}
-                    className="flex items-center justify-between p-4 bg-[#F8FAFC] rounded-xl hover:bg-[#EEF2FF] transition-colors group"
+                    className="group flex items-center justify-between rounded-xl bg-[#F8FAFC] p-4 transition-colors hover:bg-[#E8791E]/5"
                   >
                     <span className="font-medium text-[#0F172A] text-lg">
                       {subCategory}
@@ -369,7 +348,7 @@ const Internship = () => {
                           navigate("/register");
                         }
                       }}
-                      className="px-6 py-2 bg-[#22D3EE] text-[#0F172A] font-semibold rounded-lg hover:bg-[#06b6d4] hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="rounded-xl bg-gradient-to-r from-[#F2A93C] to-[#E8791E] px-6 py-2 font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {loadingApply === idx ? "Applying..." : "Apply"}
                     </button>
@@ -378,10 +357,10 @@ const Internship = () => {
               </div>
 
               {/* Modal Footer */}
-              <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
+              <div className="sticky bottom-0 border-t border-slate-100 bg-white p-4">
                 <button
                   onClick={closeModal}
-                  className="w-full py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+                  className="w-full rounded-xl border-2 border-[#E8791E]/20 py-3 font-semibold text-[#0F172A] transition-colors hover:bg-[#E8791E]/5"
                 >
                   Close
                 </button>
@@ -394,27 +373,15 @@ const Internship = () => {
       {/* ================= FOOTER CTA SECTION ================= */}
       <motion.section
         ref={footerRef}
-        className="relative h-[450px] overflow-hidden"
+        className="relative flex min-h-[450px] items-center justify-center overflow-hidden bg-[radial-gradient(120%_160%_at_100%_0%,#1c5872,#12171B_70%)] px-6 py-24"
         variants={staggerContainer}
         initial="hidden"
         animate={footerInView ? "visible" : "hidden"}
       >
-        {/* Video */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src={video} type="video/mp4" />
-        </video>
-
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-[#0F172A]/80 backdrop-blur-md"></div>
+        <div className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(232,121,30,0.22)_0%,transparent_68%)] blur-[10px]" />
 
         {/* CTA Content */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
           <motion.h2
             variants={fadeUp}
             className="text-white text-[clamp(1.7rem,4vw,2.6rem)] font-bold mb-8 max-w-3xl font-heading"
@@ -431,7 +398,7 @@ const Internship = () => {
             className={`px-12 py-5 text-xl font-bold rounded-xl transition-all duration-300 ${
               ProfileComplete
                 ? "bg-gray-600 text-gray-300 cursor-not-allowed"
-                : "bg-[#22D3EE] text-[#0F172A] hover:shadow-[0_0_35px_rgba(34,211,238,0.7)]"
+                : "bg-gradient-to-r from-[#F2A93C] to-[#E8791E] text-white shadow-lg shadow-[#E8791E]/25 hover:-translate-y-1 hover:shadow-xl"
             }`}
           >
             {ProfileComplete ? "You have already registered" : "Register Now"}

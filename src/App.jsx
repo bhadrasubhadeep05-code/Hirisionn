@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css'
-import LandingPage from './MainComponents/LandingPage'
+import LandingPage2 from './landingPage/LandingPage2'
 import { Routes, Route } from "react-router-dom"; 
 import Blog from './MainComponents/Blog';
 import Video from './MainComponents/Video';
@@ -40,7 +40,6 @@ import AdminSoftSkill from './admin/AdminSoftSkill';
 
 
 
-
 function App() {
 
 
@@ -48,10 +47,10 @@ function App() {
   return (
     <>
     <Routes>  
-      <Route path="/" element={
+       <Route path="/" element={
         <>
         
-          <LandingPage />
+          <LandingPage2 />
         </>
       } />
        <Route path="/blog-page" element={<BlogPage />} />
@@ -87,7 +86,7 @@ function App() {
       <Route path="/manpower" element={<ManPower/>}/>
       <Route path="/contact-us" element={<ContactUs/>}/>
       <Route path="/about-us" element={<AboutUs/>}/>
-      <Route path="resume-builder" element={<ResumeMasterclass/>}/>
+      <Route path="/resume-builder" element={<ResumeMasterclass/>}/>
        <Route path="/workforce-insights" element={<WorkForce/>}/>
      </Routes>
     </>

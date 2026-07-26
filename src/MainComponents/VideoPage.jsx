@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import NavBar2 from './NavBar2';
 import VideoCard from './VideoCard';
-const video = 'https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778458/videoPage_yj0iny.mp4';
 import { getVideo } from '../services/video.api';
 
-// Blogs Category Subcategories for Video
+
 const videoCategories = [
-  { id: 1, name: "All Videos",  description: "View all video content", isLive: false },
-  { id: 2, name: "Company Updates",  description: "Announcements & behind-the-scenes", isLive: true },
-  { id: 3, name: "Leadership Perspectives",  description: "Founder & executive insights", isLive: true },
-  { id: 4, name: "Opinion Pieces",  description: "Trends & industry opinions", isLive: false },
-  { id: 5, name: "Case Studies",  description: "Success stories & learnings", isLive: true },
-  { id: 6, name: "Event Recaps",  description: "Partnerships, milestones & events", isLive: false },
-  { id: 7, name: "Problem Solving",  description: "How we solved challenges", isLive: true },
+  { id: 1, name: 'All Videos', description: 'View all video content', isLive: false },
+  { id: 2, name: 'Company Updates', description: 'Announcements & behind-the-scenes', isLive: true },
+  { id: 3, name: 'Leadership Perspectives', description: 'Founder & executive insights', isLive: true },
+  { id: 4, name: 'Opinion Pieces', description: 'Trends & industry opinions', isLive: false },
+  { id: 5, name: 'Case Studies', description: 'Success stories & learnings', isLive: true },
+  { id: 6, name: 'Event Recaps', description: 'Partnerships, milestones & events', isLive: false },
+  { id: 7, name: 'Problem Solving', description: 'How we solved challenges', isLive: true },
 ];
 
 const VideoPage = () => {
@@ -38,195 +37,179 @@ const VideoPage = () => {
   }, [page]);
 
   useEffect(() => {
-    fetchVideos();
+    const loadVideos = async () => {
+      await fetchVideos();
+    };
+
+    loadVideos();
   }, [fetchVideos]);
 
-  // Filter videos based on selected subcategory
-  const filteredVideos = activeCategory === 1 
-    ? videos 
-    : videos.filter(video => {
+  const filteredVideos = activeCategory === 1
+    ? videos
+    : videos.filter((videoItem) => {
         const subcategoryMap = {
-          2: "Company Updates & Announcements",
-          3: "Leadership Perspectives",
-          4: "Opinion Pieces & Trends",
-          5: "Case Studies & Success Stories",
-          6: "Event Recaps & Milestones",
-          7: "Problem Solving Narratives"
+          2: 'Company Updates & Announcements',
+          3: 'Leadership Perspectives',
+          4: 'Opinion Pieces & Trends',
+          5: 'Case Studies & Success Stories',
+          6: 'Event Recaps & Milestones',
+          7: 'Problem Solving Narratives',
         };
-        return video.subCategory === subcategoryMap[activeCategory];
+        return videoItem.subCategory === subcategoryMap[activeCategory];
       });
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800">
       <NavBar2 progress={1} />
+
+      <Motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative mt-16 flex min-h-[60vh] items-center justify-center overflow-hidden bg-[radial-gradient(120%_160%_at_100%_0%,#1c5872,#12171B_70%)] px-6 py-24 md:mt-24 md:py-52"
+      >
       
-      {/* Vision Hero Section */}
-      <div className="relative h-[450px] overflow-hidden mt-24">
-        {/* Background Video */}
-        <video 
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src={video} type="video/mp4" />
-        </video>
+        <div className="pointer-events-none absolute right-0 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(232,121,30,0.25)_0%,transparent_68%)] blur-[10px] sm:-right-20 sm:-top-20 sm:h-[420px] sm:w-[420px] lg:-right-[6%] lg:-top-[10%] lg:h-[520px] lg:w-[520px]" />
 
-        {/* Deep Navy Overlay */}
-        <div className="absolute inset-0 bg-[#0F172A]/40 backdrop-blur-lg" />
-
-        {/* Hero Content */}
-        <div className="relative z-10 h-full flex flex-col justify-center items-center px-6 text-center">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-4xl md:text-5xl font-bold text-white mb-4"
-          >
-            Hirisionn Vision: See Your Future in Motion
-          </motion.h1>
-          <motion.p 
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
+          <Motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-lg text-slate-300 max-w-xl mb-10"
+            transition={{ delay: 0.2 }}
+            className="mb-4 inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-orange-300"
           >
-            Masterclasses, industry breakdowns, and expert interviews—curated for the modern professional.
-          </motion.p>
+            Insights in motion
+          </Motion.div>
+          <Motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-4 text-4xl font-bold text-white md:text-5xl"
+          >
+            See your future in motion
+          </Motion.h1>
+          <Motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+            className="mb-10 max-w-2xl text-lg text-slate-300"
+          >
+            Masterclasses, expert perspectives, and industry stories curated for today’s ambitious professional.
+          </Motion.p>
 
-          {/* Search Bar */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
+          <Motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6 }}
             className="relative w-full max-w-lg"
           >
-            <input 
+            <input
               type="text"
-              placeholder="Search videos, instructors or topics..."
-             className="w-full px-6 py-4 rounded-full bg-white/10 backdrop-blur-md border border-[#22D3EE]/50 text-white placeholder:text-white/50 outline-none focus:border-[#22D3EE] transition-colors"
+              placeholder="Search videos, themes or speakers..."
+              className="w-full rounded-full border border-white/20 bg-white/10 px-6 py-4 text-white outline-none backdrop-blur-md placeholder:text-white/50 focus:border-[#F2A93C]"
             />
-            <svg className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#22D3EE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#F2A93C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-          </motion.div>
+          </Motion.div>
         </div>
-      </div>
+      </Motion.section>
 
-      {/* Main Content Layout */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pb-16 pt-12">
-        <div className="flex flex-col lg:flex-row gap-12">
-          
-          {/* Desktop Sticky Sidebar */}
-          <div className="hidden lg:block w-64 sticky top-32 self-start">
-            <h3 className="text-[#0F172A] font-bold text-lg mb-6">Video Channels</h3>
+      <div className="mx-auto max-w-7xl px-4 pb-16 pt-12 md:px-8">
+        <div className="flex flex-col gap-12 lg:flex-row">
+          <div className="sticky top-32 hidden w-64 self-start lg:block">
+            <h3 className="mb-6 text-lg font-bold text-[#0F172A]">Video channels</h3>
             <div className="space-y-2">
               {videoCategories.map((category) => (
-                <motion.button
+                <Motion.button
                   key={category.id}
                   onClick={() => setActiveCategory(category.id)}
                   whileHover={{ x: 4 }}
-                  className={`w-full text-left p-4 rounded-xl transition-all relative overflow-hidden ${
-                    activeCategory === category.id 
-                      ? 'bg-white shadow-md' 
-                      : 'bg-transparent hover:bg-white/50'
+                  className={`relative w-full overflow-hidden rounded-xl p-4 text-left transition-all ${
+                    activeCategory === category.id ? 'bg-white shadow-md' : 'bg-transparent hover:bg-white/50'
                   }`}
                 >
-                  {activeCategory === category.id && (
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#22D3EE] rounded-l-xl" />
-                  )}
-                  
+                  {activeCategory === category.id && <div className="absolute bottom-0 left-0 top-0 w-1 rounded-l-xl bg-[#E8791E]" />}
                   <div className="flex items-center gap-3">
-                    <span className="text-lg">{category.icon}</span>
                     <div>
-                      <p className={`font-medium transition-colors ${activeCategory === category.id ? 'text-[#0F172A] font-bold' : 'text-slate-700 hover:text-[#22D3EE]'}`}>
+                      <p className={`font-medium transition-colors ${activeCategory === category.id ? 'font-bold text-[#0F172A]' : 'text-slate-700 hover:text-[#E8791E]'}`}>
                         {category.name}
                       </p>
-                      <p className="text-xs text-slate-400 mt-1">{category.description}</p>
+                      <p className="mt-1 text-xs text-slate-400">{category.description}</p>
                     </div>
                     {category.isLive && (
                       <span className="ml-auto flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#22D3EE] opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22D3EE]"></span>
+                        <span className="absolute inline-flex h-2 w-2 rounded-full bg-[#E8791E] opacity-75 animate-ping" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-[#E8791E]" />
                       </span>
                     )}
                   </div>
-                </motion.button>
+                </Motion.button>
               ))}
             </div>
           </div>
 
-          {/* Mobile Horizontal Scrollable Categories */}
-          <div className="lg:hidden overflow-x-auto py-4 -mx-4 px-4 scrollbar-hide mb-6">
-            <div className="flex gap-3 w-max">
+          <div className="-mx-4 overflow-x-auto px-4 py-4 lg:hidden">
+            <div className="flex w-max gap-3">
               {videoCategories.map((category) => (
-                <motion.button
+                <Motion.button
                   key={category.id}
                   onClick={() => setActiveCategory(category.id)}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-5 py-3 rounded-full whitespace-nowrap transition-all ${
-                    activeCategory === category.id 
-                      ? 'bg-[#22D3EE] text-[#0F172A] font-medium shadow-md' 
-                      : 'bg-white text-slate-700 border border-slate-200'
+                  className={`whitespace-nowrap rounded-full px-5 py-3 transition-all ${
+                    activeCategory === category.id ? 'bg-[#E8791E] font-medium text-white shadow-md' : 'border border-slate-200 bg-white text-slate-700'
                   }`}
                 >
-                  <span className="flex items-center gap-2">
-                    {category.icon} {category.name}
-                    {category.isLive && <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>}
-                  </span>
-                </motion.button>
+                  {category.name}
+                </Motion.button>
               ))}
             </div>
           </div>
 
-          {/* Video Grid - Extra right padding for offset cards */}
           <div className="flex-1 lg:pl-10 lg:pr-16">
             {loading ? (
-              <div className="flex justify-center items-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22D3EE]"></div>
+              <div className="flex items-center justify-center py-20">
+                <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#E8791E]" />
               </div>
             ) : videos.length === 0 ? (
-              <div className="text-center py-20 text-slate-500">
-                No videos found
-              </div>
+              <div className="py-20 text-center text-slate-500">No videos found</div>
             ) : (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
                   {filteredVideos.map((item, index) => (
-                    <motion.div
+                    <Motion.div
                       key={item._id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 * index }}
                       className="overflow-visible"
                     >
-                      <VideoCard 
+                      <VideoCard
                         title={item.title}
                         category={item.subCategory}
                         youtubeLink={item.vid_link}
                         createdAt={item.createdAt}
                       />
-                    </motion.div>
+                    </Motion.div>
                   ))}
                 </div>
-                
-                {/* Pagination */}
+
                 {totalPages > 1 && (
-                  <div className="flex justify-center items-center gap-4 mt-12">
+                  <div className="mt-12 flex items-center justify-center gap-4">
                     <button
-                      onClick={() => setPage(p => Math.max(1, p - 1))}
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="px-4 py-2 rounded-lg bg-white shadow-md text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50"
+                      className="rounded-lg bg-white px-4 py-2 text-slate-600 shadow-md transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Previous
                     </button>
-                    <span className="text-slate-600 font-medium">
+                    <span className="font-medium text-slate-600">
                       Page {page} of {totalPages}
                     </span>
                     <button
-                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
-                      className="px-4 py-2 rounded-lg bg-white shadow-md text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50"
+                      className="rounded-lg bg-white px-4 py-2 text-slate-600 shadow-md transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Next
                     </button>

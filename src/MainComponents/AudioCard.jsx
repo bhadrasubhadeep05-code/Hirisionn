@@ -25,11 +25,11 @@ const AudioCard = ({ youtubeLink, title, description, author }) => {
 
   return (
     <div className="relative bg-white p-4 pb-6 rounded-[2rem] shadow-xl w-[320px] min-w-[320px] max-w-[320px]
-                    hover:scale-[1.02] hover:shadow-[0_25px_50px_-12px_rgba(34,211,238,0.15)]
+                    hover:scale-[1.02] hover:shadow-[0_25px_50px_-12px_rgba(232,121,30,0.15)]
                     transition-all duration-500 ease-out">
 
       {/* Offset Signature Tag */}
-      <div className="absolute -left-3 top-10 z-10 bg-[#22D3EE] text-[#0F172A] px-4 py-1
+      <div className="absolute -left-3 top-10 z-10 bg-[#E8791E] text-[#0F172A] px-4 py-1
                       text-[10px] font-black uppercase tracking-widest shadow-lg
                       hover:-translate-x-1 transition-transform duration-500">
         {author}
@@ -57,7 +57,7 @@ const AudioCard = ({ youtubeLink, title, description, author }) => {
       {/* Content Area - Fixed height container */}
       <div className="mt-5 px-2 min-h-[90px]">
         <h2 className="text-[#0F172A] text-lg font-bold line-clamp-1">{title}</h2>
-        <p className="text-[#818CF8] text-[10px] uppercase tracking-wider mt-2 line-clamp-2">
+        <p className="text-[#F2A93C] text-[10px] uppercase tracking-wider mt-2 line-clamp-2">
           {description}
         </p>
       </div>

@@ -1,12 +1,31 @@
-import React, { useState, useContext, useEffect } from "react";
-import logo from "../assets/logoNav.png";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import logo from "../assets/hirisionn-logo.png";
+import { useLocation, useNavigate } from "react-router-dom";
 import AppContext from "../context/AppContext";
-// eslint-disable-next-line no-unused-vars
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+
+const Chevron = ({ open }) => (
+  <svg
+    className={`h-4 w-4 transition-transform duration-200 ${
+      open ? "rotate-180" : ""
+    }`}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="m6 9 6 6 6-6"
+    />
+  </svg>
+);
 
 const NavBar2 = () => {
-  const { user, ProfileComplete, isPageLoading, startLoading, stopLoading } = useContext(AppContext);
+  const { user, ProfileComplete, isPageLoading, startLoading, stopLoading } =
+    useContext(AppContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -15,65 +34,51 @@ const NavBar2 = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    if (!isPageLoading) return;
+    if (!isPageLoading) return undefined;
 
-    // Initialize progress at 10%
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     setProgress(10);
 
     const interval = setInterval(() => {
-      setProgress((prev) => {
-        // Stop at 90% until loading completes
-        if (prev >= 90) return prev;
-        return Math.min(prev + Math.random() * 15, 90);
-      });
+      setProgress((value) =>
+        value >= 90 ? value : Math.min(value + Math.random() * 15, 90)
+      );
     }, 200);
 
     return () => clearInterval(interval);
   }, [isPageLoading]);
 
-  // Handle completion animation when loading finishes
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (isPageLoading || progress === 0) return;
+    if (isPageLoading || progress === 0) return undefined;
 
-    // When loading completes, complete the bar then reset
     setProgress(100);
 
-    const timer = setTimeout(() => {
-      setProgress(0);
-    }, 500);
-
+    const timer = setTimeout(() => setProgress(0), 500);
     return () => clearTimeout(timer);
   }, [isPageLoading, progress]);
 
-  // ✅ Listen for global API loading events from axios interceptors
   useEffect(() => {
-    const handleStartLoading = () => startLoading();
-    const handleStopLoading = () => stopLoading();
-
-    window.addEventListener('startPageLoading', handleStartLoading);
-    window.addEventListener('stopPageLoading', handleStopLoading);
+    window.addEventListener("startPageLoading", startLoading);
+    window.addEventListener("stopPageLoading", stopLoading);
 
     return () => {
-      window.removeEventListener('startPageLoading', handleStartLoading);
-      window.removeEventListener('stopPageLoading', handleStopLoading);
+      window.removeEventListener("startPageLoading", startLoading);
+      window.removeEventListener("stopPageLoading", stopLoading);
     };
   }, [startLoading, stopLoading]);
 
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
-
-  const toggleDropdown = (name) => {
-    setOpenDropdown(openDropdown === name ? null : name);
-  };
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    setOpenDropdown(null);
+  }, [location.pathname]);
 
   const mainNavLinks = [
-    { name: "Create Your Resume", type: "link", path: "/resume-builder" },
-    { name: "About Us", type: "link", path: "/about-us" },
+    
+    {
+      name: "About Us",
+      type: "link",
+      path: "/about-us",
+    },
     {
       name: "What we Offer",
       type: "dropdown",
@@ -81,33 +86,65 @@ const NavBar2 = () => {
       options: [
         { label: "Our Career Services", type: "label" },
         { label: "Internship", path: "/internship" },
-        { label: "Live Projects", path: "/live-projects" },
         { label: "Job Placements", path: "/job-placements" },
         {
-          label: "Soft Skills & Interview Success Training",
+          label: "Certification Cources",
+          path: "/soft-skills-training",
+        },
+      ],
+    },
+     {
+      name: "For Employes",
+      type: "dropdown",
+      id: "resources",
+      options: [
+        { label: "Job Placements", path: "/job-placements" },
+         {
+          label: "Certification Cources",
           path: "/soft-skills-training",
         },
       ],
     },
     {
-      name: "Resources",
+      name: "For Student",
       type: "dropdown",
-      id: "resources",
+      id: "StudentResources",
       options: [
-        { label: "WorkForce Insights", path: "/workforce-insights" },
+       { label: "Internship", path: "/internship" },
+        { label: "Job Placements", path: "/job-placements" },
         { label: "Podcast Library", path: "/audio-library" },
         { label: "Blogs", path: "/blog-page" },
         { label: "Videos Library", path: "/video-page" },
-        { label: "Industry Insights", path: "/industry-insights" },
+         {
+          label: "Certification Cources",
+          path: "/soft-skills-training",
+        },
       ],
     },
-    { name: "Business Enquiry", type: "link", path: "/business-enquiry" },
-    { name: "Contact Us", type: "link", path: "/contact-us" },
+    {
+      name: "For Employers",
+      type: "link",
+      path: "/business-enquiry",
+    },
+    {
+      name: "Create Your Resume",
+      type: "link",
+      path: "/resume-builder",
+    },
+    {
+      name: "Contact Us",
+      type: "link",
+      path: "/contact-us",
+    },
   ];
 
   const courseNavLinks = [
     { name: "Home", type: "link", path: "/" },
-    { name: "About the Course", type: "link", path: "/soft-skills-training" },
+    {
+      name: "About the Course",
+      type: "link",
+      path: "/soft-skills-training",
+    },
     {
       name: "Curriculum",
       type: "link",
@@ -120,162 +157,101 @@ const NavBar2 = () => {
     },
   ];
 
-  const isTrainingPage =
-    location.pathname === "/soft-skills-training" ||
-    location.pathname === "/soft-skills-training/curriculum" ||
-    location.pathname === "/soft-skills-training/outcomes";
+  const isTrainingPage = [
+    "/soft-skills-training",
+    "/soft-skills-training/curriculum",
+    "/soft-skills-training/outcomes",
+  ].includes(location.pathname);
 
   const navLinks = isTrainingPage ? courseNavLinks : mainNavLinks;
+
+  const goTo = (path) => {
+    navigate(path);
+    setIsMobileMenuOpen(false);
+    setOpenDropdown(null);
+  };
+
+  const desktopLinkClass =
+    "font-body text-sm font-bold tracking-[0.01em] text-[#12171B] transition-colors hover:text-[#E8791E] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#E8791E]";
 
   return (
     <>
       <AnimatePresence>
         {(isPageLoading || progress > 0) && (
           <motion.div
-            className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#22D3EE] via-[#818CF8] to-[#22D3EE] shadow-2xl z-[9999]"
-            style={{
-              boxShadow:
-                "0 0 20px rgba(34, 211, 238, 0.8), 0 0 40px rgba(129, 140, 248, 0.5)",
-              transformOrigin: "left",
-            }}
             initial={{ scaleX: 0 }}
             animate={{ scaleX: progress / 100 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="fixed inset-x-0 top-0 z-[1000] h-0.5 origin-left bg-gradient-to-r from-[#F2A93C] via-[#E8791E] to-[#F2A93C]"
           />
         )}
       </AnimatePresence>
 
-      <motion.nav className="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 bg-white/90 backdrop-blur-md shadow-lg">
-        <div className="relative h-24 md:h-24 w-full bg-white/80 backdrop-blur-md flex items-center justify-between md:justify-center px-4 md:px-12 border-b border-slate-200">
-          <button
-            className="md:hidden p-2 text-[#0F172A]"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <svg
-              className="w-7 h-7"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isMobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => handleNavigation("/")}
-            className="md:static absolute left-[150px] md:transform-none"
+      <nav className="fixed inset-x-0 top-0 z-[999] w-[100vw] border-b-2 border-[#F2A93C] bg-[#F6F8F8]/95 font-body text-[#12171B] backdrop-blur-xl">
+        <div className="mx-auto flex h-[72px] w-[100vw] md:w-full md:max-w-[1440px] items-center px-4 sm:h-20 sm:px-8 xl:h-[104px] xl:px-14 2xl:px-20">
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => goTo("/")}
+            className="shrink-0"
+            aria-label="Go to home"
           >
             <img
               src={logo}
-              alt="Logo"
-              className="h-20 md:h-28 w-auto cursor-pointer object-contain"
+              alt="Hirisionn"
+              className="h-9 w-auto object-contain sm:h-11 xl:h-16"
             />
-          </motion.div>
+          </motion.button>
 
-          <div className="absolute right-4 md:right-12 flex flex-col items-center gap-1">
-            <motion.button
-              className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-gradient-to-br from-[#22D3EE] to-[#818CF8] flex items-center justify-center text-white shadow-lg border border-white/30"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() =>
-                ProfileComplete
-                  ? handleNavigation("/profile")
-                  : handleNavigation("/register")
-              }
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-            </motion.button>
-
-            {user?.fullName && (
-              <span className="block text-xs font-semibold text-[#0F172A]">
-                {user.fullName}
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="hidden md:flex relative h-12 w-full bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0F172A] items-center justify-center gap-2 shadow-xl">
-          <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#22D3EE] to-transparent opacity-100" />
-
-          {navLinks.map((link) => (
-            <div key={link.name} className="relative">
-              {link.type === "dropdown" ? (
+          {/* Desktop navigation: visible only on large desktop screens */}
+          <div className="ml-auto hidden items-center gap-5 xl:flex 2xl:gap-9">
+            {navLinks.map((link) =>
+              link.type === "dropdown" ? (
                 <div
+                  key={link.name}
+                  className="relative"
                   onMouseEnter={() => setOpenDropdown(link.id)}
                   onMouseLeave={() => setOpenDropdown(null)}
-                  className="relative"
                 >
-                  <button className="px-4 py-2 text-white/80 text-sm font-medium hover:text-[#22D3EE] transition-colors flex items-center gap-1">
+                  <button
+                    onClick={() =>
+                      setOpenDropdown(
+                        openDropdown === link.id ? null : link.id
+                      )
+                    }
+                    className={`${desktopLinkClass} inline-flex items-center gap-1.5`}
+                    aria-expanded={openDropdown === link.id}
+                    aria-haspopup="true"
+                  >
                     {link.name}
-                    <svg
-                      className={`w-4 h-4 transition-transform duration-300 ${
-                        openDropdown === link.id ? "rotate-180" : ""
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <Chevron open={openDropdown === link.id} />
                   </button>
 
                   <AnimatePresence>
                     {openDropdown === link.id && (
                       <motion.div
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="absolute top-full left-0 w-48 bg-white rounded-b-xl p-2 shadow-2xl border-t-2 border-[#22D3EE] z-50"
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.16 }}
+                        className="absolute left-0 top-[calc(100%+26px)] w-72 rounded-xl border border-[#D8E0E3] bg-[#1F2830] p-2 shadow-2xl"
                       >
-                        {link.options.map((opt) =>
-                          opt.type === "label" ? (
-                            <div
-                              key={opt.label}
-                              className="w-full text-left px-4 py-2 text-[#0F172A] font-bold text-sm border-b border-slate-100 mb-1 cursor-default"
+                        {link.options.map((option) =>
+                          option.type === "label" ? (
+                            <p
+                              key={option.label}
+                              className="px-3 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-[#F2A93C]"
                             >
-                              {opt.label}
-                            </div>
+                              {option.label}
+                            </p>
                           ) : (
                             <button
-                              key={opt.label}
-                              onClick={() => handleNavigation(opt.path)}
-                              className="w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-100 hover:text-[#22D3EE] rounded-lg transition-all text-sm font-semibold"
+                              key={option.label}
+                              onClick={() => goTo(option.path)}
+                              className="w-full rounded-lg px-3 py-2.5 text-left text-sm text-[#CDD5D9] transition-colors hover:bg-white/[0.08] hover:text-white"
                             >
-                              {opt.label}
+                              {option.label}
                             </button>
                           )
                         )}
@@ -285,102 +261,148 @@ const NavBar2 = () => {
                 </div>
               ) : (
                 <button
-                  onClick={() => handleNavigation(link.path)}
-                  className="px-4 py-2 text-white/80 text-sm font-medium hover:text-[#22D3EE] transition-colors"
+                  key={link.name}
+                  onClick={() => goTo(link.path)}
+                  className={desktopLinkClass}
                 >
                   {link.name}
                 </button>
-              )}
-            </div>
-          ))}
+              )
+            )}
+          </div>
+
+          <div className="ml-auto flex items-center xl:ml-6">
+            <motion.button
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() =>
+                goTo(ProfileComplete ? "/profile" : "/register")
+              }
+              aria-label="Open profile"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F2A93C] to-[#E8791E] text-[#12171B] shadow-[0_8px_20px_-8px_rgba(232,121,30,0.7)] sm:h-11 sm:w-11"
+            >
+              <svg
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </motion.button>
+
+            {/* Mobile and tablet menu button */}
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen((open) => !open);
+                setOpenDropdown(null);
+              }}
+              aria-label="Toggle navigation menu"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
+              className="ml-2 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#D8E0E3] text-[#12171B] transition-colors hover:bg-[#E9EFF0] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8791E] sm:ml-3 sm:h-11 sm:w-11 xl:hidden"
+            >
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.8}
+                  d={
+                    isMobileMenuOpen
+                      ? "m6 6 12 12M18 6 6 18"
+                      : "M4 6h16M4 12h16M4 18h16"
+                  }
+                />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
+              id="mobile-navigation"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white border-t border-slate-200 overflow-hidden"
+              transition={{ duration: 0.2 }}
+              className="max-h-[calc(100dvh-72px)] overflow-y-auto border-t border-[#D8E0E3] bg-[#F6F8F8] xl:hidden"
             >
-              <div className="flex flex-col p-4 gap-2">
-                {navLinks.map((link) => (
-                  <div key={link.name} className="w-full">
-                    {link.type === "dropdown" ? (
-                      <div className="w-full">
-                        <button
-                          onClick={() => toggleDropdown(link.id)}
-                          className="w-full flex items-center justify-between p-3 rounded-lg text-[#0F172A] font-semibold bg-slate-50"
-                        >
-                          {link.name}
-                          <svg
-                            className={`w-5 h-5 transition-transform ${
-                              openDropdown === link.id ? "rotate-180" : ""
-                            }`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </button>
-
-                        <AnimatePresence>
-                          {openDropdown === link.id && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="overflow-hidden flex flex-col pl-4 gap-1 mt-1"
-                            >
-                              {link.options.map((opt) =>
-                                opt.type === "label" ? (
-                                  <div
-                                    key={opt.label}
-                                    className="p-3 text-left text-[#0F172A] font-bold text-sm border-b border-slate-100 cursor-default"
-                                  >
-                                    {opt.label}
-                                  </div>
-                                ) : (
-                                  <button
-                                    key={opt.label}
-                                    onClick={() => {
-                                      handleNavigation(opt.path);
-                                      setIsMobileMenuOpen(false);
-                                    }}
-                                    className="p-3 text-left text-slate-500 hover:text-[#22D3EE] text-sm"
-                                  >
-                                    {opt.label}
-                                  </button>
-                                )
-                              )}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    ) : (
+              <div className="space-y-1 px-4 py-4 sm:px-8 sm:py-5">
+                {navLinks.map((link) =>
+                  link.type === "dropdown" ? (
+                    <div key={link.name}>
                       <button
-                        onClick={() => {
-                          handleNavigation(link.path);
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className="w-full text-left p-3 rounded-lg text-[#0F172A] font-semibold bg-slate-50"
+                        onClick={() =>
+                          setOpenDropdown(
+                            openDropdown === link.id ? null : link.id
+                          )
+                        }
+                        className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-left text-sm font-semibold text-[#12171B] transition-colors hover:bg-[#E9EFF0]"
+                        aria-expanded={openDropdown === link.id}
                       >
-                        {link.name}
+                        <span>{link.name}</span>
+                        <Chevron open={openDropdown === link.id} />
                       </button>
-                    )}
-                  </div>
-                ))}
+
+                      <AnimatePresence>
+                        {openDropdown === link.id && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.18 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="ml-3 border-l-2 border-[#F2A93C] py-1">
+                              {link.options
+                                .filter((option) => option.type !== "label")
+                                .map((option) => (
+                                  <button
+                                    key={option.label}
+                                    onClick={() => goTo(option.path)}
+                                    className="block w-full px-4 py-2.5 text-left text-sm text-[#4B5860] transition-colors hover:text-[#E8791E]"
+                                  >
+                                    {option.label}
+                                  </button>
+                                ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <button
+                      key={link.name}
+                      onClick={() => goTo(link.path)}
+                      className="block w-full rounded-lg px-3 py-3 text-left text-sm font-semibold text-[#12171B] transition-colors hover:bg-[#E9EFF0] hover:text-[#E8791E]"
+                    >
+                      {link.name}
+                    </button>
+                  )
+                )}
+
+                {user?.fullName && (
+                  <p className="px-3 pt-3 text-xs text-[#66747C]">
+                    Signed in as {user.fullName}
+                  </p>
+                )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.nav>
+      </nav>
     </>
   );
 };

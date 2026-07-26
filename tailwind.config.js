@@ -8,7 +8,8 @@ export default {
      extend: {
     fontFamily: {
       heading: ['Space Grotesk'],
-      body: ['Inter'],
+      body: ['Geomini'],
+      testHead: ['Montenegrin Gothic One']
     },
   },
   },

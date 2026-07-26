@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useViewportScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import NavBar2 from './NavBar2';
-const video = "https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778447/video2_ndpc3f.mp4";
-
 
 const AboutUs = () => {
   const [activeSection, setActiveSection] = useState('story');
-  const { scrollYProgress } = useViewportScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   const navigation = [
     { id: 'story', name: 'Our Story'  },
@@ -37,10 +33,10 @@ const AboutUs = () => {
   // ];
 
   const stats = [
-    { value: "2000+", label: "Candidates Empowered" },
+    { value: "2500+", label: "Candidates Empowered" },
     { value: "15+", label: "Industries Covered" },
     { value: "100%", label: "Expert Vetted Resumes" },
-    { value: "15+", label: "States Covered" },
+    { value: "10+", label: "States Covered" },
   ];
 
   const scrollToSection = (sectionId) => {
@@ -49,27 +45,20 @@ const AboutUs = () => {
   };
 
   return (
-    <div className="min-h-screen min-w-screen bg-[#F8FAFC]">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#F8FAFC]">
       <NavBar2 progress={1} />
       
-      {/* DNA Hero Section */}
-      <motion.div 
-        style={{ opacity: heroOpacity }}
-        className="relative h-[550px] overflow-hidden mt-24"
+      {/* ================= HERO SECTION ================= */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative bg-[radial-gradient(120%_160%_at_100%_0%,#1c5872,#12171B_70%)] min-h-[60vh] flex items-center justify-center px-6 py-24 md:mt-24 mt-16 md:py-52"
       >
-        <video 
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src={video} type="video/mp4" />
-        </video>
+        {/* Decorative glow */}
+        <div className="pointer-events-none absolute right-0 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(232,121,30,0.25)_0%,transparent_68%)] blur-[10px] sm:-right-20 sm:-top-20 sm:h-[420px] sm:w-[420px] lg:-right-[6%] lg:-top-[10%] lg:h-[520px] lg:w-[520px]" />
 
-        <div className="absolute inset-0 bg-[#0F172A]/70 backdrop-blur-md" />
-
-        <div className="relative z-10 h-full flex flex-col justify-center items-center px-6 text-center">
+        <div className="relative z-10 max-w-5xl mx-auto text-center">
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -82,20 +71,20 @@ const AboutUs = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-lg text-slate-300 max-w-2xl mb-8"
+            className="text-lg text-[#AAB5BA] max-w-2xl mx-auto mb-8"
           >
-            Hirisionn isn't just a platform; it’s a bridge between current potential and future reality.
+            Hirisionn isn't just a platform; it's a bridge between current potential and future reality.
           </motion.p>
 
-          {/* Vertical Cyan Lead Line */}
+          {/* Vertical Orange Lead Line */}
           <motion.div 
             initial={{ height: 0 }}
             animate={{ height: 60 }}
             transition={{ delay: 0.8, duration: 1.5 }}
-            className="w-0.5 bg-[#22D3EE]"
+            className="w-0.5 bg-gradient-to-b from-[#F2A93C] to-[#E8791E] mx-auto"
           />
         </div>
-      </motion.div>
+      </motion.section>
 
       {/* Main Content Layout */}
       <div className="max-w-7xl mx-auto px-4 md:px-8 pb-24 pt-16">
@@ -111,7 +100,7 @@ const AboutUs = () => {
                   onClick={() => scrollToSection(item.id)}
                   className={`text-left py-3 px-4 rounded-xl transition-all duration-300 group ${
                     activeSection === item.id 
-                      ? 'bg-white shadow-md text-[#22D3EE] border-l-2 border-[#22D3EE]' 
+                      ? 'bg-white shadow-md text-[#E8791E] border-l-2 border-[#E8791E]' 
                       : 'text-slate-700 hover:bg-white/50'
                   }`}
                 >
@@ -151,8 +140,8 @@ const AboutUs = () => {
                   viewport={{ once: true }}
                   className="relative"
                 >
-                  {/* Lavender Shadow Layer */}
-                  <div className="absolute -bottom-6 -left-6 w-full h-full bg-[#818CF8]/10 rounded-3xl" />
+                  {/* Orange Shadow Layer */}
+                  <div className="absolute -bottom-6 -left-6 w-full h-full bg-[#E8791E]/10 rounded-3xl" />
                   
                   {/* Offset Image */}
                   <img 
@@ -184,7 +173,7 @@ const AboutUs = () => {
                     viewport={{ once: true }}
                     className="bg-white p-8 rounded-l-[2rem] shadow-xl relative z-10"
                   >
-                    <div className="absolute left-0 top-8 bottom-8 w-1 bg-[#22D3EE]" />
+                    <div className="absolute left-0 top-8 bottom-8 w-1 bg-gradient-to-b from-[#F2A93C] to-[#E8791E]" />
                     <h3 className="text-2xl font-bold text-[#0F172A] mb-4 pl-4">Our Mission</h3>
                     <p className="text-slate-600 pl-4">
                       To democratize access to professional opportunities by equipping every candidate with the tools, presentation, and confidence they deserve.
@@ -198,7 +187,7 @@ const AboutUs = () => {
                     viewport={{ once: true }}
                     className="bg-white p-8 rounded-l-[2rem] shadow-xl relative z-10 "
                   >
-                    <div className="absolute left-0 top-8 bottom-8 w-1 bg-[#22D3EE]" />
+                    <div className="absolute left-0 top-8 bottom-8 w-1 bg-gradient-to-b from-[#F2A93C] to-[#E8791E]" />
                     <h3 className="text-2xl font-bold text-[#0F172A] mb-4 pl-4">Our Vision</h3>
                     <p className="text-slate-600 pl-4">
                      A world where your potential is the only currency that matters. Where geography, network, and background never limit what you can achieve.
@@ -221,8 +210,8 @@ const AboutUs = () => {
                     transition={{ delay: 0.1 * index }}
                     className="text-center"
                   >
-                    <div className="text-4xl md:text-5xl font-bold text-[#22D3EE] mb-2">{stat.value}</div>
-                    <div className="text-[#818CF8] text-sm uppercase tracking-wider">{stat.label}</div>
+                    <div className="text-4xl md:text-5xl font-bold text-[#E8791E] mb-2">{stat.value}</div>
+                    <div className="text-[#F2A93C] text-sm uppercase tracking-wider">{stat.label}</div>
                   </motion.div>
                 ))}
               </div>
@@ -255,8 +244,8 @@ const AboutUs = () => {
                     transition={{ delay: 0.1 * index }}
                     className="flex gap-6 items-start"
                   >
-                    <div className="text-2xl font-bold text-[#22D3EE] min-w-[80px]">{milestone.year}</div>
-                    <div className="border-l-2 border-[#818CF8]/30 pl-6 py-2">
+                    <div className="text-2xl font-bold text-[#E8791E] min-w-[80px]">{milestone.year}</div>
+                    <div className="border-l-2 border-[#F2A93C]/30 pl-6 py-2">
                       <p className="text-[#0F172A]">{milestone.event}</p>
                     </div>
                   </motion.div>
