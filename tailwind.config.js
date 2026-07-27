@@ -9,7 +9,8 @@ export default {
     fontFamily: {
       heading: ['Space Grotesk'],
       body: ['Geomini'],
-      testHead: ['Montenegrin Gothic One']
+      testHead: ['Montenegrin Gothic One'],
+      archivo: ["Archivo Black"], // ← Add this
     },
   },
   },
