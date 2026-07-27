@@ -20,7 +20,7 @@ function GlassCard({ icon, value, label, className, delay = 0 }) {
       </span>
       <div>
         <b className="block font-heading text-sm md:text-lg text-white">{value}</b>
-        <span className="text-[8px] text-xs font-medium text-[#c9dbe3]">{label}</span>
+        <span className="text-[8px] md:text-xs font-medium text-[#c9dbe3]">{label}</span>
       </div>
     </motion.div>
   );

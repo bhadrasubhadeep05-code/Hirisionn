@@ -33,9 +33,9 @@ const AboutUs = () => {
   // ];
 
   const stats = [
-    { value: "2500+", label: "Candidates Empowered" },
-    { value: "15+", label: "Industries Covered" },
-    { value: "100%", label: "Expert Vetted Resumes" },
+    { value: "2500+", label: "Successful Placement" },
+    { value: "250+", label: "Hiring Partner" },
+    { value: "3000%", label: "Internships Facilitated" },
     { value: "10+", label: "States Covered" },
   ];
 

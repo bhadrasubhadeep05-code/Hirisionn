@@ -103,7 +103,7 @@ const Footer = () => {
                 transition={{ duration: 0.6 }}
               >
                 <motion.div whileHover={{ scale: 1.02 }}>
-                  <h3 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-[#F2A93C] to-[#E8791E] bg-clip-text text-transparent mb-3">
+                  <h3 className="text-4xl md:text-5xl font-black bg-white bg-clip-text text-transparent mb-3">
                     Hirisionn
                   </h3>
                 </motion.div>

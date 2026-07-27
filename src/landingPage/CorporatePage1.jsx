@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 const CorporatePage1 = () => {
   const MODULES = [
     {
-      icon: "📝",
+      icon: '"📝"',
       title: "Resume & LinkedIn Building",
       desc: "Craft ATS-friendly resumes and LinkedIn profiles that get you noticed by recruiters and hiring managers.",
     },

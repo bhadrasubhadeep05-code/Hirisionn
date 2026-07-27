@@ -32,7 +32,7 @@ const FinalCta = () => {
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
            <GlassCard
           icon="🎓"
-          value="5,000+"
+          value="3,000+"
           label="Internships Facilitated"
           className="-left-[10px] top-[140px] md:-left-[80px] md:top-[180px] z-10"
           delay={0.2}
@@ -40,7 +40,7 @@ const FinalCta = () => {
         <GlassCard
           icon="💬"
           value="48 hrs"
-          label="Avg. Candidate Response"
+          label="Average. Candidate Response"
           className="left-[170px] top-[20px] md:left-[770px] md:top-[80px] z-10"
           delay={0.6}
         />
