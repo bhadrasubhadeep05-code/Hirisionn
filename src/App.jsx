@@ -46,7 +46,11 @@ function App() {
 
   return (
     <>
-    <Routes>  
+      <div className='w-full h-full flex flex-col justify-center items-center'>
+      <h1>404</h1>
+      <h3>WE will be back soon</h3>
+      </div>
+    {/* <Routes>  
        <Route path="/" element={
         <>
         
@@ -88,7 +92,7 @@ function App() {
       <Route path="/about-us" element={<AboutUs/>}/>
       <Route path="/resume-builder" element={<ResumeMasterclass/>}/>
        <Route path="/workforce-insights" element={<WorkForce/>}/>
-     </Routes>
+     </Routes> */}
     </>
   )
 }
