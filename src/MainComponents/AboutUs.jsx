@@ -35,7 +35,7 @@ const AboutUs = () => {
   const stats = [
     { value: "2500+", label: "Successful Placement" },
     { value: "250+", label: "Hiring Partner" },
-    { value: "3000%", label: "Internships Facilitated" },
+    { value: "3000+", label: "Internships Facilitated" },
     { value: "10+", label: "States Covered" },
   ];
 
@@ -231,10 +231,10 @@ const AboutUs = () => {
               
               <div className="space-y-8">
                 {[
-                  { year: "2023", event: "Hirisionn founded with a mission to democratize career opportunities" },
+                  { year: "2023", event: "Hirisionn was founded with a mission to democratize career opportunities" },
                   { year: "2024", event: "Launched resume services and helped first 100 candidates land roles" },
                   { year: "2025", event: "Reached multiple Industries and officially came into existence as a Manpower Solutions Provider" },
-                  { year: "2026", event: "Inclusion of B-Schools, Universities and Colleges as client partners" },
+                  { year: "2026", event: "Inclusion of Corporates,  B-Schools, Universities and Colleges as client partners" },
                 ].map((milestone, index) => (
                   <motion.div
                     key={index}
