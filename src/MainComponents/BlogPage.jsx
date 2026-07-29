@@ -6,6 +6,7 @@ import NavBar2 from './NavBar2'
 import { getBlog } from '../services/blog.api';
 import AppContext from '../context/AppContext';
 
+
 const BlogPage = () => {
   const { startLoading, stopLoading } = useContext(AppContext);
   const [activeCategory, setActiveCategory] = useState(1);

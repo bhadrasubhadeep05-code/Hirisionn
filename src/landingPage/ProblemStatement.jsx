@@ -5,13 +5,13 @@ import CountUp from "../MainComponents/CountUp";
 const ProblemStatement = () => {
   const navigate = useNavigate();
   return (
-   <section className="screen2 min-h-screen relative overflow-hidden bg-[#F8FAFC] flex items-center justify-center">
+   <section className="screen2 h-full relative overflow-hidden bg-[#F8FAFC] flex items-center justify-center">
 
   {/* Locomotive wrapper */}
   <div
     data-scroll
     data-scroll-speed="-0.05"
-    className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-10 py-10 sm:py-16 md:py-20"
+    className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-16 md:py-20"
   >
 
     {/* Framer Motion animation */}
@@ -20,11 +20,8 @@ const ProblemStatement = () => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9 }}
       viewport={{ once: true }}
-      className="bg-[radial-gradient(120%_160%_at_100%_0%,#1c5872,#12171B_70%)] rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl border border-slate-200 p-6 sm:p-10 md:p-14 lg:p-20"
+      className="bg-[#12171B] rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl border border-slate-200 p-6 sm:p-10 md:p-14 lg:p-20 shadow-[#12171B]"
     >
-
-      {/* Glow dot */}
-            <div className="pointer-events-none absolute -right-12 -top-8 md:right-10 md:top-16 h-[260px] w-[260px] rounded-full bg-[radial-gradient(circle,rgba(242,135,46,0.45),transparent_70%)]" />
 
       {/* ================= TOP ================= */}
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 sm:gap-10 lg:gap-12">

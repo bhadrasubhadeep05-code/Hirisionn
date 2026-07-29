@@ -104,6 +104,24 @@ export const updateSoftSkill = async (data) => {
     return res.data;
 };
 
+//Job Posting
+export const createJob = async(data)=>{
+    const res = await adminApi.post("/admin/job/create-job", data);
+    return res.data;
+}
+export const getAllJobs = async()=>{
+    const res = await adminApi.get("/admin/job/all-jobs");
+    return res.data;
+}
+export const getJobById = async(jobId)=>{
+    const res = await adminApi.get(`/admin/job/get-job/${jobId}`);
+    return res.data;
+}
+export const deleteJob = async(jobId)=>{
+    const res = await adminApi.get(`/admin/job/delete-job${jobId}`);
+    return res.data;
+}
+
 export const adminLogout = async () => {
     const res = await adminApi.post("/admin/logout");
     return res.data;

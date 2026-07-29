@@ -53,7 +53,7 @@ const CorporatePage3 = () => {
     <>
       <div
       data-scroll
-       data-scroll-speed="0.4"
+       data-scroll-speed="0.1"
         className="bg-[#f6f9fb] py-20 sm:py-28"
       >
         <div className="mx-auto max-w-6xl px-5 sm:px-8">

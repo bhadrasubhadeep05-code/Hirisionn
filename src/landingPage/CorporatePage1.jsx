@@ -3,32 +3,32 @@ import { motion } from "framer-motion";
 const CorporatePage1 = () => {
   const MODULES = [
     {
-      icon: '"📝"',
+      linker: 'https://plus.unsplash.com/premium_photo-1661288470388-c5006797bdff?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       title: "Resume & LinkedIn Building",
       desc: "Craft ATS-friendly resumes and LinkedIn profiles that get you noticed by recruiters and hiring managers.",
     },
     {
-      icon: "🎤",
+      linker: "https://plus.unsplash.com/premium_photo-1676666379090-e0fc81f41e7e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       title: "Mock Interviews",
       desc: "Simulated interview sessions with real feedback from industry professionals — technical, HR, and case-based rounds.",
     },
     {
-      icon: "💬",
+      linker: "https://images.unsplash.com/photo-1577563908411-5077b6dc7624?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       title: "Communication & Soft Skills",
       desc: "Business writing, presentation skills, and workplace communication that set you apart from other candidates.",
     },
     {
-      icon: "🏢",
+      linker: "https://images.unsplash.com/photo-1573167507387-6b4b98cb7c13?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       title: "Workplace Etiquette",
       desc: "Understand corporate culture, professional conduct, email protocols, and how to navigate office dynamics.",
     },
     {
-      icon: "📜",
+      linker: "https://images.unsplash.com/photo-1648337564744-f919c7c2fc02?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       title: "Industry Certifications",
       desc: "Get certified in high-demand skills aligned with what employers are actively screening for across sectors.",
     },
     {
-      icon: "🧮",
+      linker: "https://images.unsplash.com/photo-1773332585815-f106a5d6ed6c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3DF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       title: "Aptitude & Case Prep",
       desc: "Numerical reasoning, logical thinking, and case study preparation for consulting, finance, and tech roles.",
     },
@@ -119,11 +119,9 @@ const CorporatePage1 = () => {
                 key={m.title}
                 variants={scaleIn}
                 whileHover={{ y: -6, transition: { duration: 0.25 } }}
-                className="group relative overflow-hidden rounded-2xl border border-[#e3ebef] bg-white p-7 transition-shadow duration-300 hover:shadow-[0_20px_50px_-20px_rgba(15,43,56,0.25)]"
+                className="group relative overflow-hidden rounded-2xl border border-[#e3ebef] bg-white p-7 transition-shadow duration-300 hover:shadow-[0_20px_50px_-20px_rgba(15,43,56,0.25)] shadow-md shadow-black/10"
               >
-                <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#164257] to-[#0f2b38] text-2xl shadow-[0_10px_22px_-8px_rgba(28,88,114,0.55)]">
-                  {m.icon}
-                </span>
+                <img src={m.linker} alt={m.title} className="mb-6" />
                 <h3 className="font-heading text-[1.1rem] font-bold text-[#0f2b38]">
                   {m.title}
                 </h3>
@@ -131,7 +129,7 @@ const CorporatePage1 = () => {
                   {m.desc}
                 </p>
                 <div className="mt-4 inline-block text-xs font-bold tracking-wide text-[#f2872e] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  Learn More →
+                  Hirisionn .
                 </div>
               </motion.article>
             ))}

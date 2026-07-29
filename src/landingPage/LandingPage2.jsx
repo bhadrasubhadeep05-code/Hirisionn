@@ -45,7 +45,7 @@ const LandingPage2 = () => {
   }, []);
   return (
     <>
-      <div data-scroll-container ref={scrollRef} className="bg-[#ffffff]">
+      <div data-scroll-container ref={scrollRef} className="bg-[#f6f9fb]">
         <NavBar2 />
         <HirisionnHero />
         <Marquee />
@@ -57,7 +57,6 @@ const LandingPage2 = () => {
         </div>
         <Offerings />
         <InternAndJobLanding />
-        <TraningLanding />
         <CorporatePage2 />
         <CorporatePage1 />
         <CorporatePage3 />

@@ -1,12 +1,32 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppContext from '../context/AppContext';
 import NavBar2 from './NavBar2';
 import JobCards from './JobCards';
+import {getAllJobs} from '../services/admin.api'
+import { useState } from 'react';
 const Placements = () => {
-  const { ProfileComplete } = useContext(AppContext);
-  const navigate = useNavigate();
+  // const { ProfileComplete, startLoading, stopLoading  } = useContext(AppContext);
+  // const [loading, setLoading] = useState(true);
+  // const [jobs, setJobs] = useState([]);
+  // const navigate = useNavigate();
+  // useEffect(()=>{
+  //   const loadingJobs = async ()=>{
+  //     setLoading(true);
+  //     startLoading();
 
+  //     try{
+  //       const response = await getAllJobs();
+  //       setJobs(response.data||[]);
+  //       console.log(jobs)
+  //     }catch(error){
+  //       console.log("failed to fetch Job error:", error)
+  //     }finally{
+  //       setLoading(false);
+  //       stopLoading();
+  //     }
+  //   }
+  // })
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-[#F8FAFC] text-slate-800">
       <NavBar2 progress={1} />

@@ -28,7 +28,7 @@ const FinalCta = () => {
 
   return (
     <>
-      <div data-scroll data-scroll-speed="-0.02" className="pt-6 pb-32 sm:pt-10 md:pb-36">
+      <div data-scroll data-scroll-speed="-0.3" className="pt-6 pb-32 sm:pt-10 md:pb-36">
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
            <GlassCard
           icon="🎓"
@@ -40,14 +40,14 @@ const FinalCta = () => {
         <GlassCard
           icon="💬"
           value="48 hrs"
-          label="Average. Candidate Response"
+          label="Candidate Response"
           className="left-[170px] top-[20px] md:left-[770px] md:top-[80px] z-10"
           delay={0.6}
         />
         <GlassCard
           icon="📈"
-          value="92%"
-          label="Training-to-Placement Rate"
+          value="2500+"
+          label="Placements"
           className="-left-[16px] top-[440px] md:left-[30px] md:top-[280px] z-10"
           delay={0.8}
         />

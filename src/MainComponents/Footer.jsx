@@ -235,21 +235,6 @@ const Footer = () => {
               <p className="text-xs sm:text-sm text-[#AAB5BA] font-medium">
                 © <span className="text-[#F2A93C] font-bold">Hirisionn</span>. All rights reserved.
               </p>
-
-              <div className="flex items-center gap-6 text-xs sm:text-sm">
-                {["Privacy Policy", "Terms", "Sitemap"].map((item, idx) => (
-                  <React.Fragment key={idx}>
-                    <motion.a
-                      href="#"
-                      className="text-[#AAB5BA] hover:text-[#F2A93C] font-medium transition-all duration-300"
-                      whileHover={{ scale: 1.07 }}
-                    >
-                      {item}
-                    </motion.a>
-                    {idx < 2 && <div className="w-1 h-1 rounded-full bg-gradient-to-r from-[#F2A93C] to-[#E8791E]" />}
-                  </React.Fragment>
-                ))}
-              </div>
             </motion.div>
           </div>
         </div>

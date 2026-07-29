@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 const TraningLanding = () => {
   const navigate = useNavigate()
   return (
-    <div className="h-full w-full bg-white flex flex-col justify-center items-center px-4 sm:px-10 py-8 sm:p-10 font-body">
+    <div className="h-full w-full bg-[#f6f9fb] flex flex-col justify-center items-center px-4 sm:px-10 py-8 sm:p-10 font-body">
       <div className="flex flex-col justify-start w-full max-w-7xl mb-6 sm:mb-10 mt-6 sm:mt-10 ml-0 sm:ml-[100px] lg:ml-[228px]">
         <div className="flex items-center">
           <span className="h-[3px] w-6 rounded inline-block bg-[#f2872e] mr-2" />
@@ -16,7 +16,7 @@ const TraningLanding = () => {
       <div className="flex flex-col lg:flex-row gap-8 md:gap-4 w-full max-w-7xl">
         {/*block 1 — Blogs*/}
         <div data-scroll data-scroll-speed="0.02" className="h-[460px] sm:h-[500px] w-full lg:w-[600px] bg-[url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=900&q=80')] bg-cover bg-center rounded-[20px] shrink-0">
-          <div className="bg-gradient-to-br from-[#0f2b38]/80 from-70% to-[#164257]/80 h-full w-full rounded-[20px] text-white p-6 sm:p-10 flex flex-col justify-between">
+          <div className="bg-[#12171B] h-full w-full rounded-[20px] text-white p-6 sm:p-10 flex flex-col justify-between">
             <div>
               <h3 className="font-bold text-2xl sm:text-[33px] mb-3 sm:mb-4">
                 Blogs
@@ -54,7 +54,7 @@ const TraningLanding = () => {
         </div>
 
         {/*block 2 — Videos*/}
-        <div data-scroll data-scroll-speed="-0.02" className="h-[460px] sm:h-[500px] w-full lg:w-[600px] bg-[url('https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=900&q=80')] bg-cover bg-center rounded-[20px] shrink-0">
+        <div data-scroll data-scroll-speed="-0.02" className="h-[460px] sm:h-[500px] w-full lg:w-[600px] bg-[url('https://images.unsplash.com/photo-1497015289639-54688650d173?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center rounded-[20px] shrink-0">
           <div className="bg-gradient-to-br from-[#E8791E]/80 from-70% to-[#F2A93C]/80 h-full w-full rounded-[20px] text-white p-6 sm:p-10 flex flex-col justify-between">
             <div>
               <h3 className="font-bold text-2xl sm:text-[33px] mb-3 sm:mb-4">
