@@ -204,7 +204,7 @@ const NavBar2 = () => {
           </motion.button>
 
           {/* Desktop navigation: visible only on large desktop screens */}
-          <div className="ml-auto hidden items-center gap-5 xl:flex 2xl:gap-9">
+          <div className="ml-auto hidden items-center gap-5 xl:flex ">
             {navLinks.map((link) =>
               link.type === "dropdown" ? (
                 <div
