@@ -10,7 +10,6 @@ import { inject } from '@vercel/analytics';
 inject();
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
     <BrowserRouter>
       <ScrollToTop /> 
       
@@ -19,5 +18,4 @@ createRoot(document.getElementById('root')).render(
       </AppProvider>
 
     </BrowserRouter>
-  </StrictMode>
 );

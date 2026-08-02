@@ -11,9 +11,9 @@ const formatDate = (dateStr) => {
   });
 };
 
-const JobCards = ({ job }) => {
+const AdminJobCards = ({ job }) => {
   const navigate = useNavigate();
-  const { _id, jobTitle, location, CTC, deadLine, experience, jobType, industries, domain } = job;
+  const { _id, jobTitle, location, CTC, deadLine, experience, jobType, industries, domain, active } = job;
 
   return (
     <div className="w-full rounded-[24px] border border-slate-700/40 bg-[linear-gradient(135deg,#112233_0%,#0F172A_45%,#16263A_100%)] p-5 text-white shadow-[0_18px_45px_rgba(2,6,23,0.28)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(2,6,23,0.35)]">
@@ -23,7 +23,7 @@ const JobCards = ({ job }) => {
           <h3 className="mt-2 text-xl font-bold text-white">{jobTitle}</h3>
         </div>
         <span className="rounded-full border border-[#F2A93C]/30 bg-[#F2A93C]/10 px-3 py-1 text-xs font-semibold text-[#F2A93C]">
-          Active
+          {active ? "Active" : "Inactive"}
         </span>
       </div>
 
@@ -66,7 +66,7 @@ const JobCards = ({ job }) => {
       </div>
 
       <button
-        onClick={() => navigate(`/job/${_id}`)}
+        onClick={() => navigate(`/admin/job/${_id}`)}
         className="mt-6 w-full rounded-full bg-[#E8791E] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#F2A93C] hover:text-[#0F172A]"
       >
         View details
@@ -75,4 +75,4 @@ const JobCards = ({ job }) => {
   );
 };
 
-export default JobCards;
+export default AdminJobCards;

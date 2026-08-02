@@ -42,6 +42,12 @@ const PlusIcon = () => (
   </svg>
 );
 
+const EnquiryIcon = () => (
+  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+  </svg>
+);
+
 const AdminPanel = () => {
   const navigate = useNavigate();
 
@@ -124,6 +130,13 @@ const AdminPanel = () => {
       icon: <BriefcaseIcon />,
       color: "from-[#06B6D4] to-[#0891B2]",
       action: () => navigate('/admin/soft-skill'),
+    },
+    {
+      title: "Business Enquiries",
+      count: "0",
+      icon: <EnquiryIcon />,
+      color: "from-[#F472B6] to-[#EC4899]",
+      action: () => navigate('/admin/enquiry'),
     },
      
   ];

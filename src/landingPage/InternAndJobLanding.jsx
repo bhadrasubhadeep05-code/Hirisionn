@@ -1,8 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const InternAndJobLanding = () => {
+    const navigate = useNavigate();
   return (
-    <div data-scroll data-scroll-speed="0.2" className="h-full w-full bg-[#f6f9fb] flex flex-col justify-center items-center px-4 sm:px-10 py-8 sm:p-10 font-body pb-16 sm:pb-36">
+    <div className="h-full w-full bg-[#f6f9fb] flex flex-col justify-center items-center px-4 sm:px-10 py-8 sm:p-10 font-body pb-16 sm:pb-0">
       <div className="flex flex-col justify-start w-full max-w-7xl mb-6 sm:mb-10 mt-6 sm:mt-10 ml-0 sm:ml-[100px] lg:ml-[228px]">
         <div className="flex items-center">
           <span className="h-[3px] w-6 rounded inline-block bg-[#f2872e] mr-2" />
@@ -25,9 +27,11 @@ const InternAndJobLanding = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent from-30% via-[#12171B]/80 to-[#12171B] transition-all duration-500" />
           <div className="relative z-10 flex h-full flex-col justify-end p-6">
-            <h2 className="text-white font-archivo transition-all duration-300 sm:translate-y-0 sm:group-hover:-translate-y-1 sm:group-focus-within:-translate-y-1">Internships</h2>
+            <h2 className="text-white font-archivo transition-all duration-300 sm:translate-y-0 sm:group-hover:-translate-y-1 sm:group-focus-within:-translate-y-1 text-2xl pl-3">Internships</h2>
             <div className="mt-3 flex items-center justify-start opacity-100 transition-all duration-300 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 sm:translate-y-2 sm:group-hover:translate-y-0 sm:group-focus-within:translate-y-0">
-              <button className="w-fit rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-[#12171B] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:bg-white sm:px-4 sm:py-2 sm:text-sm">
+              <button
+              onClick={()=> navigate('/internship')}
+               className="w-fit rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-[#12171B] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:bg-white sm:px-4 sm:py-2 sm:text-sm">
                 View Internships
               </button>
             </div>
@@ -46,9 +50,11 @@ const InternAndJobLanding = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent from-30% via-[#12171B]/80 to-[#12171B] transition-all duration-500" />
           <div className="relative z-10 flex h-full flex-col justify-end p-6">
-            <h2 className="text-white font-archivo text-lg transition-all duration-300 sm:translate-y-0 sm:group-hover:-translate-y-1 sm:group-focus-within:-translate-y-1">Certification Courses</h2>
+            <h2 className="text-white font-archivo  transition-all duration-300 sm:translate-y-0 sm:group-hover:-translate-y-1 sm:group-focus-within:-translate-y-1 text-2xl pl-3">Certification Courses</h2>
             <div className="mt-3 flex items-center justify-start opacity-100 transition-all duration-300 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 sm:translate-y-2 sm:group-hover:translate-y-0 sm:group-focus-within:translate-y-0">
-              <button className="w-fit rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-[#12171B] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:bg-white sm:px-4 sm:py-2 sm:text-sm">
+              <button 
+              onClick={()=> navigate('/soft-skills-training')}
+              className="w-fit rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-[#12171B] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:bg-white sm:px-4 sm:py-2 sm:text-sm">
                 View Courses
               </button>
             </div>

@@ -5,12 +5,12 @@ const PROCESS = [
   {
     step: "01",
     title: "Register & Assess",
-    desc: "Candidates share their goals and current skill level; we assess readiness and identify the gaps to close.",
+    desc: "Candidates share their goals and current skills  level. We assess readiness and identify the gaps to close.",
   },
   {
     step: "02",
     title: "Train & Prepare",
-    desc: "Corporate readiness workshops build communication, interview skills, and workplace competencies employers look for.",
+    desc: "Corporate Readiness Workshops build communication, interview skills, and workplace competencies employers look for.",
   },
   {
     step: "03",
@@ -19,8 +19,8 @@ const PROCESS = [
   },
   {
     step: "04",
-    title: "Place & Support",
-    desc: "We stay involved post-placement, supporting both candidate and employer well beyond day one.",
+    title: "Placement & Support",
+    desc: "We stay involved post-placement, supporting both the candidate and employer well beyond day one.",
   },
 ];
 
@@ -53,7 +53,7 @@ const PROCESS = [
       <div
         id="process"
         data-scroll
-        data-scroll-speed="0.2"
+        data-scroll-speed="0.4"
         className="bg-[#f6f9fb] py-20 sm:py-28"
       >
        <div className="mx-auto max-w-6xl px-5 sm:px-8">

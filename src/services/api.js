@@ -47,12 +47,12 @@ api.interceptors.response.use(
       window.dispatchEvent(new CustomEvent('stopPageLoading'));
     }
 
-    if (error.response?.status === 401) {
+    // if (error.response?.status === 401) {
       
-      // 🔥 Token expired or invalid
-      localStorage.removeItem("token");
+    //   // 🔥 Token expired or invalid
+    //   localStorage.removeItem("token");
 
-    }
+    // }
 
     return Promise.reject(error);
   }

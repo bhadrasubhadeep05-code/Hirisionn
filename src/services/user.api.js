@@ -68,4 +68,8 @@ export const softSkillsApply = async(data)=>{
     const res = await api.put("/admin/softskills", data);
     return res.data
 }
-
+//apply job
+export const applyJob = async(data)=>{
+    const res = await api.put(`/admin/job/apply-job`, data);
+    return res.data;
+}

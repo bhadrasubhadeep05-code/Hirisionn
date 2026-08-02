@@ -43,7 +43,8 @@ const Login = () => {
       }
       const res = await login(data);
       // setToken(res.token);
-      // ✅ Immediately fetch user data after login
+      // localStorage.setItem("token", res.token);
+      // ✅ Immediately fetch user data after login using the fresh token
       await fetchUser();
       
       if(res.succes){

@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
-import NavBar2 from './NavBar2';
-import Footer from './Footer';
-import { updateUser, logout } from '../services/user.api';
-import AppContext from '../context/AppContext';
+import React, { useState, useContext, useEffect } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
+import NavBar2 from "./NavBar2";
+import Footer from "./Footer";
+import { updateUser, logout } from "../services/user.api";
+import AppContext from "../context/AppContext";
 
 const Profile = () => {
   const { user, fetchUser } = useContext(AppContext);
@@ -13,7 +13,7 @@ const Profile = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -30,26 +30,26 @@ const Profile = () => {
   });
 
   // Load user data into form when user context changes
-useEffect(() => {
-  if (user) {
-    setFormData({
-      fullName: user.fullName || "",
-      email: user.email || "",
-      phoneNo: user.phoneNo || "",
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.fullName || "",
+        email: user.email || "",
+        phoneNo: user.phoneNo || "",
 
-      experienceLevel: user.profile?.experienceLevel || "",
-      job: user.profile?.job || "",
-      employer: user.profile?.employer || "",
-      currentCTC: user.profile?.currentCTC || "",
-      course: user.profile?.course || "",
-      domain: user.profile?.domain || "",
-      education: user.profile?.education || "",
-      linkedin: user.profile?.linkedin || "",
+        experienceLevel: user.profile?.experienceLevel || "",
+        job: user.profile?.job || "",
+        employer: user.profile?.employer || "",
+        currentCTC: user.profile?.currentCTC || "",
+        course: user.profile?.course || "",
+        domain: user.profile?.domain || "",
+        education: user.profile?.education || "",
+        linkedin: user.profile?.linkedin || "",
 
-      resume: null,
-    });
-  }
-}, [user]);
+        resume: null,
+      });
+    }
+  }, [user]);
 
   const toBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -62,37 +62,64 @@ useEffect(() => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    
+
     if (name === "resume") {
       const selectedFile = files[0];
-      
+
       // Validate that file is PDF only
       if (selectedFile) {
-        const isValidPDF = selectedFile.type === 'application/pdf';
-        
+        const isValidPDF = selectedFile.type === "application/pdf";
+
         if (!isValidPDF) {
-          setError("Only PDF files are allowed for resume. Please upload a valid PDF document.");
+          setError(
+            "Only PDF files are allowed for resume. Please upload a valid PDF document.",
+          );
           // Reset file input
-          e.target.value = '';
+          e.target.value = "";
           return;
         }
       }
-      
+
       setFormData((prev) => ({ ...prev, [name]: selectedFile }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-    
+
     if (error) setError("");
     if (success) setSuccess("");
   };
 
+  const getJobStatusBadge = (status = "") => {
+    const normalizedStatus = String(status || "")
+      .trim()
+      .toLowerCase();
+
+    if (normalizedStatus === "selected") {
+      return {
+        className: "bg-emerald-100 text-emerald-700",
+        label: "✅ Selected",
+      };
+    }
+
+    if (normalizedStatus === "rejected") {
+      return {
+        className: "bg-red-100 text-red-700",
+        label: "❌ Rejected",
+      };
+    }
+
+    return {
+      className: "bg-blue-100 text-blue-700",
+      label: "📝 Applied",
+    };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       setSubmitted(true);
-      
+
       const data = {
         experienceLevel: formData.experienceLevel,
         job: formData.job,
@@ -110,19 +137,19 @@ useEffect(() => {
       }
 
       await updateUser(data);
-      
+
       // Refresh user data
       await fetchUser();
-      
+
       setSuccess("Profile updated successfully!");
       setIsEditing(false);
-      
     } catch (error) {
       console.error("Profile update error:", error);
       // Show actual error message from backend if available
-      const errorMessage = error.response?.data?.message 
-        || error.response?.data?.error 
-        || "Failed to update profile. Please try again.";
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to update profile. Please try again.";
       setError(errorMessage);
     } finally {
       setSubmitted(false);
@@ -173,17 +200,21 @@ useEffect(() => {
                 onClick={() => setIsEditing(!isEditing)}
                 className="rounded-2xl bg-[#0F172A] px-6 py-2.5 text-sm font-bold text-white transition-all duration-300 hover:bg-[#1e293b]"
               >
-                {isEditing ? '✕ Cancel Edit' : '✏️ Edit Profile'}
+                {isEditing ? "✕ Cancel Edit" : "✏️ Edit Profile"}
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="rounded-2xl border border-[#E8791E]/20 bg-[#E8791E]/10 p-5">
-                <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">Account Information</h3>
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">
+                  Account Information
+                </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Full Name</label>
+                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                      Full Name
+                    </label>
                     <input
                       type="text"
                       name="fullName"
@@ -195,7 +226,9 @@ useEffect(() => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Email Address</label>
+                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                      Email Address
+                    </label>
                     <input
                       type="email"
                       name="email"
@@ -207,7 +240,9 @@ useEffect(() => {
                   </div>
 
                   <div className="space-y-2 md:col-span-2">
-                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Phone Number</label>
+                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                      Phone Number
+                    </label>
                     <input
                       type="tel"
                       name="phoneNo"
@@ -221,11 +256,15 @@ useEffect(() => {
               </div>
 
               <div className="rounded-2xl border border-[#E8791E]/20 bg-[#F8FAFC] p-5">
-                <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">Professional Details</h3>
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">
+                  Professional Details
+                </h3>
 
                 <div className="space-y-5">
                   <div className="space-y-2">
-                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Experience Level</label>
+                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                      Experience Level
+                    </label>
                     <select
                       name="experienceLevel"
                       value={formData.experienceLevel}
@@ -240,16 +279,18 @@ useEffect(() => {
                   </div>
 
                   <AnimatePresence mode="wait">
-                    {formData.experienceLevel === 'experienced' && (
+                    {formData.experienceLevel === "experienced" && (
                       <motion.div
                         key="experienced"
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
+                        animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         className="grid grid-cols-1 md:grid-cols-2 gap-5"
                       >
                         <div className="space-y-2">
-                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Current Job</label>
+                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                            Current Job
+                          </label>
                           <input
                             type="text"
                             name="job"
@@ -262,7 +303,9 @@ useEffect(() => {
                         </div>
 
                         <div className="space-y-2">
-                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Employer</label>
+                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                            Employer
+                          </label>
                           <input
                             type="text"
                             name="employer"
@@ -275,7 +318,9 @@ useEffect(() => {
                         </div>
 
                         <div className="space-y-2 md:col-span-2">
-                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Current CTC</label>
+                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                            Current CTC
+                          </label>
                           <input
                             type="text"
                             name="currentCTC"
@@ -289,16 +334,18 @@ useEffect(() => {
                       </motion.div>
                     )}
 
-                    {formData.experienceLevel === 'fresher' && (
+                    {formData.experienceLevel === "fresher" && (
                       <motion.div
                         key="fresher"
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
+                        animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         className="grid grid-cols-1 md:grid-cols-2 gap-5"
                       >
                         <div className="space-y-2">
-                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Course</label>
+                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                            Course
+                          </label>
                           <input
                             type="text"
                             name="course"
@@ -311,7 +358,9 @@ useEffect(() => {
                         </div>
 
                         <div className="space-y-2">
-                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Domain</label>
+                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                            Domain
+                          </label>
                           <input
                             type="text"
                             name="domain"
@@ -328,7 +377,9 @@ useEffect(() => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="space-y-2">
-                      <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Highest Education</label>
+                      <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                        Highest Education
+                      </label>
                       <input
                         type="text"
                         name="education"
@@ -341,7 +392,9 @@ useEffect(() => {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">LinkedIn (Optional)</label>
+                      <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                        LinkedIn (Optional)
+                      </label>
                       <input
                         type="text"
                         name="linkedin"
@@ -355,7 +408,9 @@ useEffect(() => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Upload / Update Resume</label>
+                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
+                      Upload / Update Resume
+                    </label>
                     <input
                       type="file"
                       name="resume"
@@ -365,7 +420,9 @@ useEffect(() => {
                       className="w-full rounded-2xl border border-slate-200 bg-white px-5 py-3.5 font-medium text-[#0F172A] shadow-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent disabled:cursor-not-allowed disabled:opacity-70"
                     />
                     {user?.profile?.resume && !isEditing && (
-                      <p className="mt-1 text-xs text-slate-500">✅ Resume already uploaded</p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        ✅ Resume already uploaded
+                      </p>
                     )}
                   </div>
                 </div>
@@ -375,7 +432,7 @@ useEffect(() => {
                 {error && (
                   <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     className="text-red-500 text-sm font-semibold text-center"
                   >
@@ -385,7 +442,7 @@ useEffect(() => {
                 {success && (
                   <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     className="text-emerald-600 text-sm font-semibold text-center"
                   >
@@ -406,7 +463,9 @@ useEffect(() => {
                   >
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                     <span className="relative z-10">
-                      {submitted ? '✓ Saving Changes...' : 'Save Profile Changes'}
+                      {submitted
+                        ? "✓ Saving Changes..."
+                        : "Save Profile Changes"}
                     </span>
                   </motion.button>
                 )}
@@ -414,49 +473,87 @@ useEffect(() => {
             </form>
 
             <div className="mt-8 space-y-5">
-              {user?.internshipInterests && Array.isArray(user.internshipInterests) && user.internshipInterests.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="rounded-[2rem] border border-white/50 bg-white/70 p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)]"
-                >
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#818CF8] to-[#6366F1]">
-                      <span className="text-lg">🎓</span>
+              {user?.internshipInterests &&
+                Array.isArray(user.internshipInterests) &&
+                user.internshipInterests.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="rounded-[2rem] border border-white/50 bg-white/70 p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)]"
+                  >
+                    <div className="mb-4 flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#818CF8] to-[#6366F1]">
+                        <span className="text-lg">🎓</span>
+                      </div>
+                      <h3 className="text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">
+                        Internship Applications
+                      </h3>
                     </div>
-                    <h3 className="text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">Internship Applications</h3>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {user.internshipInterests.map((interest, idx) => (
-                      <span key={idx} className="inline-flex items-center rounded-xl border border-[#818CF8]/20 bg-[#818CF8]/10 px-4 py-2 text-sm font-semibold text-[#4F46E5]">
-                        {interest.category || interest}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
+                    <div className="flex flex-wrap gap-2">
+                      {user.internshipInterests.map((interest, idx) => (
+                        <span
+                          key={idx}
+                          className="inline-flex items-center rounded-xl border border-[#818CF8]/20 bg-[#818CF8]/10 px-4 py-2 text-sm font-semibold text-[#4F46E5]"
+                        >
+                          {interest.category || interest}
+                        </span>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
 
-              {user?.jobPlacement && user.jobPlacement.applied && (
+              {user?.jobPlacement?.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                   className="rounded-[2rem] border border-white/50 bg-white/70 p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)]"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#22D3EE] to-[#06B6D4]">
-                        <span className="text-lg">💼</span>
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">Job Placement</h3>
-                        <p className="mt-0.5 text-xs text-slate-500">Placement Program Application</p>
-                      </div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#22D3EE] to-[#06B6D4]">
+                      <span className="text-lg">💼</span>
                     </div>
-                    <span className={`rounded-xl px-4 py-2 text-sm font-bold ${user.jobPlacement.status.toLowerCase() === 'fulfilled' ? 'bg-emerald-100 text-emerald-700' : user.jobPlacement.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
-                      {user.jobPlacement.status.toLowerCase() === 'fulfilled' ? '✅ Fulfilled' : user.jobPlacement.status.toLowerCase() === 'pending' ? '⏳ Pending' : '📝 Applied'}
-                    </span>
+
+                    <div>
+                      <h3 className="text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">
+                        Job Applications
+                      </h3>
+                      <p className="mt-0.5 text-xs text-slate-500">
+                        {user.jobPlacement.length} Application
+                        {user.jobPlacement.length > 1 ? "s" : ""}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {user.jobPlacement.map((job) => {
+                      const jobStatusBadge = getJobStatusBadge(job.status);
+
+                      return (
+                        <div
+                          onClick={() => navigate(`/job/${job.jobId}`)}
+                          key={job._id}
+                          className="flex items-center justify-between rounded-2xl border transition-all duration-500 border-slate-200 bg-white p-4 hover:scale-[105%] hover:cursor-pointer"
+                        >
+                          <div>
+                            <h4 className="text-base font-semibold text-slate-800">
+                              {job.jobTitle}
+                            </h4>
+
+                            <p className="text-sm text-slate-500">
+                              Job ID: {job.jobId}
+                            </p>
+                          </div>
+
+                          <span
+                            className={`rounded-xl px-4 py-2 text-sm font-bold ${jobStatusBadge.className}`}
+                          >
+                            {jobStatusBadge.label}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </motion.div>
               )}
@@ -474,12 +571,22 @@ useEffect(() => {
                         <span className="text-lg">🚀</span>
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">Live Project</h3>
-                        <p className="mt-0.5 text-xs text-slate-500">Real Industry Project Access</p>
+                        <h3 className="text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">
+                          Live Project
+                        </h3>
+                        <p className="mt-0.5 text-xs text-slate-500">
+                          Real Industry Project Access
+                        </p>
                       </div>
                     </div>
-                    <span className={`rounded-xl px-4 py-2 text-sm font-bold ${user.liveProject.status.toLowerCase() === 'fulfilled' ? 'bg-emerald-100 text-emerald-700' : user.liveProject.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
-                      {user.liveProject.status.toLowerCase() === 'fulfilled' ? '✅ Fulfilled' : user.liveProject.status.toLowerCase() === 'pending' ? '⏳ Pending' : '📝 Applied'}
+                    <span
+                      className={`rounded-xl px-4 py-2 text-sm font-bold ${user.liveProject.status.toLowerCase() === "fulfilled" ? "bg-emerald-100 text-emerald-700" : user.liveProject.status === "pending" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`}
+                    >
+                      {user.liveProject.status.toLowerCase() === "fulfilled"
+                        ? "✅ Fulfilled"
+                        : user.liveProject.status.toLowerCase() === "pending"
+                          ? "⏳ Pending"
+                          : "📝 Applied"}
                     </span>
                   </div>
                 </motion.div>
@@ -498,12 +605,22 @@ useEffect(() => {
                         <span className="text-lg">⭐</span>
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">Soft Skill Program</h3>
-                        <p className="mt-0.5 text-xs text-slate-500">Personality Development Program</p>
+                        <h3 className="text-sm font-bold uppercase tracking-[0.25em] text-[#0F172A]">
+                          Soft Skill Program
+                        </h3>
+                        <p className="mt-0.5 text-xs text-slate-500">
+                          Personality Development Program
+                        </p>
                       </div>
                     </div>
-                    <span className={`rounded-xl px-4 py-2 text-sm font-bold ${user.softSkill.status.toLowerCase() === 'fulfilled' ? 'bg-emerald-100 text-emerald-700' : user.softSkill.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
-                      {user.softSkill.status.toLowerCase() === 'fulfilled' ? '✅ Fulfilled' : user.softSkill.status.toLowerCase() === 'pending' ? '⏳ Pending' : '📝 Applied'}
+                    <span
+                      className={`rounded-xl px-4 py-2 text-sm font-bold ${user.softSkill.status.toLowerCase() === "fulfilled" ? "bg-emerald-100 text-emerald-700" : user.softSkill.status === "pending" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`}
+                    >
+                      {user.softSkill.status.toLowerCase() === "fulfilled"
+                        ? "✅ Fulfilled"
+                        : user.softSkill.status.toLowerCase() === "pending"
+                          ? "⏳ Pending"
+                          : "📝 Applied"}
                     </span>
                   </div>
                 </motion.div>
@@ -518,7 +635,7 @@ useEffect(() => {
                 <motion.button
                   onClick={() => {
                     logout();
-                    navigate('/login');
+                    navigate("/login");
                   }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -526,8 +643,18 @@ useEffect(() => {
                 >
                   <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
                     </svg>
                     Logout
                   </span>
@@ -541,6 +668,6 @@ useEffect(() => {
       <Footer />
     </div>
   );
-  };
+};
 
 export default Profile;

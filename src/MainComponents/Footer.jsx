@@ -7,30 +7,29 @@ const Footer = () => {
   
   const footerLinks = [
     {
-      title: "Our Services",
+      title: "What We Offer",
       links: [
-        { label: "Create Your Resume", path: "/resume-builder" },
         { label: "Internship", path: "/internship" },
-        { label: "Live Projects", path: "/live-projects" },
         { label: "Job Placements", path: "/job-placements" },
-        { label: "Soft Skills Training", path: "/soft-skills-training" }
+        { label: "Certification Courses", path: "/soft-skills-training" }
       ]
     },
     {
-      title: "Resources",
+      title: "For Students",
       links: [
-        { label: "WorkForce Insights", path: "/workforce-insights" },
-        { label: "Podcast Library", path: "/audio-library" },
+        { label: "Internship", path: "/internship" },
+        { label: "Job Placements", path: "/job-placements" },
         { label: "Blogs", path: "/blog-page" },
         { label: "Videos Library", path: "/video-page" },
-        { label: "Industry Insights", path: "/industry-insights" }
+        { label: "Certification Courses", path: "/soft-skills-training" }
       ]
     },
     {
       title: "Company",
       links: [
         { label: "About Us", path: "/about-us" },
-        { label: "Business Enquiry", path: "/business-enquiry" },
+        { label: "For Employers", path: "/business-enquiry" },
+        { label: "Create Your Resume", path: "/resume-builder" },
         { label: "Contact Us", path: "/contact-us" }
       ]
     }

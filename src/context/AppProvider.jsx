@@ -14,31 +14,39 @@ const AppProvider = ({ children }) => {
   const [isPageLoading, setIsPageLoading] = useState(false);
   // Fetch user data - can be called on app load and after login/register
   const fetchUser = useCallback(async (authToken = token) => {
-    if (!authToken && !import.meta.env.PROD) {
-      console.log("Token Missing")
-      setLoading(false);
-      return;
-    }
+    // const effectiveToken = authToken || token || localStorage.getItem("token") || "";
+
+    // if (!effectiveToken && !import.meta.env.PROD) {
+    //   console.log("Token Missing")
+    //   setLoading(false);
+    //   return;
+    // }
     
     try {
       setLoading(true);
       // Production uses HTTP-only cookie auth and does not need a token header.
-      // In localhost/dev mode, uncomment the localStorage fallback below if needed.
-      // if (authToken) {
-      //   localStorage.setItem("token", authToken);
+      // In localhost/dev mode, use the localStorage fallback.
+      // if (effectiveToken) {
+      //   localStorage.setItem("token", effectiveToken);
       // }
       
       const userData = await getUser();
-      setUser(userData.user);
-      setProfileComplete(userData.user.isProfileComplete  || false);
-      setFormContext(userData.user.isProfileComplete)
+      const userPayload = userData?.user;
+
+      if (!userPayload) {
+        throw new Error("No user payload returned from getUser");
+      }
+
+      setUser(userPayload);
+      setProfileComplete(userPayload.isProfileComplete || false);
+      setFormContext(userPayload.isProfileComplete)
     } catch (error) {
       console.error("Failed to fetch user:", error);
       // Clear invalid token
-      setToken("");
-      if (!import.meta.env.PROD) {
-        localStorage.removeItem("token");
-      }
+      // setToken("");
+      // if (!import.meta.env.PROD) {
+      //   localStorage.removeItem("token");
+      // }
       setUser({});
     } finally {
       setLoading(false);

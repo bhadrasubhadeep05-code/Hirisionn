@@ -8,27 +8,27 @@ const adminApi = axios.create({
   },
 });
 
-adminApi.interceptors.request.use((config) => {
-  // Production uses HTTP-only cookie auth for admin.
-  // For localhost/dev testing, you can restore the localStorage fallback here.
-  // const token = localStorage.getItem("adminToken");
-  // if (token) {
-  //   config.headers.Authorization = `Bearer ${token}`;
-  // }
+// adminApi.interceptors.request.use((config) => {
+//   // Production uses HTTP-only cookie auth for admin.
+//   // For localhost/dev testing, you can restore the localStorage fallback here.
+//   const token = localStorage.getItem("adminToken");
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
 
-  return config;
-});
+//   return config;
+// });
 
-adminApi.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("adminToken");
-      window.location.href = "/admin";
-    }
+// adminApi.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response?.status === 401) {
+//       localStorage.removeItem("adminToken");
+//       window.location.href = "/admin";
+//     }
 
-    return Promise.reject(error);
-  }
-);
+//     return Promise.reject(error);
+//   }
+// );
 
 export default adminApi;

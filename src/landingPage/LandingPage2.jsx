@@ -21,28 +21,21 @@ const LandingPage2 = () => {
   const problemStatementRef = useRef(null);
   const statsRef = useRef(null);
 
-  useEffect(() => {
-    const scroll = new LocomotiveScroll({
-      el: scrollRef.current,
-      smooth: true,
-      smartphone: {
-        smooth: true,
-      },
-      tablet: {
-        smooth: true,
-      },
-    });
-      window.addEventListener("load", () => {
-    scroll.update();
+useEffect(() => {
+  const scroll = new LocomotiveScroll({
+    el: scrollRef.current,
+    smooth: true,
   });
 
   setTimeout(() => {
-    scroll.update();
-  }, 1000);
-    return () => {
-      scroll.destroy();
-    };
-  }, []);
+    scroll.resize();
+  }, 100);
+
+  return () => {
+    scroll.destroy();
+  };
+}, []);
+
   return (
     <>
       <div data-scroll-container ref={scrollRef} className="bg-[#f6f9fb]">

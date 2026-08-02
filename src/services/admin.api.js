@@ -118,13 +118,34 @@ export const getJobById = async(jobId)=>{
     return res.data;
 }
 export const deleteJob = async(jobId)=>{
-    const res = await adminApi.get(`/admin/job/delete-job${jobId}`);
+    const res = await adminApi.delete(`/admin/job/delete-job/${jobId}`);
     return res.data;
 }
+export const getAdminJobs = async()=>{
+    const res = await adminApi.get("/admin/job/get-jobs/admin");
+    return res.data;
+}
+export const getApplicants = async(jobId)=>{
+    const res = await adminApi.get(`/admin/job/get-applicants/${jobId}`);
+    return res;
+}
+export const stateController = async(data)=>{
+    const res = await adminApi.put(`/admin/job/job-state`, data);
+    return res.data;
+};
+export const jobActiveToggel = async(data)=>{
+    const res = await adminApi.put(`/admin/job/job-toggler`, data);
+    return res.data;
+}
+
 
 export const adminLogout = async () => {
     const res = await adminApi.post("/admin/logout");
     return res.data;
 };
 
-
+//bussiness enquiry
+export const bussiness = async (userData) =>{
+    const res = await adminApi.get("/enquiry/", userData);
+    return res.data;
+};

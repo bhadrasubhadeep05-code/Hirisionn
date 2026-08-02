@@ -94,7 +94,7 @@ const NavBar2 = () => {
       ],
     },
      {
-      name: "For Employes",
+      name: "For Employees",
       type: "dropdown",
       id: "resources",
       options: [
@@ -112,7 +112,6 @@ const NavBar2 = () => {
       options: [
        { label: "Internship", path: "/internship" },
         { label: "Job Placements", path: "/job-placements" },
-        { label: "Podcast Library", path: "/audio-library" },
         { label: "Blogs", path: "/blog-page" },
         { label: "Videos Library", path: "/video-page" },
          {
@@ -272,29 +271,62 @@ const NavBar2 = () => {
           </div>
 
           <div className="ml-auto flex items-center xl:ml-6">
-            <motion.button
-              whileHover={{ scale: 1.06 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() =>
-                goTo(ProfileComplete ? "/profile" : "/register")
-              }
-              aria-label="Open profile"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F2A93C] to-[#E8791E] text-[#12171B] shadow-[0_8px_20px_-8px_rgba(232,121,30,0.7)] sm:h-11 sm:w-11"
-            >
-              <svg
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
+            {user?.fullName && (
+              <div className="mr-2 flex flex-col items-center">
+                <motion.button
+                  whileHover={{ scale: 1.06 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() =>
+                    goTo(ProfileComplete ? "/profile" : "/register")
+                  }
+                  aria-label="Open profile"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F2A93C] to-[#E8791E] text-[#12171B] shadow-[0_8px_20px_-8px_rgba(232,121,30,0.7)] sm:h-11 sm:w-11"
+                >
+                  <svg
+                    className="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </motion.button>
+                <span className="mt-1 max-w-[90px] truncate text-center text-[10px] font-semibold leading-tight text-[#E8791E] sm:max-w-[110px] sm:text-xs">
+                  {user.fullName}
+                </span>
+              </div>
+            )}
+
+            {!user?.fullName && (
+              <motion.button
+                whileHover={{ scale: 1.06 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() =>
+                  goTo(ProfileComplete ? "/profile" : "/register")
+                }
+                aria-label="Open profile"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F2A93C] to-[#E8791E] text-[#12171B] shadow-[0_8px_20px_-8px_rgba(232,121,30,0.7)] sm:h-11 sm:w-11"
               >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-            </motion.button>
+                <svg
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </motion.button>
+            )}
 
             {/* Mobile and tablet menu button */}
             <button
@@ -340,6 +372,27 @@ const NavBar2 = () => {
               className="max-h-[calc(100dvh-72px)] overflow-y-auto border-t border-[#D8E0E3] bg-[#F6F8F8] xl:hidden"
             >
               <div className="space-y-1 px-4 py-4 sm:px-8 sm:py-5">
+                {user?.fullName && (
+                  <div className="mb-3 flex items-center gap-2 rounded-xl border border-[#F2A93C]/25 bg-[#FFF7ED] px-3 py-2 text-sm font-semibold text-[#E8791E]">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F2A93C] to-[#E8791E] text-[#12171B]">
+                      <svg
+                        className="h-4 w-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </div>
+                    <span className="truncate">{user.fullName}</span>
+                  </div>
+                )}
+
                 {navLinks.map((link) =>
                   link.type === "dropdown" ? (
                     <div key={link.name}>
@@ -393,11 +446,6 @@ const NavBar2 = () => {
                   )
                 )}
 
-                {user?.fullName && (
-                  <p className="px-3 pt-3 text-xs text-[#66747C]">
-                    Signed in as {user.fullName}
-                  </p>
-                )}
               </div>
             </motion.div>
           )}

@@ -5,11 +5,11 @@ const CorporatePage1 = () => {
     {
       linker: 'https://plus.unsplash.com/premium_photo-1661288470388-c5006797bdff?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       title: "Resume & LinkedIn Building",
-      desc: "Craft ATS-friendly resumes and LinkedIn profiles that get you noticed by recruiters and hiring managers.",
+      desc: "Craft ATS-friendly resumes and LinkedIn profile that gets you noticed by recruiters and hiring managers.",
     },
     {
       linker: "https://plus.unsplash.com/premium_photo-1676666379090-e0fc81f41e7e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      title: "Mock Interviews",
+      title: "Mock Interview",
       desc: "Simulated interview sessions with real feedback from industry professionals — technical, HR, and case-based rounds.",
     },
     {
@@ -29,7 +29,7 @@ const CorporatePage1 = () => {
     },
     {
       linker: "https://images.unsplash.com/photo-1773332585815-f106a5d6ed6c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3DF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      title: "Aptitude & Case Prep",
+      title: "Aptitude & Case Preparation",
       desc: "Numerical reasoning, logical thinking, and case study preparation for consulting, finance, and tech roles.",
     },
   ];

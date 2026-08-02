@@ -19,6 +19,7 @@ import ManPower from './MainComponents/ManPower';
 import Internship from './MainComponents/Intership';
 import LiveProjects from './MainComponents/LiveProjects';
 import Placements from './MainComponents/Placements';
+import JobPage from './MainComponents/JobPage';
 import SoftSkills from './MainComponents/SoftSkills';
 import Curriculum from './MainComponents/Curriculum';
 import LearningOutcomes from './MainComponents/LearningOutcomes';
@@ -37,6 +38,10 @@ import AdminInternship from './admin/AdminInternship';
 import AdminPlacements from './admin/AdminPlacements';
 import AdminLiveProject from './admin/AdminLiveProject';
 import AdminSoftSkill from './admin/AdminSoftSkill';
+import AdminEnquiry from './admin/AdminEnquiry';
+import CreateJob from './admin/CreateJob';
+import ViewJobs from './admin/ViewJobs';
+import AdminJobPage from './admin/AdminJobPage';
 
 
 
@@ -68,13 +73,17 @@ function App() {
       <Route path="/admin/videos" element={<ViewVideos />} />
       <Route path="/admin/audios" element={<ViewAudios />} />
       <Route path="/admin/users" element={<AdminViewUser />} />
+      <Route path="/admin/jobs" element={<ViewJobs />} />
+      <Route path="/admin/job/:id" element={<AdminJobPage />} />
       <Route path="/admin/create-blog" element={<CreateBlog />} />
       <Route path="/admin/internships" element={<AdminInternship />} />
       <Route path="/admin/placements" element={<AdminPlacements />} />
       <Route path="/admin/live-project" element={<AdminLiveProject />} />
       <Route path="/admin/soft-skill" element={<AdminSoftSkill />} />
+      <Route path="/admin/enquiry" element={<AdminEnquiry />} />
       <Route path="/admin/create-video" element={<CreateVideo />} />
       <Route path="/admin/create-audio" element={<CreateAudio />} />
+      <Route path="/admin/create-job" element={<CreateJob />} />
       <Route path="/register" element={<Register/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/forgot-password" element={<ForgetPassword/>}/>
@@ -82,6 +91,7 @@ function App() {
       <Route path="/internship" element={<Internship/>}/>
       <Route path="/live-projects" element={<LiveProjects/>}/>
       <Route path="/job-placements" element={<Placements/>}/>
+      <Route path="/job/:id" element={<JobPage/>}/>
       <Route path="/manpower" element={<ManPower/>}/>
       <Route path="/contact-us" element={<ContactUs/>}/>
       <Route path="/about-us" element={<AboutUs/>}/>
