@@ -25,7 +25,7 @@ const formatDate = (dateStr) => {
 const JobPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { startLoading, stopLoading, user } = useContext(AppContext);
+  const { startLoading, stopLoading, user, ProfileComplete } = useContext(AppContext);
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -134,9 +134,6 @@ const JobPage = () => {
             </svg>
             Back to listings
           </button>
-          <div className="mb-4 inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-orange-300">
-            {jobType || "Open role"}
-          </div>
           <h1 className="text-3xl font-bold text-white md:text-5xl">{jobTitle}</h1>
           <p className="mt-3 flex items-center gap-2 text-lg text-slate-300">
             <span>{location}</span>
@@ -171,7 +168,13 @@ const JobPage = () => {
           <div>
             <div className="sticky top-28 space-y-6">
               {/* Apply Button */}
-              <button onClick={()=>apply()} className="w-full rounded-2xl bg-gradient-to-r from-[#E8791E] to-[#F2A93C] px-6 py-4 text-base font-bold text-white shadow-lg transition hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]">
+              <button onClick={()=>{
+                if(ProfileComplete){
+                apply()
+                }else{
+                  navigate('/register')
+                }
+              }} className="w-full rounded-2xl bg-gradient-to-r from-[#E8791E] to-[#F2A93C] px-6 py-4 text-base font-bold text-white shadow-lg transition hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]">
                 Apply now
               </button>
 
