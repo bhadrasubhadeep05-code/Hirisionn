@@ -16,58 +16,57 @@ const JobCards = ({ job }) => {
   const { _id, jobTitle, location, CTC, deadLine, experience, jobType, industries, domain } = job;
 
   return (
-    <div className="w-full rounded-[24px] border border-slate-700/40 bg-[linear-gradient(135deg,#112233_0%,#0F172A_45%,#16263A_100%)] p-5 text-white shadow-[0_18px_45px_rgba(2,6,23,0.28)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(2,6,23,0.35)]">
+    <div className="md:w-[800px] md:h-[240px] w-[336px] h-[190px] rounded-xl  bg-[#fff] p-3 md:p-5 text-white shadow-[0_6px_12px_rgba(30,10,58,0.04)] transition duration-200  hover:shadow-xl">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#F2A93C]">Open role</p>
-          <h3 className="mt-2 text-xl font-bold text-white">{jobTitle}</h3>
+          <h3 className="md:mt-2 mt-1 text-[14px] md:text-lg font-bold text-[#E8791E]">{jobTitle}</h3>
         </div>
-        <span className="rounded-full border border-[#F2A93C]/30 bg-[#F2A93C]/10 px-3 py-1 text-xs font-semibold text-[#F2A93C]">
+        <span className="rounded-full border border-[#F2A93C]/30 bg-[#F2A93C]/10 px-3 py-1 text-[10px] md:text-xs font-semibold text-[#F2A93C]">
           Active
         </span>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="md:mt-4 mt-2 flex flex-wrap gap-2">
         {experience && (
-          <span className="rounded-full border border-slate-600/40 bg-slate-800/50 px-3 py-1 text-xs font-medium text-slate-300">
+          <span className="rounded-full border border-[#12171B] px-2 py-1  md:px-3 md:py-1 text-[9px] md:text-xs font-medium text-[#12171B]">
             Exp: {experience} yrs
           </span>
         )}
         {jobType && (
-          <span className="rounded-full border border-slate-600/40 bg-slate-800/50 px-3 py-1 text-xs font-medium text-slate-300">
+          <span className="rounded-full border border-[#12171B]  px-2 py-1  md:px-3 md:py-1 text-[9px] md:text-xs font-medium text-[#12171B]">
             {jobType}
           </span>
         )}
         {industries && (
-          <span className="rounded-full border border-slate-600/40 bg-slate-800/50 px-3 py-1 text-xs font-medium text-slate-300">
+          <span className='rounded-full border border-[#12171B]  px-2 py-1  md:px-3 md:py-1 text-[9px] md:text-xs font-medium text-[#12171B]'>
             {industries}
           </span>
         )}
          {domain && (
-          <span className="rounded-full border border-slate-600/40 bg-slate-800/50 px-3 py-1 text-xs font-medium text-slate-300">
+          <span className="rounded-full border border-[#12171B]  px-2 py-1  md:px-3 md:py-1 text-[9px] md:text-xsfont-medium text-[#12171B]">
             {domain}
           </span>
         )}
       </div>
 
-      <div className="mt-6 space-y-3 border-t border-slate-700/60 pt-4">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-slate-400">Location</span>
-          <span className="font-semibold text-slate-100">{location}</span>
+      <div className="md:mt-6 mt-4 border-t border-slate-700/60 pt-4 flex justify-evenly">
+        <div className="flex items-center gap-1 md:gap-6 text-[10px] md:text-sm">
+          <span className="text-[#12171B]">Location:</span>
+          <span className="font-semibold text-[#12171B]">{location}</span>
         </div>
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-slate-400">CTC</span>
-          <span className="font-semibold text-slate-100">{CTC} LPA</span>
+        <div className="flex items-center gap-1 md:gap-6 text-[10px] md:text-sm">
+          <span className="text-[#12171B]">CTC:</span>
+          <span className="font-semibold text-[#12171B]">{CTC} LPA</span>
         </div>
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-slate-400">Apply till</span>
+        <div className="flex items-center gap-1 md:gap-6 text-[10px] md:text-sm">
+          <span className="text-[#12171B]">Apply till:</span>
           <span className="font-semibold text-[#F2A93C]">{formatDate(deadLine)}</span>
         </div>
       </div>
 
       <button
         onClick={() => navigate(`/job/${_id}`)}
-        className="mt-6 w-full rounded-full bg-[#E8791E] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#F2A93C] hover:text-[#0F172A]"
+        className="md:mt-6 mt-2 w-full rounded-full bg-[#E8791E] py-1 md:px-6 md:py-3 text-[12px] md:text-sm font-semibold text-white transition hover:bg-[#F2A93C] hover:text-[#0F172A]"
       >
         View details
       </button>

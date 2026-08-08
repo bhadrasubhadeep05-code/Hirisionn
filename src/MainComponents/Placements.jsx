@@ -74,7 +74,7 @@ const Placements = () => {
   const hasActiveFilters = filters.experience || filters.location || filters.jobType;
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-[#F8FAFC] text-slate-800">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#e9edf1] text-slate-800">
       <NavBar2 progress={1} />
 
       <section className="relative mt-24 flex min-h-[50vh] items-center justify-center overflow-hidden bg-[radial-gradient(120%_160%_at_100%_0%,#1c5872,#12171B_70%)] px-6 py-20">
@@ -93,10 +93,10 @@ const Placements = () => {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-12 md:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-4 md:py-12 md:px-8">
         <div className="flex flex-col gap-8 lg:flex-row-reverse">
           {/* Filter Panel - Fixed on desktop, sticky bar on mobile */}
-          <aside className="w-full shrink-0 lg:sticky lg:top-28 lg:h-fit lg:w-80">
+          <aside className="w-full shrink-0 h-fit top-10 sticky md:top-28 md:h-fit md:w-80">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:shadow-[0_8px_30px_rgba(15,23,42,0.06)]">
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div>
@@ -110,7 +110,7 @@ const Placements = () => {
                 )}
               </div>
 
-              <div className="space-y-5">
+              <div className="md:space-y-5 flex md:gap-0 gap-2">
                 {/* Experience Filter */}
                 <div>
                   <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-slate-400">Experience</label>
@@ -132,7 +132,7 @@ const Placements = () => {
                   <select
                     value={filters.location}
                     onChange={(e) => handleFilterChange("location", e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-[#E8791E] focus:ring-1 focus:ring-[#E8791E]/30"
+                    className="md:w-full w-[100px] rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-[#E8791E] focus:ring-1 focus:ring-[#E8791E]/30"
                   >
                     <option value="">All locations</option>
                     {INDIAN_STATES.map((state) => (
@@ -192,7 +192,6 @@ const Placements = () => {
         </div>
       </section>
 
-     <Footer />
     </div>
   );
 };
