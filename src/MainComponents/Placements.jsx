@@ -94,7 +94,7 @@ const Placements = () => {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-4 md:py-12 md:px-8">
-        <div className="flex flex-col gap-8 lg:flex-row-reverse">
+        <div className="flex flex-col gap-8 md:flex-row-reverse">
           {/* Filter Panel - Fixed on desktop, sticky bar on mobile */}
           <aside className="w-full shrink-0 h-fit top-10 sticky md:top-28 md:h-fit md:w-80">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:shadow-[0_8px_30px_rgba(15,23,42,0.06)]">
@@ -110,7 +110,7 @@ const Placements = () => {
                 )}
               </div>
 
-              <div className="md:space-y-5 flex md:gap-0 gap-2">
+              <div className="md:space-y-5 flex md:flex-col md:gap-0 gap-2">
                 {/* Experience Filter */}
                 <div>
                   <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-slate-400">Experience</label>
