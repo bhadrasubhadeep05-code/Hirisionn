@@ -163,7 +163,7 @@ const CreateJob = () => {
       const jobPayload = {
         jobTitle: resolvedFormData.jobTitle,
         jobDescription: resolvedFormData.jobDescription,
-        CTC: Number(resolvedFormData.CTC),
+        CTC: String(resolvedFormData.CTC),
         deadLine: resolvedFormData.deadLine,
         industries: resolvedFormData.industries,
         location: resolvedFormData.location,
