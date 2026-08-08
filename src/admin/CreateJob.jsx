@@ -21,6 +21,20 @@ const CreateJob = () => {
     experience: "",
     active: true,
   });
+  const [customValues, setCustomValues] = useState({
+    industries: "",
+    domain: "",
+    jobType: "",
+    eligibility: "",
+    experience: "",
+  });
+  const [showCustomInput, setShowCustomInput] = useState({
+    industries: false,
+    domain: false,
+    jobType: false,
+    eligibility: false,
+    experience: false,
+  });
 
   // Dropdown option constants
   const industryOptions = [
@@ -93,24 +107,71 @@ const CreateJob = () => {
     }));
   };
 
+  const handleSelectChange = (e) => {
+    const { name, value } = e.target;
+
+    if (value === "__custom__") {
+      setFormData((prev) => ({ ...prev, [name]: "" }));
+      setCustomValues((prev) => ({ ...prev, [name]: "" }));
+      setShowCustomInput((prev) => ({ ...prev, [name]: true }));
+      return;
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setShowCustomInput((prev) => ({ ...prev, [name]: false }));
+    setCustomValues((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const handleCustomInputChange = (e) => {
+    const { name, value } = e.target;
+    setCustomValues((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       setLoading(true);
 
+      const resolvedFormData = {
+        ...formData,
+        industries: showCustomInput.industries
+          ? customValues.industries.trim()
+          : formData.industries,
+        domain: showCustomInput.domain ? customValues.domain.trim() : formData.domain,
+        jobType: showCustomInput.jobType
+          ? customValues.jobType.trim()
+          : formData.jobType,
+        eligibility: showCustomInput.eligibility
+          ? customValues.eligibility.trim()
+          : formData.eligibility,
+        experience: showCustomInput.experience
+          ? customValues.experience.trim()
+          : formData.experience,
+      };
+
+      if (
+        Object.entries(showCustomInput).some(
+          ([field, isCustom]) => isCustom && !resolvedFormData[field]?.trim()
+        )
+      ) {
+        alert("Please enter your custom value for the selected field");
+        return;
+      }
+
       const jobPayload = {
-        jobTitle: formData.jobTitle,
-        jobDescription: formData.jobDescription,
-        CTC: Number(formData.CTC),
-        deadLine: formData.deadLine,
-        industries: formData.industries,
-        location: formData.location,
-        domain: formData.domain,
-        jobType: formData.jobType,
-        eligibility: formData.eligibility,
-        experience: formData.experience,
-        active: formData.active,
+        jobTitle: resolvedFormData.jobTitle,
+        jobDescription: resolvedFormData.jobDescription,
+        CTC: Number(resolvedFormData.CTC),
+        deadLine: resolvedFormData.deadLine,
+        industries: resolvedFormData.industries,
+        location: resolvedFormData.location,
+        domain: resolvedFormData.domain,
+        jobType: resolvedFormData.jobType,
+        eligibility: resolvedFormData.eligibility,
+        experience: resolvedFormData.experience,
+        active: resolvedFormData.active,
       };
 
       await createJob(jobPayload);
@@ -130,6 +191,20 @@ const CreateJob = () => {
         eligibility: "",
         experience: "",
         active: true,
+      });
+      setCustomValues({
+        industries: "",
+        domain: "",
+        jobType: "",
+        eligibility: "",
+        experience: "",
+      });
+      setShowCustomInput({
+        industries: false,
+        domain: false,
+        jobType: false,
+        eligibility: false,
+        experience: false,
       });
     } catch (err) {
       console.error(err.response?.data || err.message);
@@ -221,14 +296,14 @@ const CreateJob = () => {
                 <div className="space-y-2">
                   <label className={labelClass}>CTC (in LPA)</label>
                   <input
-                    type="number"
+                    type="text"
                     name="CTC"
                     required
                     min={0}
                     step="0.01"
                     value={formData.CTC}
                     onChange={handleChange}
-                    placeholder="e.g. 12"
+                    placeholder="e.g. 12 LAP"
                     className={inputClass}
                   />
                 </div>
@@ -252,9 +327,8 @@ const CreateJob = () => {
                   <label className={labelClass}>Industry</label>
                   <select
                     name="industries"
-                    required
                     value={formData.industries}
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
                     className={selectClass}
                   >
                     <option value="">-- Select industry --</option>
@@ -263,7 +337,18 @@ const CreateJob = () => {
                         {industry}
                       </option>
                     ))}
+                    <option value="__custom__">Custom / Other</option>
                   </select>
+                  {showCustomInput.industries && (
+                    <input
+                      type="text"
+                      name="industries"
+                      value={customValues.industries}
+                      onChange={handleCustomInputChange}
+                      placeholder="Enter your desired industry"
+                      className={`${inputClass} mt-3`}
+                    />
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -286,9 +371,8 @@ const CreateJob = () => {
                   <label className={labelClass}>Domain</label>
                   <select
                     name="domain"
-                    required
                     value={formData.domain}
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
                     className={selectClass}
                   >
                     <option value="">-- Select domain --</option>
@@ -297,16 +381,26 @@ const CreateJob = () => {
                         {domain}
                       </option>
                     ))}
+                    <option value="__custom__">Custom / Other</option>
                   </select>
+                  {showCustomInput.domain && (
+                    <input
+                      type="text"
+                      name="domain"
+                      value={customValues.domain}
+                      onChange={handleCustomInputChange}
+                      placeholder="Enter your desired domain"
+                      className={`${inputClass} mt-3`}
+                    />
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <label className={labelClass}>Job Type</label>
                   <select
                     name="jobType"
-                    required
                     value={formData.jobType}
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
                     className={selectClass}
                   >
                     <option value="">-- Select job type --</option>
@@ -315,7 +409,18 @@ const CreateJob = () => {
                         {type}
                       </option>
                     ))}
+                    <option value="__custom__">Custom / Other</option>
                   </select>
+                  {showCustomInput.jobType && (
+                    <input
+                      type="text"
+                      name="jobType"
+                      value={customValues.jobType}
+                      onChange={handleCustomInputChange}
+                      placeholder="Enter your desired job type"
+                      className={`${inputClass} mt-3`}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -325,9 +430,8 @@ const CreateJob = () => {
                   <label className={labelClass}>Eligibility</label>
                   <select
                     name="eligibility"
-                    required
                     value={formData.eligibility}
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
                     className={selectClass}
                   >
                     <option value="">-- Select eligibility --</option>
@@ -336,16 +440,26 @@ const CreateJob = () => {
                         {eligibility}
                       </option>
                     ))}
+                    <option value="__custom__">Custom / Other</option>
                   </select>
+                  {showCustomInput.eligibility && (
+                    <input
+                      type="text"
+                      name="eligibility"
+                      value={customValues.eligibility}
+                      onChange={handleCustomInputChange}
+                      placeholder="Enter your desired eligibility"
+                      className={`${inputClass} mt-3`}
+                    />
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <label className={labelClass}>Experience Required</label>
                   <select
                     name="experience"
-                    required
                     value={formData.experience}
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
                     className={selectClass}
                   >
                     <option value="">-- Select experience --</option>
@@ -354,7 +468,18 @@ const CreateJob = () => {
                         {experience}
                       </option>
                     ))}
+                    <option value="__custom__">Custom / Other</option>
                   </select>
+                  {showCustomInput.experience && (
+                    <input
+                      type="text"
+                      name="experience"
+                      value={customValues.experience}
+                      onChange={handleCustomInputChange}
+                      placeholder="Enter your desired experience"
+                      className={`${inputClass} mt-3`}
+                    />
+                  )}
                 </div>
               </div>
 
