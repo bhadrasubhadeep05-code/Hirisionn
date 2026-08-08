@@ -77,22 +77,14 @@ const NavBar2 = () => {
     {
       name: "About Us",
       type: "link",
+      path: "/job-placements",
+    },
+     {
+      name: "Job Placements",
+      type: "link",
       path: "/about-us",
     },
-    {
-      name: "What we Offer",
-      type: "dropdown",
-      id: "offers",
-      options: [
-        { label: "Our Career Services", type: "label" },
-        { label: "Internship", path: "/internship" },
-        { label: "Job Placements", path: "/job-placements" },
-        {
-          label: "Certification Cources",
-          path: "/soft-skills-training",
-        },
-      ],
-    },
+   
      {
       name: "For Employees",
       type: "dropdown",
