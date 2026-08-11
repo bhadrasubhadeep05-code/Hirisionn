@@ -7,12 +7,6 @@ import { getJobById } from "../services/admin.api";
 import {applyJob} from "../services/user.api"
 import { useToast } from "./AlertNotification";
 
-const formatCTC = (ctc) => {
-  if (!ctc) return "Not disclosed";
-  const num = Number(ctc);
-  if (num >= 100000) return `₹${(num / 100000).toFixed(1)}`;
-  return `₹${num.toLocaleString()}`;
-};
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "Rolling";
@@ -115,7 +109,7 @@ const JobPage = () => {
     { label: "Job Type", value: jobType || "Not specified"},
     { label: "Domain", value: domain || "Not specified"},
     { label: "Industry", value: industries || "Not specified" },
-    { label: "CTC", value: `${formatCTC(CTC)}`},
+    { label: "CTC", value: `${CTC}`},
     { label: "Apply by", value: formatDate(deadLine) },
   ];
 
@@ -140,7 +134,7 @@ const JobPage = () => {
           <p className="mt-3 flex items-center gap-2 text-lg text-slate-300">
             <span>{location}</span>
             <span className="text-slate-600">•</span>
-            <span className="text-[#F2A93C] font-semibold">{formatCTC(CTC)}</span>
+            <span className="text-[#F2A93C] font-semibold">{CTC}</span>
           </p>
         </div>
       </section>
