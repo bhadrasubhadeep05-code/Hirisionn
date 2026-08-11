@@ -56,7 +56,7 @@ const JobCards = ({ job }) => {
         </div>
         <div className="flex items-center gap-1 md:gap-6 text-[10px] md:text-sm">
           <span className="text-[#12171B]">CTC:</span>
-          <span className="font-semibold text-[#12171B]">{CTC} LPA</span>
+          <span className="font-semibold text-[#12171B]">{CTC}</span>
         </div>
         <div className="flex items-center gap-1 md:gap-6 text-[10px] md:text-sm">
           <span className="text-[#12171B]">Apply till:</span>
