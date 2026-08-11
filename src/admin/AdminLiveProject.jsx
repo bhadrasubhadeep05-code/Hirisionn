@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import NavBar2 from "../MainComponents/NavBar2";
 import Footer from "../MainComponents/Footer";
 import { getLiveProject, updateLiveProject  } from "../services/admin.api";
+import { useToast } from "../MainComponents/AlertNotification";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -14,6 +15,7 @@ const fadeUp = {
 };
 
 const AdminLiveProject = () => {
+  const toast = useToast();
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
@@ -71,13 +73,13 @@ const AdminLiveProject = () => {
       });
 
       console.log(res);
-      alert(res.message);
+      toast.success(res.message);
       
       // Refresh applicants list after successful update
       fetchApplicants();
     } catch (err) {
       console.error("Error updating live project:", err);
-      alert(err.response?.data?.message || "Failed to update project. Please try again.");
+      toast.error(err.response?.data?.message || "Failed to update project. Please try again.");
     }
   }
 

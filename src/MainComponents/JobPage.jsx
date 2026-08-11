@@ -5,6 +5,7 @@ import NavBar2 from "./NavBar2";
 import Footer from "./Footer";
 import { getJobById } from "../services/admin.api";
 import {applyJob} from "../services/user.api"
+import { useToast } from "./AlertNotification";
 
 const formatCTC = (ctc) => {
   if (!ctc) return "Not disclosed";
@@ -25,6 +26,7 @@ const formatDate = (dateStr) => {
 const JobPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
   const { startLoading, stopLoading, user, ProfileComplete } = useContext(AppContext);
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,7 +55,7 @@ const JobPage = () => {
       const payload = { userId, id };
       const res = await applyJob(payload);
       if (res?.success) {
-        alert("Applied Successfully");
+        toast.success("Applied Successfully");
       }
     } catch (error) {
       const errorMessage =
@@ -61,7 +63,7 @@ const JobPage = () => {
         error?.response?.data?.error ||
         "Something went wrong while applying. Please try again.";
 
-      alert(`Failed to apply: ${errorMessage}`);
+      toast.error(`Failed to apply: ${errorMessage}`);
     }
   };
 

@@ -5,6 +5,7 @@ import AppContext from "../context/AppContext";
 const video = "https://res.cloudinary.com/dtz4htk6y/video/upload/v1780778460/video11_dw34pr.mp4";
 import NavBar2 from "./NavBar2";
 import { softSkillsApply } from "../services/user.api";
+import { useToast } from "./AlertNotification";
 
 /* ---------------- Animations ---------------- */
 const fadeUp = {
@@ -48,6 +49,7 @@ const benefitCards = [
 const LearningOutcomes = () => {
   const { ProfileComplete } = useContext(AppContext);
   const navigate = useNavigate();
+  const toast = useToast();
       const [loading, setLoading] = useState(false)
 
   /* ✅ FIX: proper refs */
@@ -64,10 +66,10 @@ const LearningOutcomes = () => {
               applied: true
             });
       
-            alert(res.message);
+            toast.success(res.message);
       
           } catch (err) {
-            alert(
+            toast.error(
               err.response?.data?.message ||
               "Something went wrong"
             );

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import NavBar2 from "../MainComponents/NavBar2";
 import Footer from "../MainComponents/Footer";
 import { getInternships, getInternshipsFulfilled, fulfillInternship  } from "../services/admin.api";
+import { useToast } from "../MainComponents/AlertNotification";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -14,6 +15,7 @@ const fadeUp = {
 };
 
 const AdminInternship = () => {
+  const toast = useToast();
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
@@ -88,13 +90,13 @@ const AdminInternship = () => {
       });
 
       console.log(res);
-      alert(res.message);
+      toast.success(res.message);
       
       // Refresh applicants list after successful fulfillment
       fetchApplicants();
     } catch (err) {
       console.error("Error fulfilling internship:", err);
-      alert(err.response?.data?.message || "Failed to fulfill internship. Please try again.");
+      toast.error(err.response?.data?.message || "Failed to fulfill internship. Please try again.");
     }
   }
 

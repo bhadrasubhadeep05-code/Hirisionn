@@ -4,6 +4,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import AppContext from "../context/AppContext";
 import NavBar2 from "./NavBar2";
 import { internshipUpdate } from "../services/user.api";
+import { useToast } from "./AlertNotification";
 
 /* ---------------- Animations ---------------- */
 const fadeUp = {
@@ -110,6 +111,7 @@ const internshipCategories = [
 const Internship = () => {
   const { ProfileComplete } = useContext(AppContext);
   const navigate = useNavigate();
+  const toast = useToast();
 
   // State for modal
   const [openModal, setOpenModal] = useState(null);
@@ -241,12 +243,12 @@ const Internship = () => {
                               });
 
                               if (res.success === true) {
-                                alert(
+                                toast.success(
                                   `Successfully applied for ${category.title}!`,
                                 );
                               }
                             } catch (err) {
-                              alert(
+                              toast.error(
                                 err.response?.data?.message ||
                                   "Something went wrong",
                               );
@@ -336,11 +338,11 @@ const Internship = () => {
 
                             // Show success message
                             if (res.success === true) {
-                              alert(`Successfully applied for ${subCategory}!`);
+                              toast.success(`Successfully applied for ${subCategory}!`);
                             }
                             closeModal();
                           } catch (err) {
-                            alert(err.response.data.message);
+                            toast.error(err.response.data.message);
                           } finally {
                             setLoadingApply(null);
                           }

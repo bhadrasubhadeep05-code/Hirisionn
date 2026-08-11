@@ -5,6 +5,58 @@ import NavBar2 from './NavBar2';
 import Footer from './Footer';
 import { verifyUserForReset, verifySecurityAnswers, resetPassword } from '../services/user.api';
 
+// ---------------------------------------------------------------
+// Shared input style helpers (highlight fields with errors)
+// ---------------------------------------------------------------
+const inputBase =
+  "w-full rounded-2xl border bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:bg-white";
+const inputActive = " border-slate-200 focus:border-[#E8791E] focus:ring-2 focus:ring-[#E8791E]/20";
+const inputError = " border-red-400 bg-red-50 focus:border-red-400 focus:ring-2 focus:ring-red-400/20";
+const inputClass = (hasError) => `${inputBase}${hasError ? inputError : inputActive}`;
+
+// ---------------------------------------------------------------
+// Reusable animated error components
+// ---------------------------------------------------------------
+const ErrorAlert = ({ message }) => (
+  <AnimatePresence>
+    {message && (
+      <motion.div
+        role="alert"
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.25 }}
+        className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600"
+      >
+        <svg className="h-5 w-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>{message}</span>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+
+const FieldError = ({ msg }) =>
+  msg ? (
+    <motion.p
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="ml-1 mt-1.5 text-xs font-semibold text-red-500"
+    >
+      {msg}
+    </motion.p>
+  ) : null;
+
+const initialErrors = {
+  phoneNo: "",
+  securityAnswer1: "",
+  securityAnswer2: "",
+  newPassword: "",
+  confirmNewPassword: "",
+  general: "",
+};
+
 const ForgetPassword = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
@@ -21,21 +73,84 @@ const ForgetPassword = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const [formErrors, setFormErrors] = useState(initialErrors);
   const [userQuestions, setUserQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // -------------------------------------------------------------
+  // Client-side validation mirroring the backend validation layer
+  // (`BackEnd/middlewares/validateUser.js` reset-password validators)
+  // -------------------------------------------------------------
+  const PHONE_REGEX = /^\d{10}$/;
+  const SPECIAL_REGEX = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+  const PASSWORD_STRENGTH_REGEX = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
+
+  // Robustly pull the validation error message out of an axios/network error
+  const getApiError = (err, fallback) =>
+    err?.response?.data?.message || err?.message || fallback;
+
+  // Map a backend validation message back to the originating field
+  const mapErrorToField = (msg) => {
+    const m = (msg || "").toLowerCase();
+    const mapped = {};
+    const assign = (field, value) => { mapped[field] = value; };
+
+    if (m.includes("phone")) assign("phoneNo", msg);
+    else if (m.includes("answer 1")) assign("securityAnswer1", msg);
+    else if (m.includes("answer 2")) assign("securityAnswer2", msg);
+    else if (m.includes("confirm password") || m.includes("passwords do not match")) assign("confirmNewPassword", msg);
+    else if (m.includes("password")) assign("newPassword", msg);
+    else assign("general", msg);
+    return mapped;
+  };
+
+  // Step 1 → validateVerifyUser (phone)
+  const validatePhone = () => {
+    const errs = {};
+    const phone = formData.phoneNo.trim();
+    if (!phone) errs.phoneNo = "Phone number is required";
+    else if (!PHONE_REGEX.test(phone)) errs.phoneNo = "Phone number must be 10 digits";
+    return errs;
+  };
+
+  // Step 2 → validateSecurityAnswers
+  const validateAnswers = () => {
+    const errs = {};
+    if (!formData.securityAnswer1 || formData.securityAnswer1.trim().length < 2)
+      errs.securityAnswer1 = "Security answer 1 must be at least 2 characters";
+    if (!formData.securityAnswer2 || formData.securityAnswer2.trim().length < 2)
+      errs.securityAnswer2 = "Security answer 2 must be at least 2 characters";
+    return errs;
+  };
+
+  // Step 3 → validateResetPassword (strong password + confirm match)
+  const validateNewPassword = () => {
+    const errs = {};
+    const password = formData.newPassword;
+    if (!password) errs.newPassword = "New password is required";
+    else if (password.length < 8) errs.newPassword = "New password must be at least 8 characters";
+    else if (!PASSWORD_STRENGTH_REGEX.test(password) || !SPECIAL_REGEX.test(password))
+      errs.newPassword = "New password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
+
+    if (!formData.confirmNewPassword) errs.confirmNewPassword = "Confirm password is required";
+    else if (password && password !== formData.confirmNewPassword) errs.confirmNewPassword = "Passwords do not match";
+    return errs;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error) setError(""); // Clear error when user types
+    // Clear the error for the field being edited + the general banner
+    setFormErrors((prev) => ({ ...prev, [name]: "", general: "" }));
   };
 
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!formData.phoneNo) {
-      setError("Please enter your registered phone number!");
+
+    // Client-side validation mirroring validateVerifyUser
+    const errs = validatePhone();
+    if (Object.values(errs).some(Boolean)) {
+      setFormErrors(() => ({ ...initialErrors, ...errs }));
       return;
     }
 
@@ -46,7 +161,10 @@ const ForgetPassword = () => {
       setUserQuestions(res.securityQuestions.map(q => q.question));
       setCurrentStep(2);
     } catch (err) {
-      setError(err.response?.data?.message || "User not found with this phone number");
+      setFormErrors(() => ({
+        ...initialErrors,
+        ...mapErrorToField(getApiError(err, "User not found with this phone number")),
+      }));
     } finally {
       setIsLoading(false);
     }
@@ -54,9 +172,11 @@ const ForgetPassword = () => {
 
   const handleSecuritySubmit = async (e) => {
     e.preventDefault();
-    
-    if (!formData.securityAnswer1 || !formData.securityAnswer2) {
-      setError("Please answer both security questions!");
+
+    // Client-side validation mirroring validateSecurityAnswers
+    const errs = validateAnswers();
+    if (Object.values(errs).some(Boolean)) {
+      setFormErrors(() => ({ ...initialErrors, ...errs }));
       return;
     }
 
@@ -70,7 +190,10 @@ const ForgetPassword = () => {
       setResetToken(res.resetToken);
       setCurrentStep(3);
     } catch (err) {
-      setError(err.response?.data?.message || "Security answers are incorrect");
+      setFormErrors(() => ({
+        ...initialErrors,
+        ...mapErrorToField(getApiError(err, "Security answers are incorrect")),
+      }));
     } finally {
       setIsLoading(false);
     }
@@ -78,14 +201,11 @@ const ForgetPassword = () => {
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
-    
-    if (formData.newPassword !== formData.confirmNewPassword) {
-      setError("New passwords do not match!");
-      return;
-    }
 
-    if (formData.newPassword.length < 6) {
-      setError("Password must be at least 6 characters long!");
+    // Client-side validation mirroring validateResetPassword
+    const errs = validateNewPassword();
+    if (Object.values(errs).some(Boolean)) {
+      setFormErrors(() => ({ ...initialErrors, ...errs }));
       return;
     }
 
@@ -104,7 +224,10 @@ const ForgetPassword = () => {
       }, 3000);
     } catch (err) {
       setSubmitted(false);
-      setError(err.response?.data?.message || "Failed to reset password");
+      setFormErrors(() => ({
+        ...initialErrors,
+        ...mapErrorToField(getApiError(err, "Failed to reset password")),
+      }));
     } finally {
       setIsLoading(false);
     }
@@ -169,6 +292,8 @@ const ForgetPassword = () => {
                   exit={{ opacity: 0, x: 30 }}
                   transition={{ duration: 0.4 }}
                 >
+                  <ErrorAlert message={formErrors.general} />
+
                   <div className="space-y-2">
                     <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
                       Registered Phone Number
@@ -180,22 +305,10 @@ const ForgetPassword = () => {
                       value={formData.phoneNo}
                       onChange={handleChange}
                       placeholder="+91 98765 43210"
-                      className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:border-[#E8791E] focus:bg-white focus:ring-2 focus:ring-[#E8791E]/20"
+                      className={inputClass(formErrors.phoneNo)}
                     />
+                    <FieldError msg={formErrors.phoneNo} />
                   </div>
-
-                  <AnimatePresence>
-                    {error && (
-                      <motion.p
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="text-red-500 text-sm font-semibold text-center"
-                      >
-                        {error}
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
 
                   <motion.button
                     type="submit"
@@ -233,6 +346,8 @@ const ForgetPassword = () => {
                   exit={{ opacity: 0, x: -30 }}
                   transition={{ duration: 0.4 }}
                 >
+                  <ErrorAlert message={formErrors.general} />
+
                   <div className="mb-4 rounded-2xl border border-[#E8791E]/20 bg-[#E8791E]/10 p-5">
                     <p className="text-sm font-medium text-slate-700">
                       Please answer the security questions you selected during registration.
@@ -250,8 +365,9 @@ const ForgetPassword = () => {
                       value={formData.securityAnswer1}
                       onChange={handleChange}
                       placeholder="Your answer"
-                      className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:border-[#E8791E] focus:bg-white focus:ring-2 focus:ring-[#E8791E]/20"
+                      className={inputClass(formErrors.securityAnswer1)}
                     />
+                    <FieldError msg={formErrors.securityAnswer1} />
                   </div>
 
                   <div className="space-y-2">
@@ -265,22 +381,10 @@ const ForgetPassword = () => {
                       value={formData.securityAnswer2}
                       onChange={handleChange}
                       placeholder="Your answer"
-                      className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:border-[#E8791E] focus:bg-white focus:ring-2 focus:ring-[#E8791E]/20"
+                      className={inputClass(formErrors.securityAnswer2)}
                     />
+                    <FieldError msg={formErrors.securityAnswer2} />
                   </div>
-
-                  <AnimatePresence>
-                    {error && (
-                      <motion.p
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="text-red-500 text-sm font-semibold text-center"
-                      >
-                        {error}
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
 
                   <div className="flex flex-col gap-3">
                     <motion.button
@@ -327,6 +431,8 @@ const ForgetPassword = () => {
                   exit={{ opacity: 0, x: -30 }}
                   transition={{ duration: 0.4 }}
                 >
+                  <ErrorAlert message={formErrors.general} />
+
                   <div className="mb-4 rounded-2xl border border-[#E8791E]/20 bg-[#E8791E]/10 p-4">
                     <p className="text-sm font-medium text-slate-700">
                       Identity verified! Please set your new password.
@@ -344,8 +450,9 @@ const ForgetPassword = () => {
                       value={formData.newPassword}
                       onChange={handleChange}
                       placeholder="••••••••"
-                      className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:border-[#E8791E] focus:bg-white focus:ring-2 focus:ring-[#E8791E]/20"
+                      className={inputClass(formErrors.newPassword)}
                     />
+                    <FieldError msg={formErrors.newPassword} />
                   </div>
 
                   <div className="space-y-2">
@@ -359,22 +466,10 @@ const ForgetPassword = () => {
                       value={formData.confirmNewPassword}
                       onChange={handleChange}
                       placeholder="••••••••"
-                      className="w-full rounded-2xl border border-slate-200 bg-[#F8FAFC] px-5 py-3.5 font-medium text-[#0F172A] placeholder-slate-400 shadow-sm outline-none transition-all duration-300 focus:border-[#E8791E] focus:bg-white focus:ring-2 focus:ring-[#E8791E]/20"
+                      className={inputClass(formErrors.confirmNewPassword)}
                     />
+                    <FieldError msg={formErrors.confirmNewPassword} />
                   </div>
-
-                  <AnimatePresence>
-                    {error && (
-                      <motion.p
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="text-red-500 text-sm font-semibold text-center"
-                      >
-                        {error}
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
 
                   {submitted && (
                     <motion.div

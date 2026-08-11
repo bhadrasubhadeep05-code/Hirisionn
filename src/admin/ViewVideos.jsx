@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import VideoCard from '../MainComponents/VideoCard'
 import { getVideo, getIndustryVideo, getworkforceVideo } from '../services/video.api'
 import { deleteVideo } from '../services/admin.api'
+import { useToast } from '../MainComponents/AlertNotification'
 
 const ViewVideos = () => {
+  const toast = useToast()
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState(null)
@@ -42,7 +44,7 @@ const ViewVideos = () => {
         setItems(prev => prev.filter(item => (item._id || item.id) !== id))
       } catch (err) {
         console.error('Error deleting video:', err)
-        alert('Failed to delete video')
+        toast.error('Failed to delete video')
       } finally {
         setDeletingId(null)
       }

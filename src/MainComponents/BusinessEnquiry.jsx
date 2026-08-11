@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import NavBar2 from "./NavBar2";
 import { enquiry } from "../services/business.api";
+import { useToast } from "./AlertNotification";
 const BusinessEnquiry = () => {
+  const toast = useToast();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -55,11 +57,10 @@ const BusinessEnquiry = () => {
         const res = await enquiry(data);
 
         console.log(res);
-        alert(res.message);
+        toast.success(res.message);
 
     } catch (error) {
-        console.log(error);
-        alert(error.response?.data?.message || "Something went wrong");
+        toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
         setIsSubmitting(false);
     }

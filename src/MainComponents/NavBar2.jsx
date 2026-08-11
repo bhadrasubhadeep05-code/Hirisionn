@@ -77,12 +77,12 @@ const NavBar2 = () => {
     {
       name: "About Us",
       type: "link",
-      path: "/job-placements",
+      path: "/about-us",
     },
      {
       name: "Job Placements",
       type: "link",
-      path: "/about-us",
+      path: "/job-placements",
     },
    
      {

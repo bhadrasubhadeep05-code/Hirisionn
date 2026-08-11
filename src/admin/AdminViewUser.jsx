@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getAllUsers, getUserStats, downloadUserResume, exportAllUsersCSV, exportNewUsersCSV } from '../services/admin.api.js';
+import { useToast } from '../MainComponents/AlertNotification';
 
 const AdminViewUser = () => {
+  const toast = useToast();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({});
@@ -49,10 +51,10 @@ const AdminViewUser = () => {
       // Refresh user list
       fetchUsers();
       fetchStats();
-      alert('Resume downloaded successfully and removed from server');
+      toast.success('Resume downloaded successfully and removed from server');
     } catch (error) {
       console.error('Error downloading resume:', error);
-      alert('Failed to download resume');
+      toast.error('Failed to download resume');
     }
   };
 
@@ -77,7 +79,7 @@ const AdminViewUser = () => {
       fetchStats();
     } catch (error) {
       console.error('Error downloading CSV:', error);
-      alert('Failed to download CSV');
+      toast.error('Failed to download CSV');
     }
   };
 
@@ -102,7 +104,7 @@ const AdminViewUser = () => {
       fetchStats();
     } catch (error) {
       console.error('Error downloading new users CSV:', error);
-      alert('Failed to download new users CSV');
+      toast.error('Failed to download new users CSV');
     }
   };
 

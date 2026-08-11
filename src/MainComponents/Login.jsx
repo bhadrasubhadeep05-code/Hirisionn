@@ -6,6 +6,55 @@ import Footer from './Footer';
 import {login } from '../services/user.api';
 import AppContext from '../context/AppContext';
 
+// ---------------------------------------------------------------
+// Shared input style helpers (highlight fields with errors)
+// ---------------------------------------------------------------
+const inputBase =
+  "w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:border-transparent focus:bg-white shadow-sm";
+const inputActive = " border-slate-200 focus:ring-[#E8791E]";
+const inputError = " border-red-400 bg-red-50 focus:ring-red-400";
+const inputClass = (hasError) => `${inputBase}${hasError ? inputError : inputActive}`;
+
+// ---------------------------------------------------------------
+// Reusable animated error components
+// ---------------------------------------------------------------
+const ErrorAlert = ({ message }) => (
+  <AnimatePresence>
+    {message && (
+      <motion.div
+        role="alert"
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.25 }}
+        className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600"
+      >
+        <svg className="h-5 w-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>{message}</span>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+
+const FieldError = ({ msg }) =>
+  msg ? (
+    <motion.p
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="ml-1 mt-1.5 text-xs font-semibold text-red-500"
+    >
+      {msg}
+    </motion.p>
+  ) : null;
+
+const initialErrors = {
+  phoneNo: "",
+  password: "",
+  general: "",
+};
+
 const Login = () => {
   //setToken, use this in dev
   const { fetchUser } = useContext(AppContext);
@@ -19,19 +68,35 @@ const Login = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const [formErrors, setFormErrors] = useState(initialErrors);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Validate a 10-digit phone number (mirrors the backend)
+  const PHONE_REGEX = /^\d{10}$/;
+
+  const validateLogin = () => {
+    const errs = {};
+    const phone = formData.phoneNo.trim();
+    if (!phone) errs.phoneNo = "Phone number is required";
+    else if (!PHONE_REGEX.test(phone)) errs.phoneNo = "Phone number must be 10 digits";
+    if (!formData.password || !formData.password.trim()) errs.password = "Password is required";
+    return errs;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error) setError(""); // Clear error when user types
+    // Clear the error for the field being edited + the general banner
+    setFormErrors((prev) => ({ ...prev, [name]: "", general: "" }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.phoneNo || !formData.password) {
-      setError("Please enter both phone number and password!");
+
+    // Client-side validation mirroring validateLogin
+    const errs = validateLogin();
+    if (Object.values(errs).some(Boolean)) {
+      setFormErrors(() => ({ ...initialErrors, ...errs }));
       return;
     }
 
@@ -55,10 +120,18 @@ const Login = () => {
           navigate("/"); 
         }, 2000);
       }else{
-        alert(res.message)
+        // Wrong credentials — keep the message generic (don't reveal what failed)
+        setFormErrors(() => ({
+          ...initialErrors,
+          general: "Invalid credentials, please try again",
+        }));
       }
-    } catch (err) {
-      setError(err.message || "Login failed, please try again");
+    } catch {
+      // Never reveal whether the phone number exists or which field was wrong
+      setFormErrors(() => ({
+        ...initialErrors,
+        general: "Invalid credentials, please try again",
+      }));
     } finally {
       setIsLoading(false);
     }
@@ -108,6 +181,8 @@ const Login = () => {
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#F2A93C] via-[#E8791E] to-[#F2A93C] rounded-t-[3rem]" />
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                <ErrorAlert message={formErrors.general} />
+
                 <div className="space-y-2">
                   <label className="block text-xs uppercase tracking-[0.25em] font-bold text-slate-500 ml-1">
                     Phone Number
@@ -119,8 +194,9 @@ const Login = () => {
                     value={formData.phoneNo}
                     onChange={handleChange}
                     placeholder="+91 98765 43210"
-                    className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                    className={inputClass(formErrors.phoneNo)}
                   />
+                  <FieldError msg={formErrors.phoneNo} />
                 </div>
 
                 <div className="space-y-2">
@@ -134,8 +210,9 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                    className={inputClass(formErrors.password)}
                   />
+                  <FieldError msg={formErrors.password} />
                 </div>
 
                 <div className="text-right">
@@ -147,19 +224,6 @@ const Login = () => {
                     Forgot Password?
                   </button>
                 </div>
-
-                <AnimatePresence>
-                  {error && (
-                    <motion.p
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="text-red-500 text-sm font-semibold text-center"
-                    >
-                      {error}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
 
                 <motion.button
                   type="submit"

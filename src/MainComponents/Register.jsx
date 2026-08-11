@@ -5,11 +5,76 @@ import NavBar2 from './NavBar2';
 import Footer from './Footer';
 import { register, completeProfile } from '../services/user.api';
 import AppContext from '../context/AppContext';
+import { useToast } from './AlertNotification';
+
+// ---------------------------------------------------------------
+// Shared input style helpers (highlight fields with errors)
+// ---------------------------------------------------------------
+const inputBase =
+  "w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:border-transparent focus:bg-white shadow-sm";
+const inputActive = " border-slate-200 focus:ring-[#E8791E]";
+const inputError = " border-red-400 bg-red-50 focus:ring-red-400";
+const inputClass = (hasError) => `${inputBase}${hasError ? inputError : inputActive}`;
+
+const selectBase =
+  "w-full px-5 py-3.5 rounded-2xl bg-white border text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:border-transparent";
+const selectActive = " border-slate-200 focus:ring-[#E8791E]";
+const selectError = " border-red-400 bg-red-50 focus:ring-red-400";
+const selectClass = (hasError) => `${selectBase}${hasError ? selectError : selectActive}`;
+
+// ---------------------------------------------------------------
+// Reusable animated error components
+// ---------------------------------------------------------------
+const ErrorAlert = ({ message }) => (
+  <AnimatePresence>
+    {message && (
+      <motion.div
+        role="alert"
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.25 }}
+        className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600"
+      >
+        <svg className="h-5 w-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>{message}</span>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+
+const FieldError = ({ msg }) =>
+  msg ? (
+    <motion.p
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="ml-1 mt-1.5 text-xs font-semibold text-red-500"
+    >
+      {msg}
+    </motion.p>
+  ) : null;
+
+// Initial empty errors shape
+const initialErrors = {
+  fullName: "",
+  email: "",
+  phoneNo: "",
+  password: "",
+  confirmPassword: "",
+  securityQuestion1: "",
+  securityAnswer1: "",
+  securityQuestion2: "",
+  securityAnswer2: "",
+  general: "",
+};
 
 const Register = () => {
   //setToken, use this in dev
  const {  fetchUser, ProfileComplete, formContext } = useContext(AppContext);
    const navigate = useNavigate();
+   const toast = useToast();
 
   
 
@@ -52,7 +117,7 @@ const Register = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const [formErrors, setFormErrors] = useState(initialErrors);
   const [isLoading, setIsLoading] = useState(false);
 
   const securityQuestions = [
@@ -64,28 +129,119 @@ const Register = () => {
     "What was your first car?",
   ];
 
+  // -------------------------------------------------------------
+  // Client-side validation mirroring the backend validation layer
+  // (`BackEnd/middlewares/validateUser.js`)
+  // -------------------------------------------------------------
+  const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const PHONE_REGEX = /^\d{10}$/;
+  const MOBILE_REGEX = /^[6-9]\d{9}$/;
+  const NAME_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿ' .-]+$/;
+  const SPECIAL_REGEX = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+  const PASSWORD_STRENGTH_REGEX = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
+  const LINKEDIN_REGEX = /^https?:\/\/(www\.)?linkedin\.com\/(in|company|pub)\/.*$/i;
+
+  // Robustly pull the validation error message out of an axios/network error
+  const getApiError = (err, fallback) =>
+    err?.response?.data?.message || err?.message || fallback;
+
+  // Map a backend validation message back to the originating field
+  const mapErrorToField = (msg) => {
+    const m = (msg || "").toLowerCase();
+    const mapped = {};
+    const assign = (field, value) => { mapped[field] = value; };
+
+    if (m.includes("full name")) assign("fullName", msg);
+    else if (m.includes("email")) assign("email", msg);
+    else if (m.includes("phone")) assign("phoneNo", msg);
+    else if (m.includes("confirm password") || m.includes("passwords do not match")) assign("confirmPassword", msg);
+    else if (m.includes("password")) assign("password", msg);
+    else if (m.includes("security answer 1")) assign("securityAnswer1", msg);
+    else if (m.includes("security answer 2")) assign("securityAnswer2", msg);
+    else if (m.includes("security question 1")) assign("securityQuestion1", msg);
+    else if (m.includes("security question 2")) assign("securityQuestion2", msg);
+    else assign("general", msg);
+    return mapped;
+  };
+
+  const validateForm1 = () => {
+    const errs = { ...initialErrors };
+
+    // Full name
+    const name = formData.fullName.trim();
+    if (!name) errs.fullName = "Full name is required";
+    else if (name.length < 3) errs.fullName = "Full name must be at least 3 characters";
+    else if (!NAME_REGEX.test(name)) errs.fullName = "Full name can only contain letters, spaces, hyphens and apostrophes";
+
+    // Email
+    const email = formData.email.trim().toLowerCase();
+    if (!email) errs.email = "Email is required";
+    else if (!EMAIL_REGEX.test(email)) errs.email = "Please enter a valid email address";
+
+    // Phone
+    const phone = formData.phoneNo.trim();
+    if (!phone) errs.phoneNo = "Phone number is required";
+    else if (!PHONE_REGEX.test(phone)) errs.phoneNo = "Phone number must be 10 digits";
+    else if (!MOBILE_REGEX.test(phone)) errs.phoneNo = "Phone number must be a valid 10-digit mobile number";
+
+    // Password & confirmation
+    const password = formData.password;
+    if (!password) errs.password = "Password is required";
+    else if (password.length < 8) errs.password = "Password must be at least 8 characters";
+    else if (!PASSWORD_STRENGTH_REGEX.test(password) || !SPECIAL_REGEX.test(password))
+      errs.password = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
+
+    if (!formData.confirmPassword) errs.confirmPassword = "Confirm password is required";
+    else if (password && password !== formData.confirmPassword) errs.confirmPassword = "Passwords do not match";
+
+    // Security questions & answers
+    if (!formData.securityQuestion1) errs.securityQuestion1 = "Please select security question 1";
+    if (!formData.securityAnswer1 || formData.securityAnswer1.trim().length < 2)
+      errs.securityAnswer1 = "Security answer 1 must be at least 2 characters";
+    if (!formData.securityQuestion2) errs.securityQuestion2 = "Please select security question 2";
+    if (!formData.securityAnswer2 || formData.securityAnswer2.trim().length < 2)
+      errs.securityAnswer2 = "Security answer 2 must be at least 2 characters";
+    if (formData.securityQuestion1 && formData.securityQuestion2 && formData.securityQuestion1 === formData.securityQuestion2)
+      errs.securityQuestion2 = "Security questions must be different";
+
+    return errs;
+  };
+
+  const validateForm2 = () => {
+    const errs = {};
+
+    if (formData.experienceLevel === "experienced") {
+      if (!formData.job || formData.job.trim().length < 2) errs.job = "Job title must be at least 2 characters";
+      if (!formData.employer || formData.employer.trim().length < 2) errs.employer = "Employer name must be at least 2 characters";
+      if (!formData.currentCTC || !formData.currentCTC.trim()) errs.currentCTC = "Current CTC is required";
+    }
+
+    if (formData.linkedin && formData.linkedin.trim() && !LINKEDIN_REGEX.test(formData.linkedin.trim())) {
+      errs.linkedin = "Please enter a valid LinkedIn URL";
+    }
+
+    return errs;
+  };
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    
+
     if (name === "resume") {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-    
-    if (error) setError(""); // Clear error when user types
+
+    // Clear the error for the field being edited + the general banner
+    setFormErrors((prev) => ({ ...prev, [name]: "", general: "" }));
   };
 
   const handleForm1Submit = async (e) => {
     e.preventDefault();
-    // Basic Validation
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match!");
-      return;
-    }
-
-    if (!formData.securityQuestion1 || !formData.securityAnswer1 || !formData.securityQuestion2 || !formData.securityAnswer2) {
-      setError("Please select and answer both security questions!");
+    // Client-side validation mirroring the backend validation layer
+    const errs = validateForm1();
+    if (Object.values(errs).some(Boolean)) {
+      setFormErrors(errs);
       return;
     }
 
@@ -111,7 +267,10 @@ const Register = () => {
         setCurrentStep(2); // Move to Form 2
       }
     } catch (err) {
-      setError(err.message || "Registration failed, please try again");
+      // Show the validation layer's message (badge on the originating field,
+      // otherwise as the general banner)
+      const msg = getApiError(err, "Registration failed, please try again");
+      setFormErrors(() => ({ ...initialErrors, ...mapErrorToField(msg) }));
     } finally {
       setIsLoading(false);
     }
@@ -119,6 +278,13 @@ const Register = () => {
   
   const handleForm2Submit = async (e) => {
     e.preventDefault();
+    // Light client-side checks before sending
+    const errs = validateForm2();
+    if (Object.values(errs).some(Boolean)) {
+      setFormErrors(() => ({ ...initialErrors, ...errs }));
+      return;
+    }
+
     setIsLoading(true);
     try {
       const base64 = await toBase64(formData.resume);
@@ -134,7 +300,7 @@ const Register = () => {
         resume: base64
       }
       const res = await completeProfile(data);
-      alert(res.message);
+      toast.success(res.message);
       
       // Combine all data
       const completeUserData = {
@@ -152,7 +318,10 @@ const Register = () => {
         navigate("/"); 
       }, 3000);
     } catch (err) {
-      alert(err.message || "Profile submission failed, please try again");
+      setFormErrors((prev) => ({
+        ...prev,
+        general: getApiError(err, "Profile submission failed, please try again"),
+      }));
     } finally {
       setIsLoading(false);
     }
@@ -170,7 +339,7 @@ const Register = () => {
 
   const goBackToForm1 = () => {
     setCurrentStep(1);
-    setError("");
+    setFormErrors(initialErrors);
   };
 
   return (
@@ -231,6 +400,8 @@ const Register = () => {
                     exit={{ opacity: 0, x: 30 }}
                     transition={{ duration: 0.4 }}
                   >
+                    <ErrorAlert message={formErrors.general} />
+
                     <div className="space-y-2">
                       <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Full Name</label>
                       <input
@@ -240,8 +411,9 @@ const Register = () => {
                         value={formData.fullName}
                         onChange={handleChange}
                         placeholder="Enter your full name"
-                        className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                        className={inputClass(formErrors.fullName)}
                       />
+                      <FieldError msg={formErrors.fullName} />
                     </div>
 
                     <div className="space-y-2">
@@ -253,8 +425,9 @@ const Register = () => {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="name@company.com"
-                        className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                        className={inputClass(formErrors.email)}
                       />
+                      <FieldError msg={formErrors.email} />
                     </div>
 
                     <div className="space-y-2">
@@ -266,8 +439,9 @@ const Register = () => {
                         value={formData.phoneNo}
                         onChange={handleChange}
                         placeholder="+91 98765 43210"
-                        className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                        className={inputClass(formErrors.phoneNo)}
                       />
+                      <FieldError msg={formErrors.phoneNo} />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -280,8 +454,9 @@ const Register = () => {
                           value={formData.password}
                           onChange={handleChange}
                           placeholder="••••••••"
-                          className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                          className={inputClass(formErrors.password)}
                         />
+                        <FieldError msg={formErrors.password} />
                       </div>
 
                       <div className="space-y-2">
@@ -293,8 +468,9 @@ const Register = () => {
                           value={formData.confirmPassword}
                           onChange={handleChange}
                           placeholder="••••••••"
-                          className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                          className={inputClass(formErrors.confirmPassword)}
                         />
+                        <FieldError msg={formErrors.confirmPassword} />
                       </div>
                     </div>
 
@@ -311,13 +487,14 @@ const Register = () => {
                             required
                             value={formData.securityQuestion1}
                             onChange={handleChange}
-                            className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent"
+                            className={selectClass(formErrors.securityQuestion1)}
                           >
                             <option value="">Select a security question</option>
                             {securityQuestions.map((q, i) => (
                               <option key={i} value={q}>{q}</option>
                             ))}
                           </select>
+                          <FieldError msg={formErrors.securityQuestion1} />
                           <input
                             type="text"
                             name="securityAnswer1"
@@ -325,8 +502,9 @@ const Register = () => {
                             value={formData.securityAnswer1}
                             onChange={handleChange}
                             placeholder="Your answer"
-                            className="mt-2 w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent"
+                            className={`mt-2 ${inputClass(formErrors.securityAnswer1)}`}
                           />
+                          <FieldError msg={formErrors.securityAnswer1} />
                         </div>
 
                         <div className="space-y-2">
@@ -336,13 +514,14 @@ const Register = () => {
                             required
                             value={formData.securityQuestion2}
                             onChange={handleChange}
-                            className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent"
+                            className={selectClass(formErrors.securityQuestion2)}
                           >
                             <option value="">Select a security question</option>
                             {securityQuestions.map((q, i) => (
                               <option key={i} value={q}>{q}</option>
                             ))}
                           </select>
+                          <FieldError msg={formErrors.securityQuestion2} />
                           <input
                             type="text"
                             name="securityAnswer2"
@@ -350,24 +529,12 @@ const Register = () => {
                             value={formData.securityAnswer2}
                             onChange={handleChange}
                             placeholder="Your answer"
-                            className="mt-2 w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent"
+                            className={`mt-2 ${inputClass(formErrors.securityAnswer2)}`}
                           />
+                          <FieldError msg={formErrors.securityAnswer2} />
                         </div>
                       </div>
                     </div>
-
-                    <AnimatePresence>
-                      {error && (
-                        <motion.p
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="text-red-500 text-sm font-semibold text-center"
-                        >
-                          {error}
-                        </motion.p>
-                      )}
-                    </AnimatePresence>
 
                     <motion.button
                       type="submit"
@@ -405,6 +572,8 @@ const Register = () => {
                     exit={{ opacity: 0, x: -30 }}
                     transition={{ duration: 0.4 }}
                   >
+                    <ErrorAlert message={formErrors.general} />
+
                     <div className="mb-4 rounded-2xl border border-[#E8791E]/20 bg-[#E8791E]/10 p-4">
                       <p className="text-sm font-medium text-slate-700">
                         Already using your Name <strong>{formData.fullName}</strong> and Phone <strong>{formData.phoneNo}</strong> from account creation.
@@ -435,8 +604,9 @@ const Register = () => {
                             value={formData.job}
                             onChange={handleChange}
                             placeholder="e.g. Software Engineer"
-                            className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                            className={inputClass(formErrors.job)}
                           />
+                          <FieldError msg={formErrors.job} />
                         </div>
 
                         <div className="space-y-2">
@@ -447,8 +617,9 @@ const Register = () => {
                             value={formData.employer}
                             onChange={handleChange}
                             placeholder="Company Name"
-                            className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                            className={inputClass(formErrors.employer)}
                           />
+                          <FieldError msg={formErrors.employer} />
                         </div>
 
                         <div className="space-y-2 md:col-span-2">
@@ -459,8 +630,9 @@ const Register = () => {
                             value={formData.currentCTC}
                             onChange={handleChange}
                             placeholder="Annual Package"
-                            className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                            className={inputClass(formErrors.currentCTC)}
                           />
+                          <FieldError msg={formErrors.currentCTC} />
                         </div>
                       </div>
                     )}
@@ -514,8 +686,9 @@ const Register = () => {
                           value={formData.linkedin}
                           onChange={handleChange}
                           placeholder="Profile URL"
-                          className="w-full px-5 py-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#E8791E] focus:border-transparent focus:bg-white shadow-sm"
+                          className={inputClass(formErrors.linkedin)}
                         />
+                        <FieldError msg={formErrors.linkedin} />
                       </div>
                     </div>
 

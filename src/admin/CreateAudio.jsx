@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import NavBar2 from '../MainComponents/NavBar2';
 import Footer from '../MainComponents/Footer';
 import { createAudio } from '../services/audio'; 
+import { useToast } from '../MainComponents/AlertNotification';
 const CreateAudio = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -80,7 +82,7 @@ const CreateAudio = () => {
       };
       
       await createAudio(audioPayload);
-      alert("Audio is created ✅");
+      toast.success("Audio is created ✅");
 
       setFormData({
         title: "",
@@ -92,7 +94,7 @@ const CreateAudio = () => {
       });
     } catch (err) {
       console.log("error message: " + err);
-      alert("failed to create audio ❌");
+      toast.error("failed to create audio ❌");
     } finally {
       setLoading(false);
     }

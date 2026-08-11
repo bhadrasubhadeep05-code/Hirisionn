@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import NavBar2 from "../MainComponents/NavBar2";
 import Footer from "../MainComponents/Footer";
 import { createJob } from "../services/admin.api";
+import { useToast } from "../MainComponents/AlertNotification";
 
 const CreateJob = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     jobTitle: "",
@@ -156,7 +158,7 @@ const CreateJob = () => {
           ([field, isCustom]) => isCustom && !resolvedFormData[field]?.trim()
         )
       ) {
-        alert("Please enter your custom value for the selected field");
+        toast.warning("Please enter your custom value for the selected field");
         return;
       }
 
@@ -176,7 +178,7 @@ const CreateJob = () => {
 
       await createJob(jobPayload);
 
-      alert("Job post created successfully!");
+      toast.success("Job post created successfully!");
 
       // Reset form
       setFormData({
@@ -208,7 +210,7 @@ const CreateJob = () => {
       });
     } catch (err) {
       console.error(err.response?.data || err.message);
-      alert("Failed to create job post");
+      toast.error("Failed to create job post");
     } finally {
       setLoading(false);
     }

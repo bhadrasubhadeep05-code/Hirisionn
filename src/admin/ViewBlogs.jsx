@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Card from '../MainComponents/Card'
 import { getBlog, getIndustry, getworkforce } from '../services/blog.api'
 import { deleteBlog } from '../services/admin.api'
+import { useToast } from '../MainComponents/AlertNotification'
 
 const ViewBlogs = () => {
+  const toast = useToast()
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState(null)
@@ -42,7 +44,7 @@ const ViewBlogs = () => {
         setItems(prev => prev.filter(item => (item._id || item.id) !== id))
       } catch (err) {
         console.error('Error deleting item:', err)
-        alert('Failed to delete item')
+        toast.error('Failed to delete item')
       } finally {
         setDeletingId(null)
       }

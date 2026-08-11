@@ -7,9 +7,11 @@ import { uploadImage } from "../services/image.api";
 import { createBlog } from "../services/blog.api";
 import { convertToBase64 } from "../services/convertToBase64";
 import RichTextEditor from "../MainComponents/RichTextEditor";
+import { useToast } from "../MainComponents/AlertNotification";
 
 const CreateBlog = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -121,7 +123,7 @@ const CreateBlog = () => {
       // 4️⃣ Create blog
       await createBlog(blogPayload);
 
-      alert("Blog created successfully!");
+      toast.success("Blog created successfully!");
 
       // reset
       setFormData({
@@ -136,7 +138,7 @@ const CreateBlog = () => {
       setPreviewUrl(null);
     } catch (err) {
       console.error(err.response?.data || err.message);
-      alert("Failed to create blog");
+      toast.error("Failed to create blog");
     } finally {
       setLoading(false);
     }

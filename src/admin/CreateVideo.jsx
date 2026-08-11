@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import NavBar2 from '../MainComponents/NavBar2';
 import Footer from '../MainComponents/Footer';
 import { createVideo } from '../services/video.api';
+import { useToast } from '../MainComponents/AlertNotification';
 
 const CreateVideo = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [formData, SetFormData] = useState({
     title: "",
     desc: "",
@@ -79,7 +81,7 @@ const CreateVideo = () => {
         subCategory: formData.subCategory,
       };
       await createVideo(videoPayload);
-      alert("Video is created ✅");
+      toast.success("Video is created ✅");
 
       SetFormData({
         title: "",
@@ -90,7 +92,7 @@ const CreateVideo = () => {
       });
     } catch (err) {
       console.log("error message: " + err);
-      alert("failed to create video ❌");
+      toast.error("failed to create video ❌");
     } finally {
       setLoading(false);
     }
