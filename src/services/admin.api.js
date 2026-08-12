@@ -129,6 +129,10 @@ export const getApplicants = async(jobId)=>{
     const res = await adminApi.get(`/admin/job/get-applicants/${jobId}`);
     return res;
 }
+export const updateJob = async(jobId, data)=>{
+    const res = await adminApi.put(`/admin/job/update-job/${jobId}`, data);
+    return res.data;
+}
 export const stateController = async(data)=>{
     const res = await adminApi.put(`/admin/job/job-state`, data);
     return res.data;
@@ -137,6 +141,7 @@ export const jobActiveToggel = async(data)=>{
     const res = await adminApi.put(`/admin/job/job-toggler`, data);
     return res.data;
 }
+
 
 
 export const adminLogout = async () => {

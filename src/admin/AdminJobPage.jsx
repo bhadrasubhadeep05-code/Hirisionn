@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars -- motion is used extensively in JSX below
 import { motion, AnimatePresence } from "framer-motion";
-import { deleteJob, getApplicants, jobActiveToggel, stateController } from "../services/admin.api";
+import { deleteJob, getApplicants, jobActiveToggel, stateController, updateJob } from "../services/admin.api";
 
 /* ------------------------------------------------------------------ */
 /*  Variants – spring physics for premium, fluid micro-interactions    */
@@ -95,9 +95,92 @@ const initials = (name = "") =>
     .toUpperCase();
 
 /* ------------------------------------------------------------------ */
+/*  Shared field options – reused by the Edit-job modal                */
+/* ------------------------------------------------------------------ */
+const editIndustryOptions = [
+  "Information Technology",
+  "Finance & Banking",
+  "Healthcare & Pharma",
+  "Education & EdTech",
+  "Manufacturing",
+  "Retail & E-Commerce",
+  "Consulting",
+  "Media & Entertainment",
+  "Real Estate & Construction",
+  "Logistics & Supply Chain",
+  "Energy & Utilities",
+  "Telecommunications",
+  "Automotive",
+  "FMCG",
+  "Aerospace & Defense",
+];
+
+const editDomainOptions = [
+  "Software Development",
+  "Data Science & AI",
+  "Cloud & DevOps",
+  "Cybersecurity",
+  "Product Management",
+  "UI/UX Design",
+  "Digital Marketing",
+  "Sales & Business Development",
+  "Human Resources",
+  "Finance & Accounting",
+  "Operations",
+  "Customer Support",
+  "Legal & Compliance",
+  "Research & Development",
+  "Content & Communications",
+];
+
+const editJobTypeOptions = [
+  "Full-time",
+  "Part-time",
+  "Contract",
+  "Freelance",
+  "Remote",
+  "Hybrid",
+  "On-site",
+];
+
+const editEligibilityOptions = [
+  "Bachelor's Degree (B.E/B.Tech/B.Sc/BCA)",
+  "Master's Degree (M.E/M.Tech/M.Sc/MCA)",
+  "MBA / PGDM",
+  "Any Graduate",
+  "Any Post Graduate",
+  "Diploma Holders",
+  "12th Pass",
+  "Freshers (0-1 Years)",
+  "Experienced Professionals",
+];
+
+const editExperienceOptions = ["0-2", "2-4", "4-6", "6-8", "8-10", "10-12"];
+
+// Fields rendered as a dropdown with a "Custom / Other" fallback.
+const editSelectFields = {
+  industries: editIndustryOptions,
+  domain: editDomainOptions,
+  jobType: editJobTypeOptions,
+  eligibility: editEligibilityOptions,
+  experience: editExperienceOptions,
+};
+
+// Convert a stored date to the yyyy-mm-dd format expected by <input type="date">.
+const toDateInputValue = (date) => {
+  if (!date) return "";
+  const d = new Date(date);
+  if (Number.isNaN(d.getTime())) return "";
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+};
+
+/* ------------------------------------------------------------------ */
 /*  Left Panel – Job Details                                           */
 /* ------------------------------------------------------------------ */
-const JobDetailsPanel = ({ job, loading, active, onToggleActive, toggling, onBack, onDelete, deleting }) => {
+const JobDetailsPanel = ({ job, loading, active, onToggleActive, toggling, onBack, onDelete, deleting, onEdit }) => {
   const deadline = formatDeadlineStatus(job?.deadLine);
 
   if (loading) {
@@ -143,6 +226,16 @@ const JobDetailsPanel = ({ job, loading, active, onToggleActive, toggling, onBac
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           Back to jobs
+        </button>
+
+        <button
+          onClick={onEdit}
+          className="inline-flex items-center gap-2 rounded-full border border-[#F2A93C]/40 bg-[#F2A93C]/10 px-4 py-1.5 text-xs font-semibold text-[#F2A93C] transition hover:border-[#F2A93C]/70 hover:bg-[#F2A93C]/20"
+        >
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          Edit job
         </button>
 
         <button
@@ -334,6 +427,350 @@ const ApplicantCard = ({ applicant, onStatusChange, updating }) => {
 };
 
 /* ------------------------------------------------------------------ */
+/*  Edit Job Modal                                                     */
+/* ------------------------------------------------------------------ */
+const EditJobModal = ({ job, saving, onSave, onClose }) => {
+  // Pre-fill the form from the current job. Option-backed fields fall back to
+  // a "Custom / Other" input when the stored value isn't one of the presets.
+  const buildInitialState = (currentJob) => {
+    const formData = {
+      jobTitle: currentJob?.jobTitle || "",
+      jobDescription: currentJob?.jobDescription || "",
+      CTC: currentJob?.CTC ?? "",
+      deadLine: toDateInputValue(currentJob?.deadLine),
+      location: currentJob?.location || "",
+      active: currentJob?.active ?? true,
+    };
+    const customValues = {};
+    const showCustomInput = {};
+
+    Object.entries(editSelectFields).forEach(([name, options]) => {
+      const value = currentJob?.[name];
+      if (options.includes(value)) {
+        formData[name] = value;
+        customValues[name] = "";
+        showCustomInput[name] = false;
+      } else {
+        formData[name] = "";
+        customValues[name] = value || "";
+        showCustomInput[name] = true;
+      }
+    });
+
+    return { formData, customValues, showCustomInput };
+  };
+
+  const [state, setState] = useState(() => buildInitialState(job));
+  const { formData, customValues, showCustomInput } = state;
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setState((prev) => ({
+      ...prev,
+      formData: {
+        ...prev.formData,
+        [name]: type === "checkbox" ? checked : value,
+      },
+    }));
+  };
+
+  const handleSelectChange = (e) => {
+    const { name, value } = e.target;
+
+    if (value === "__custom__") {
+      setState((prev) => ({
+        ...prev,
+        formData: { ...prev.formData, [name]: "" },
+        customValues: { ...prev.customValues, [name]: "" },
+        showCustomInput: { ...prev.showCustomInput, [name]: true },
+      }));
+      return;
+    }
+
+    setState((prev) => ({
+      ...prev,
+      formData: { ...prev.formData, [name]: value },
+      customValues: { ...prev.customValues, [name]: "" },
+      showCustomInput: { ...prev.showCustomInput, [name]: false },
+    }));
+  };
+
+  const handleCustomInputChange = (e) => {
+    const { name, value } = e.target;
+    setState((prev) => ({
+      ...prev,
+      formData: { ...prev.formData, [name]: value },
+      customValues: { ...prev.customValues, [name]: value },
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (saving) return;
+
+    onSave({
+      jobTitle: formData.jobTitle.trim(),
+      jobDescription: formData.jobDescription.trim(),
+      CTC: String(formData.CTC).trim(),
+      deadLine: formData.deadLine,
+      industries: showCustomInput.industries
+        ? customValues.industries.trim()
+        : formData.industries,
+      location: formData.location.trim(),
+      domain: showCustomInput.domain
+        ? customValues.domain.trim()
+        : formData.domain,
+      jobType: showCustomInput.jobType
+        ? customValues.jobType.trim()
+        : formData.jobType,
+      eligibility: showCustomInput.eligibility
+        ? customValues.eligibility.trim()
+        : formData.eligibility,
+      experience: showCustomInput.experience
+        ? customValues.experience.trim()
+        : formData.experience,
+      active: formData.active,
+    });
+  };
+
+  const inputClass =
+    "w-full px-4 py-3 rounded-xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#F2A93C] focus:border-transparent focus:bg-white shadow-sm";
+  const selectClass =
+    "w-full px-4 py-3 rounded-xl bg-white/50 border border-slate-200 text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#F2A93C] focus:border-transparent focus:bg-white shadow-sm appearance-none cursor-pointer";
+  const labelClass =
+    "block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1";
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-slate-950/60 p-4 backdrop-blur-sm sm:p-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Edit job post"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 32, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 20, scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 260, damping: 26, mass: 0.9 }}
+        onClick={(e) => e.stopPropagation()}
+        className="my-auto w-full max-w-2xl rounded-[24px] border border-slate-700/40 bg-[#F8FAFC] p-6 shadow-[0_30px_80px_rgba(2,6,23,0.5)] sm:p-8"
+      >
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#E8791E]">
+              Admin
+            </p>
+            <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-[#0F172A]">
+              Edit job post
+            </h2>
+            <p className="mt-1 text-sm font-medium text-slate-500">
+              Update details for{" "}
+              <span className="font-semibold text-[#0F172A]">
+                {job?.jobTitle}
+              </span>
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close editor"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-500"
+          >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+          {/* Title & CTC */}
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className={labelClass}>Job Title</label>
+              <input
+                type="text"
+                name="jobTitle"
+                value={formData.jobTitle}
+                onChange={handleChange}
+                required
+                placeholder="e.g. Senior Software Engineer"
+                className={inputClass}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className={labelClass}>CTC (LPA)</label>
+              <input
+                type="text"
+                name="CTC"
+                value={formData.CTC}
+                onChange={handleChange}
+                required
+                placeholder="e.g. 8"
+                className={inputClass}
+              />
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <label className={labelClass}>Job Description</label>
+            <textarea
+              name="jobDescription"
+              value={formData.jobDescription}
+              onChange={handleChange}
+              required
+              rows={4}
+              placeholder="Describe the role, responsibilities and expectations…"
+              className={`${inputClass} resize-none`}
+            />
+          </div>
+
+          {/* Location & Deadline */}
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className={labelClass}>Location</label>
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                required
+                placeholder="e.g. Bengaluru"
+                className={inputClass}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className={labelClass}>Apply Deadline</label>
+              <input
+                type="date"
+                name="deadLine"
+                value={formData.deadLine}
+                onChange={handleChange}
+                required
+                className={inputClass}
+              />
+            </div>
+          </div>
+
+          {/* Select fields with custom fallback */}
+          {Object.entries(editSelectFields).map(([name, options]) => (
+            <div key={name} className="space-y-2">
+              <label className={labelClass}>
+                {name.charAt(0).toUpperCase() + name.slice(1)}
+              </label>
+              <select
+                name={name}
+                value={formData[name]}
+                onChange={handleSelectChange}
+                className={selectClass}
+              >
+                <option value="">-- Select {name} --</option>
+                {options.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+                <option value="__custom__">Custom / Other</option>
+              </select>
+              {showCustomInput[name] && (
+                <input
+                  type="text"
+                  name={name}
+                  value={customValues[name]}
+                  onChange={handleCustomInputChange}
+                  placeholder={`Enter your desired ${name}`}
+                  className={`${inputClass} mt-3`}
+                />
+              )}
+            </div>
+          ))}
+
+          {/* Active toggle */}
+          <div
+            className="flex cursor-pointer items-center justify-between rounded-2xl border border-slate-200 bg-white/60 px-5 py-4 shadow-sm transition hover:border-[#F2A93C]/40"
+            onClick={() =>
+              setState((prev) => ({
+                ...prev,
+                formData: { ...prev.formData, active: !prev.formData.active },
+              }))
+            }
+          >
+            <div>
+              <p className="text-sm font-bold text-[#0F172A]">Active Posting</p>
+              <p className="mt-0.5 text-xs font-medium text-slate-400">
+                Toggle off to close applications
+              </p>
+            </div>
+            <div
+              aria-pressed={formData.active}
+              className={`relative h-8 w-14 shrink-0 rounded-full transition-colors duration-300 ${
+                formData.active ? "bg-emerald-500/80" : "bg-slate-300"
+              }`}
+            >
+              <motion.span
+                layout
+                transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                className={`absolute top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-md ${
+                  formData.active ? "right-1" : "left-1"
+                }`}
+              >
+                {formData.active ? (
+                  <svg className="h-3.5 w-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="h-3.5 w-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                )}
+              </motion.span>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-4 pt-2">
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onClose}
+              className="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm font-bold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
+            >
+              Cancel
+            </motion.button>
+            <motion.button
+              type="submit"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              disabled={saving}
+              className="flex-1 rounded-2xl bg-[#0F172A] px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#0F172A]/20 transition hover:bg-[#E8791E] hover:text-white disabled:cursor-wait disabled:opacity-60"
+            >
+              {saving ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Saving…
+                </span>
+              ) : (
+                "Save changes"
+              )}
+            </motion.button>
+          </div>
+        </form>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+
 /*  Main Page                                                          */
 /* ------------------------------------------------------------------ */
 const AdminJobPage = () => {
@@ -346,6 +783,8 @@ const AdminJobPage = () => {
   const [error, setError] = useState(null);
   const [toggling, setToggling] = useState(false);
   const [deletingJob, setDeletingJob] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [updatingId, setUpdatingId] = useState(null);
   const [filter, setFilter] = useState("all");
   const [toast, setToast] = useState(null);
@@ -435,6 +874,22 @@ const AdminJobPage = () => {
   };
 
   /* Update applicant status ------------------------------------------------------ */
+  const handleUpdateJob = async (payload) => {
+    if (!jobData || saving) return;
+    setSaving(true);
+    try {
+      await updateJob(jobData._id, payload);
+      showToast("Job updated successfully", "success");
+      setEditing(false);
+      await refreshApplicants();
+    } catch (err) {
+      console.error("Error updating job:", err);
+      showToast(err.response?.data?.message || "Failed to update job", "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleStatusChange = async (userId, state, fullName) => {
     setUpdatingId(userId);
     try {
@@ -566,6 +1021,7 @@ const AdminJobPage = () => {
             onBack={() => navigate("/admin/jobs")}
             onDelete={handleDeleteJob}
             deleting={deletingJob}
+            onEdit={() => setEditing(true)}
           />
 
           {/* Right – Applicants */}
@@ -652,6 +1108,18 @@ const AdminJobPage = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Edit Job Modal */}
+      <AnimatePresence>
+        {editing && jobData && (
+          <EditJobModal
+            job={jobData}
+            saving={saving}
+            onSave={handleUpdateJob}
+            onClose={() => setEditing(false)}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
