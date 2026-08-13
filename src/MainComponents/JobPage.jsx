@@ -115,7 +115,8 @@ const JobPage = () => {
     { label: "CTC", value: `${CTC}` },
     { label: "Apply by", value: formatDate(deadLine) },
   ];
-
+console.log(job);
+console.log(formLink)
   return (
     <div className="min-h-screen w-full bg-[#F8FAFC] text-slate-800">
       <NavBar2 />
