@@ -5,6 +5,7 @@ import NavBar2 from "../MainComponents/NavBar2";
 import Footer from "../MainComponents/Footer";
 import { createJob } from "../services/admin.api";
 import { useToast } from "../MainComponents/AlertNotification";
+import JobDescriptionEditor from "./JobDescriptionEditor";
 
 const CreateJob = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const CreateJob = () => {
     eligibility: "",
     experience: "",
     active: true,
+    formLink: "",
   });
   const [customValues, setCustomValues] = useState({
     industries: "",
@@ -97,9 +99,7 @@ const CreateJob = () => {
     "Experienced Professionals",
   ];
 
-  const experienceOptions = [
-   "0-2", "2-4", "4-6", "6-8", "8-10", "10-12"
-  ];
+  const experienceOptions = ["0-2", "2-4", "4-6", "6-8", "8-10", "10-12"];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -141,7 +141,9 @@ const CreateJob = () => {
         industries: showCustomInput.industries
           ? customValues.industries.trim()
           : formData.industries,
-        domain: showCustomInput.domain ? customValues.domain.trim() : formData.domain,
+        domain: showCustomInput.domain
+          ? customValues.domain.trim()
+          : formData.domain,
         jobType: showCustomInput.jobType
           ? customValues.jobType.trim()
           : formData.jobType,
@@ -155,7 +157,7 @@ const CreateJob = () => {
 
       if (
         Object.entries(showCustomInput).some(
-          ([field, isCustom]) => isCustom && !resolvedFormData[field]?.trim()
+          ([field, isCustom]) => isCustom && !resolvedFormData[field]?.trim(),
         )
       ) {
         toast.warning("Please enter your custom value for the selected field");
@@ -174,6 +176,7 @@ const CreateJob = () => {
         eligibility: resolvedFormData.eligibility,
         experience: resolvedFormData.experience,
         active: resolvedFormData.active,
+        formLink: resolvedFormData.formLink,
       };
 
       await createJob(jobPayload);
@@ -193,6 +196,7 @@ const CreateJob = () => {
         eligibility: "",
         experience: "",
         active: true,
+        formLink: "",
       });
       setCustomValues({
         industries: "",
@@ -282,21 +286,23 @@ const CreateJob = () => {
               {/* Job Description */}
               <div className="space-y-2">
                 <label className={labelClass}>Job Description</label>
-                <textarea
-                  name="jobDescription"
-                  required
-                  rows={6}
+                <JobDescriptionEditor
                   value={formData.jobDescription}
-                  onChange={handleChange}
-                  placeholder="Describe the role, responsibilities, and what makes this opportunity exciting…"
-                  className={`${inputClass} resize-none leading-relaxed`}
+                  onChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      jobDescription: value,
+                    }))
+                  }
                 />
               </div>
 
               {/* CTC & Deadline — 2 Column */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className={labelClass}>CTC (in LPA)</label>
+                  <label className={labelClass}>
+                    CTC (in LPA, please write LPA in the end)
+                  </label>
                   <input
                     type="text"
                     name="CTC"
@@ -485,6 +491,19 @@ const CreateJob = () => {
                 </div>
               </div>
 
+              {/* Form Link */}
+              <div className="space-y-2">
+                <label className={labelClass}>Form Link</label>
+                <input
+                  type="url"
+                  name="formLink"
+                  value={formData.formLink}
+                  onChange={handleChange}
+                  placeholder="e.g. https://....."
+                  className={inputClass}
+                />
+              </div>
+
               {/* Active Toggle */}
               <div className="space-y-2">
                 <div
@@ -511,8 +530,16 @@ const CreateJob = () => {
                   >
                     <motion.div
                       className="absolute top-1 w-6 h-6 rounded-full bg-white shadow-md"
-                      animate={{ left: formData.active ? "calc(100% - 1.75rem)" : "0.25rem" }}
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      animate={{
+                        left: formData.active
+                          ? "calc(100% - 1.75rem)"
+                          : "0.25rem",
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30,
+                      }}
                     />
                   </div>
                 </div>

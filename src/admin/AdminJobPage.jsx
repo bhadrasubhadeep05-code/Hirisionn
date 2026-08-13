@@ -342,6 +342,14 @@ const JobDetailsPanel = ({ job, loading, active, onToggleActive, toggling, onBac
             <span className="ml-auto text-right font-semibold text-slate-100">{row.value}</span>
           </div>
         ))}
+        {job.formLink && (
+          <div key="formLink" className="flex items-center gap-3 text-sm">
+            <span className="text-slate-400">Form Link</span>
+            <a href={job.formLink} 
+              target="_blank" 
+              rel="noopener noreferrer" className="ml-auto text-right font-semibold text-slate-100">click me</a>
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -440,6 +448,7 @@ const EditJobModal = ({ job, saving, onSave, onClose }) => {
       deadLine: toDateInputValue(currentJob?.deadLine),
       location: currentJob?.location || "",
       active: currentJob?.active ?? true,
+       formLink: currentJob?.formLink || "",
     };
     const customValues = {};
     const showCustomInput = {};
@@ -530,6 +539,7 @@ const EditJobModal = ({ job, saving, onSave, onClose }) => {
         ? customValues.experience.trim()
         : formData.experience,
       active: formData.active,
+      formLink: formData.formLink,
     });
   };
 
@@ -627,7 +637,7 @@ const EditJobModal = ({ job, saving, onSave, onClose }) => {
               required
               rows={4}
               placeholder="Describe the role, responsibilities and expectations…"
-              className={`${inputClass} resize-none`}
+              className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1 h-[300px]"
             />
           </div>
 
@@ -690,6 +700,17 @@ const EditJobModal = ({ job, saving, onSave, onClose }) => {
               )}
             </div>
           ))}
+           <div className="space-y-2">
+              <label className={labelClass}>form link</label>
+              <input
+                type="url"
+                name="formLink"
+                value={formData.formLink}
+                onChange={handleChange}
+                placeholder="e.g. https://......"
+                className={inputClass}
+              />
+            </div>
 
           {/* Active toggle */}
           <div
