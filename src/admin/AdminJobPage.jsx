@@ -637,7 +637,7 @@ const EditJobModal = ({ job, saving, onSave, onClose }) => {
               required
               rows={4}
               placeholder="Describe the role, responsibilities and expectations…"
-              className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1 h-[300px] w-full"
+              className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1 h-[300px] w-[600px]"
             />
           </div>
 
