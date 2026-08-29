@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import NavBar2 from './NavBar2';
 import Footer from './Footer';
-import { verifyUserForReset, verifySecurityAnswers, resetPassword } from '../services/user.api';
+import { verifyOtp, forgetPassword, resetPassword } from '../services/user.api';
+import PasswordInput from './PasswordInput';
 
 // ---------------------------------------------------------------
 // Shared input style helpers (highlight fields with errors)
@@ -37,6 +38,26 @@ const ErrorAlert = ({ message }) => (
   </AnimatePresence>
 );
 
+const InfoAlert = ({ message }) => (
+  <AnimatePresence>
+    {message && (
+      <motion.div
+        role="status"
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.25 }}
+        className="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700"
+      >
+        <svg className="h-5 w-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" />
+        </svg>
+        <span>{message}</span>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+
 const FieldError = ({ msg }) =>
   msg ? (
     <motion.p
@@ -49,9 +70,8 @@ const FieldError = ({ msg }) =>
   ) : null;
 
 const initialErrors = {
-  phoneNo: "",
-  securityAnswer1: "",
-  securityAnswer2: "",
+  email: "",
+  otp: "",
   newPassword: "",
   confirmNewPassword: "",
   general: "",
@@ -60,34 +80,36 @@ const initialErrors = {
 const ForgetPassword = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [userId, setUserId] = useState(null);
+
+  // ⚠ The reset JWT returned by /verify-otp lives in React state ONLY.
+  // It is intentionally never written to localStorage / sessionStorage.
   const [resetToken, setResetToken] = useState(null);
+
   const [formData, setFormData] = useState({
-    phoneNo: "",
-    securityQuestion1: "",
-    securityAnswer1: "",
-    securityQuestion2: "",
-    securityAnswer2: "",
+    email: "",
+    otp: "",
     newPassword: "",
     confirmNewPassword: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
   const [formErrors, setFormErrors] = useState(initialErrors);
-  const [userQuestions, setUserQuestions] = useState([]);
+  const [notice, setNotice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // -------------------------------------------------------------
-  // Client-side validation mirroring the backend validation layer
-  // (`BackEnd/middlewares/validateUser.js` reset-password validators)
+  // Client-side validation mirroring the backend OTP recovery flow
+  // (`BackEnd/controllers/otp.controller.js` email/OTP validation)
   // -------------------------------------------------------------
-  const PHONE_REGEX = /^\d{10}$/;
+  const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const OTP_REGEX = /^\d{6}$/;
   const SPECIAL_REGEX = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
   const PASSWORD_STRENGTH_REGEX = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
 
-  // Robustly pull the validation error message out of an axios/network error
+  // Robustly pull the validation error message out of an axios/network error.
+  // The OTP controller responds with { error }, other endpoints use { message }.
   const getApiError = (err, fallback) =>
-    err?.response?.data?.message || err?.message || fallback;
+    err?.response?.data?.error || err?.response?.data?.message || err?.message || fallback;
 
   // Map a backend validation message back to the originating field
   const mapErrorToField = (msg) => {
@@ -95,31 +117,30 @@ const ForgetPassword = () => {
     const mapped = {};
     const assign = (field, value) => { mapped[field] = value; };
 
-    if (m.includes("phone")) assign("phoneNo", msg);
-    else if (m.includes("answer 1")) assign("securityAnswer1", msg);
-    else if (m.includes("answer 2")) assign("securityAnswer2", msg);
+    if (m.includes("token")) assign("general", msg); // expired / invalid reset JWT
+    else if (m.includes("email")) assign("email", msg);
+    else if (m.includes("otp") || m.includes("verification code")) assign("otp", msg);
     else if (m.includes("confirm password") || m.includes("passwords do not match")) assign("confirmNewPassword", msg);
     else if (m.includes("password")) assign("newPassword", msg);
     else assign("general", msg);
     return mapped;
   };
 
-  // Step 1 → validateVerifyUser (phone)
-  const validatePhone = () => {
+  // Step 1 → same email format rules as the OTP controller
+  const validateEmail = () => {
     const errs = {};
-    const phone = formData.phoneNo.trim();
-    if (!phone) errs.phoneNo = "Phone number is required";
-    else if (!PHONE_REGEX.test(phone)) errs.phoneNo = "Phone number must be 10 digits";
+    const email = formData.email.trim().toLowerCase();
+    if (!email) errs.email = "Email is required";
+    else if (!EMAIL_REGEX.test(email)) errs.email = "Please enter a valid email address";
     return errs;
   };
 
-  // Step 2 → validateSecurityAnswers
-  const validateAnswers = () => {
+  // Step 2 → the backend expects a 6-digit numeric OTP
+  const validateOtp = () => {
     const errs = {};
-    if (!formData.securityAnswer1 || formData.securityAnswer1.trim().length < 2)
-      errs.securityAnswer1 = "Security answer 1 must be at least 2 characters";
-    if (!formData.securityAnswer2 || formData.securityAnswer2.trim().length < 2)
-      errs.securityAnswer2 = "Security answer 2 must be at least 2 characters";
+    const otp = formData.otp.trim();
+    if (!otp) errs.otp = "OTP is required";
+    else if (!OTP_REGEX.test(otp)) errs.otp = "OTP must be a 6-digit numeric code";
     return errs;
   };
 
@@ -144,37 +165,57 @@ const ForgetPassword = () => {
     setFormErrors((prev) => ({ ...prev, [name]: "", general: "" }));
   };
 
-  const handlePhoneSubmit = async (e) => {
+  // Step 1 → request an OTP for the registered email.
+  // The endpoint replies 200 with a generic message (anti-enumeration),
+  // so we advance to the OTP step regardless of whether the email exists.
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
 
-    // Client-side validation mirroring validateVerifyUser
-    const errs = validatePhone();
+    const errs = validateEmail();
     if (Object.values(errs).some(Boolean)) {
       setFormErrors(() => ({ ...initialErrors, ...errs }));
       return;
     }
 
     setIsLoading(true);
+    setNotice("");
     try {
-      const res = await verifyUserForReset({ phoneNo: formData.phoneNo });
-      setUserId(res.userId);
-      setUserQuestions(res.securityQuestions.map(q => q.question));
+      const res = await forgetPassword({ email: formData.email.trim().toLowerCase() });
+      setNotice(res.message || "If the email exists, an OTP has been sent.");
       setCurrentStep(2);
     } catch (err) {
       setFormErrors(() => ({
         ...initialErrors,
-        ...mapErrorToField(getApiError(err, "User not found with this phone number")),
+        ...mapErrorToField(getApiError(err, "Something went wrong. Please try again.")),
       }));
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSecuritySubmit = async (e) => {
+  // Resend the code from the OTP step without losing the entered email
+  const handleResendCode = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setNotice("");
+    try {
+      await forgetPassword({ email: formData.email.trim().toLowerCase() });
+      setNotice("A new OTP has been sent to your email.");
+    } catch (err) {
+      setFormErrors((prev) => ({
+        ...prev,
+        general: getApiError(err, "Failed to resend the OTP. Please try again."),
+      }));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Step 2 → verify the OTP; on success keep the reset JWT in state ONLY
+  const handleOtpSubmit = async (e) => {
     e.preventDefault();
 
-    // Client-side validation mirroring validateSecurityAnswers
-    const errs = validateAnswers();
+    const errs = validateOtp();
     if (Object.values(errs).some(Boolean)) {
       setFormErrors(() => ({ ...initialErrors, ...errs }));
       return;
@@ -182,17 +223,20 @@ const ForgetPassword = () => {
 
     setIsLoading(true);
     try {
-      const res = await verifySecurityAnswers({
-        userId,
-        answer1: formData.securityAnswer1,
-        answer2: formData.securityAnswer2
+      const res = await verifyOtp({
+        email: formData.email.trim().toLowerCase(),
+        otp: formData.otp.trim(),
       });
+
+      // Short-lived reset token held in React state ONLY — it is never
+      // persisted to localStorage / sessionStorage.
       setResetToken(res.resetToken);
+      setNotice("");
       setCurrentStep(3);
     } catch (err) {
       setFormErrors(() => ({
         ...initialErrors,
-        ...mapErrorToField(getApiError(err, "Security answers are incorrect")),
+        ...mapErrorToField(getApiError(err, "Invalid or expired OTP.")),
       }));
     } finally {
       setIsLoading(false);
@@ -213,11 +257,13 @@ const ForgetPassword = () => {
     try {
       setSubmitted(true);
       await resetPassword({
-        resetToken,
+        resetToken, // ONLY in React state (from the /verify-otp response)
         newPassword: formData.newPassword,
-        confirmPassword: formData.confirmNewPassword
       });
       
+      // The reset token is single-use — wipe it from state immediately
+      setResetToken(null);
+
       setTimeout(() => {
         setSubmitted(false);
         navigate("/login");
@@ -261,7 +307,7 @@ const ForgetPassword = () => {
               Reset Password
             </h1>
             <p className="text-slate-600 font-medium">
-              Verify your identity to reset your password.
+              Recover your account with a one-time code sent to your email.
             </p>
 
             <div className="mt-6 flex items-center justify-center gap-4">
@@ -285,7 +331,7 @@ const ForgetPassword = () => {
               {currentStep === 1 && (
                 <motion.form
                   key="step1"
-                  onSubmit={handlePhoneSubmit}
+                  onSubmit={handleEmailSubmit}
                   className="space-y-6"
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -294,20 +340,27 @@ const ForgetPassword = () => {
                 >
                   <ErrorAlert message={formErrors.general} />
 
+                  <div className="mb-4 rounded-2xl border border-[#E8791E]/20 bg-[#E8791E]/10 p-5">
+                    <p className="text-sm font-medium text-slate-500">
+                      Enter the email address linked to your account and we'll send you a one-time verification code.
+                    </p>
+                  </div>
+
                   <div className="space-y-2">
                     <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
-                      Registered Phone Number
+                      Registered Email
                     </label>
                     <input
-                      type="tel"
-                      name="phoneNo"
+                      type="email"
+                      name="email"
                       required
-                      value={formData.phoneNo}
+                      autoComplete="email"
+                      value={formData.email}
                       onChange={handleChange}
-                      placeholder="+91 98765 43210"
-                      className={inputClass(formErrors.phoneNo)}
+                      placeholder="you@example.com"
+                      className={inputClass(formErrors.email)}
                     />
-                    <FieldError msg={formErrors.phoneNo} />
+                    <FieldError msg={formErrors.email} />
                   </div>
 
                   <motion.button
@@ -325,10 +378,10 @@ const ForgetPassword = () => {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          Processing...
+                          Sending OTP...
                         </>
                       ) : (
-                        'Continue →'
+                        'Send OTP →'
                       )}
                     </span>
                     <div className="absolute bottom-0 left-0 h-1 w-full bg-[#E8791E]" />
@@ -339,7 +392,7 @@ const ForgetPassword = () => {
               {currentStep === 2 && (
                 <motion.form
                   key="step2"
-                  onSubmit={handleSecuritySubmit}
+                  onSubmit={handleOtpSubmit}
                   className="space-y-6"
                   initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -347,43 +400,32 @@ const ForgetPassword = () => {
                   transition={{ duration: 0.4 }}
                 >
                   <ErrorAlert message={formErrors.general} />
+                  <InfoAlert message={notice} />
 
                   <div className="mb-4 rounded-2xl border border-[#E8791E]/20 bg-[#E8791E]/10 p-5">
                     <p className="text-sm font-medium text-slate-700">
-                      Please answer the security questions you selected during registration.
+                      Enter the 6-digit code sent to{" "}
+                      <span className="font-bold text-[#E8791E]">{formData.email}</span>.
                     </p>
                   </div>
 
                   <div className="space-y-2">
                     <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
-                      {userQuestions[0]}
+                      Verification Code
                     </label>
                     <input
                       type="text"
-                      name="securityAnswer1"
+                      name="otp"
                       required
-                      value={formData.securityAnswer1}
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      maxLength={6}
+                      value={formData.otp}
                       onChange={handleChange}
-                      placeholder="Your answer"
-                      className={inputClass(formErrors.securityAnswer1)}
+                      placeholder="••••••"
+                      className={`${inputClass(formErrors.otp)} text-center text-2xl tracking-[0.5em]`}
                     />
-                    <FieldError msg={formErrors.securityAnswer1} />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
-                      {userQuestions[1]}
-                    </label>
-                    <input
-                      type="text"
-                      name="securityAnswer2"
-                      required
-                      value={formData.securityAnswer2}
-                      onChange={handleChange}
-                      placeholder="Your answer"
-                      className={inputClass(formErrors.securityAnswer2)}
-                    />
-                    <FieldError msg={formErrors.securityAnswer2} />
+                    <FieldError msg={formErrors.otp} />
                   </div>
 
                   <div className="flex flex-col gap-3">
@@ -405,7 +447,7 @@ const ForgetPassword = () => {
                             Verifying...
                           </>
                         ) : (
-                          'Verify Answers →'
+                          'Verify OTP →'
                         )}
                       </span>
                     </motion.button>
@@ -414,9 +456,22 @@ const ForgetPassword = () => {
                       type="button"
                       onClick={() => setCurrentStep(1)}
                       className="w-full py-2 text-slate-500 transition-all text-sm font-medium hover:text-slate-700"
+                      disabled={isLoading}
                     >
                       ← Go back
                     </button>
+
+                    <p className="text-center text-sm font-medium text-slate-500">
+                      Didn't receive the code?{" "}
+                      <button
+                        type="button"
+                        onClick={handleResendCode}
+                        disabled={isLoading}
+                        className="font-bold text-[#E8791E] transition-all hover:underline hover:underline-offset-4"
+                      >
+                        Resend OTP
+                      </button>
+                    </p>
                   </div>
                 </motion.form>
               )}
@@ -443,14 +498,13 @@ const ForgetPassword = () => {
                     <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
                       New Password
                     </label>
-                    <input
-                      type="password"
+                    <PasswordInput
                       name="newPassword"
-                      required
+                      autoComplete="new-password"
                       value={formData.newPassword}
                       onChange={handleChange}
                       placeholder="••••••••"
-                      className={inputClass(formErrors.newPassword)}
+                      error={formErrors.newPassword}
                     />
                     <FieldError msg={formErrors.newPassword} />
                   </div>
@@ -459,14 +513,13 @@ const ForgetPassword = () => {
                     <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">
                       Confirm New Password
                     </label>
-                    <input
-                      type="password"
+                    <PasswordInput
                       name="confirmNewPassword"
-                      required
+                      autoComplete="new-password"
                       value={formData.confirmNewPassword}
                       onChange={handleChange}
                       placeholder="••••••••"
-                      className={inputClass(formErrors.confirmNewPassword)}
+                      error={formErrors.confirmNewPassword}
                     />
                     <FieldError msg={formErrors.confirmNewPassword} />
                   </div>

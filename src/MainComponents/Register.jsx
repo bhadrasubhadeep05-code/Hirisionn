@@ -6,6 +6,7 @@ import Footer from './Footer';
 import { register, completeProfile } from '../services/user.api';
 import AppContext from '../context/AppContext';
 import { useToast } from './AlertNotification';
+import PasswordInput from './PasswordInput';
 
 // ---------------------------------------------------------------
 // Shared input style helpers (highlight fields with errors)
@@ -15,12 +16,6 @@ const inputBase =
 const inputActive = " border-slate-200 focus:ring-[#E8791E]";
 const inputError = " border-red-400 bg-red-50 focus:ring-red-400";
 const inputClass = (hasError) => `${inputBase}${hasError ? inputError : inputActive}`;
-
-const selectBase =
-  "w-full px-5 py-3.5 rounded-2xl bg-white border text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:border-transparent";
-const selectActive = " border-slate-200 focus:ring-[#E8791E]";
-const selectError = " border-red-400 bg-red-50 focus:ring-red-400";
-const selectClass = (hasError) => `${selectBase}${hasError ? selectError : selectActive}`;
 
 // ---------------------------------------------------------------
 // Reusable animated error components
@@ -63,10 +58,6 @@ const initialErrors = {
   phoneNo: "",
   password: "",
   confirmPassword: "",
-  securityQuestion1: "",
-  securityAnswer1: "",
-  securityQuestion2: "",
-  securityAnswer2: "",
   general: "",
 };
 
@@ -99,10 +90,6 @@ const Register = () => {
     phoneNo: "",
     password: "",
     confirmPassword: "",
-    securityQuestion1: "",
-    securityAnswer1: "",
-    securityQuestion2: "",
-    securityAnswer2: "",
     
     // Form 2 - Profile Details (AppForm fields - prefilled from Form 1)
     experienceLevel: "",
@@ -119,15 +106,6 @@ const Register = () => {
   const [submitted, setSubmitted] = useState(false);
   const [formErrors, setFormErrors] = useState(initialErrors);
   const [isLoading, setIsLoading] = useState(false);
-
-  const securityQuestions = [
-    "What was your first pet's name?",
-    "What is your mother's maiden name?",
-    "What was the name of your first school?",
-    "What city were you born in?",
-    "What is your favorite movie?",
-    "What was your first car?",
-  ];
 
   // -------------------------------------------------------------
   // Client-side validation mirroring the backend validation layer
@@ -156,10 +134,6 @@ const Register = () => {
     else if (m.includes("phone")) assign("phoneNo", msg);
     else if (m.includes("confirm password") || m.includes("passwords do not match")) assign("confirmPassword", msg);
     else if (m.includes("password")) assign("password", msg);
-    else if (m.includes("security answer 1")) assign("securityAnswer1", msg);
-    else if (m.includes("security answer 2")) assign("securityAnswer2", msg);
-    else if (m.includes("security question 1")) assign("securityQuestion1", msg);
-    else if (m.includes("security question 2")) assign("securityQuestion2", msg);
     else assign("general", msg);
     return mapped;
   };
@@ -193,16 +167,6 @@ const Register = () => {
 
     if (!formData.confirmPassword) errs.confirmPassword = "Confirm password is required";
     else if (password && password !== formData.confirmPassword) errs.confirmPassword = "Passwords do not match";
-
-    // Security questions & answers
-    if (!formData.securityQuestion1) errs.securityQuestion1 = "Please select security question 1";
-    if (!formData.securityAnswer1 || formData.securityAnswer1.trim().length < 2)
-      errs.securityAnswer1 = "Security answer 1 must be at least 2 characters";
-    if (!formData.securityQuestion2) errs.securityQuestion2 = "Please select security question 2";
-    if (!formData.securityAnswer2 || formData.securityAnswer2.trim().length < 2)
-      errs.securityAnswer2 = "Security answer 2 must be at least 2 characters";
-    if (formData.securityQuestion1 && formData.securityQuestion2 && formData.securityQuestion1 === formData.securityQuestion2)
-      errs.securityQuestion2 = "Security questions must be different";
 
     return errs;
   };
@@ -253,10 +217,6 @@ const Register = () => {
         phoneNo: formData.phoneNo,
         password: formData.password, 
         confirmPassword: formData.confirmPassword,
-        securityQuestion1: formData.securityQuestion1,
-        securityAnswer1: formData.securityAnswer1,
-        securityQuestion2:formData.securityQuestion2,
-        securityAnswer2: formData.securityAnswer2
       }
       const res = await register(userData)
       // setToken(res.token);
@@ -447,93 +407,35 @@ const Register = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="space-y-2">
                         <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Password</label>
-                        <input
-                          type="password"
+                        <PasswordInput
                           name="password"
-                          required
+                          autoComplete="new-password"
                           value={formData.password}
                           onChange={handleChange}
                           placeholder="••••••••"
-                          className={inputClass(formErrors.password)}
+                          error={formErrors.password}
                         />
                         <FieldError msg={formErrors.password} />
                       </div>
 
                       <div className="space-y-2">
                         <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Confirm Password</label>
-                        <input
-                          type="password"
+                        <PasswordInput
                           name="confirmPassword"
-                          required
+                          autoComplete="new-password"
                           value={formData.confirmPassword}
                           onChange={handleChange}
                           placeholder="••••••••"
-                          className={inputClass(formErrors.confirmPassword)}
+                          error={formErrors.confirmPassword}
                         />
                         <FieldError msg={formErrors.confirmPassword} />
                       </div>
                     </div>
 
                     <div className="rounded-2xl border border-[#E8791E]/20 bg-[#E8791E]/10 p-5">
-                      <p className="mb-4 text-sm font-medium text-slate-700">
-                        These questions will be used for password recovery. Please remember your answers.
+                      <p className="text-sm font-medium text-slate-700">
+                        Forgot your password later? We'll recover your account with a one-time code sent to your email.
                       </p>
-
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Security Question 1</label>
-                          <select
-                            name="securityQuestion1"
-                            required
-                            value={formData.securityQuestion1}
-                            onChange={handleChange}
-                            className={selectClass(formErrors.securityQuestion1)}
-                          >
-                            <option value="">Select a security question</option>
-                            {securityQuestions.map((q, i) => (
-                              <option key={i} value={q}>{q}</option>
-                            ))}
-                          </select>
-                          <FieldError msg={formErrors.securityQuestion1} />
-                          <input
-                            type="text"
-                            name="securityAnswer1"
-                            required
-                            value={formData.securityAnswer1}
-                            onChange={handleChange}
-                            placeholder="Your answer"
-                            className={`mt-2 ${inputClass(formErrors.securityAnswer1)}`}
-                          />
-                          <FieldError msg={formErrors.securityAnswer1} />
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="ml-1 block text-xs uppercase tracking-[0.25em] font-bold text-slate-500">Security Question 2</label>
-                          <select
-                            name="securityQuestion2"
-                            required
-                            value={formData.securityQuestion2}
-                            onChange={handleChange}
-                            className={selectClass(formErrors.securityQuestion2)}
-                          >
-                            <option value="">Select a security question</option>
-                            {securityQuestions.map((q, i) => (
-                              <option key={i} value={q}>{q}</option>
-                            ))}
-                          </select>
-                          <FieldError msg={formErrors.securityQuestion2} />
-                          <input
-                            type="text"
-                            name="securityAnswer2"
-                            required
-                            value={formData.securityAnswer2}
-                            onChange={handleChange}
-                            placeholder="Your answer"
-                            className={`mt-2 ${inputClass(formErrors.securityAnswer2)}`}
-                          />
-                          <FieldError msg={formErrors.securityAnswer2} />
-                        </div>
-                      </div>
                     </div>
 
                     <motion.button

@@ -15,18 +15,18 @@ export const login = async (userData) =>{
 }
 
 // Forgot Password API methods
-export const verifyUserForReset = async (data) => {
-    const res = await api.post("/user/forgot-password/verify-user", data);
+export const forgetPassword = async (data) => {
+    const res = await api.post("/user/forgot-password", data);
     return res.data;
 }
 
-export const verifySecurityAnswers = async (data) => {
-    const res = await api.post("/user/forgot-password/verify-answers", data);
+export const verifyOtp = async (data) => {
+    const res = await api.post("/user/verify-otp", data);
     return res.data;
 }
 
 export const resetPassword = async (data) => {
-    const res = await api.post("/user/forgot-password/reset", data);
+    const res = await api.post("/user/reset-password", data);
     return res.data;
 }
 

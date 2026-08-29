@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import NavBar2 from './NavBar2';
 import Footer from './Footer';
-import {login } from '../services/user.api';
+import { login } from '../services/user.api';
 import AppContext from '../context/AppContext';
+import PasswordInput from './PasswordInput';
 
 // ---------------------------------------------------------------
 // Shared input style helpers (highlight fields with errors)
@@ -203,14 +204,13 @@ const Login = () => {
                   <label className="block text-xs uppercase tracking-[0.25em] font-bold text-slate-500 ml-1">
                     Password
                   </label>
-                  <input
-                    type="password"
+                  <PasswordInput
                     name="password"
-                    required
+                    autoComplete="current-password"
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className={inputClass(formErrors.password)}
+                    error={formErrors.password}
                   />
                   <FieldError msg={formErrors.password} />
                 </div>
