@@ -20,8 +20,7 @@ const JobPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
-  const { startLoading, stopLoading, user, ProfileComplete } =
-    useContext(AppContext);
+  const { startLoading, stopLoading, user, ProfileComplete } = useContext(AppContext);
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,7 +42,6 @@ const JobPage = () => {
     };
     fetchJob();
   }, [id]);
-
   const apply = async () => {
     try {
       const payload = { userId, id };
@@ -58,6 +56,7 @@ const JobPage = () => {
         "Something went wrong while applying. Please try again.";
 
       toast.error(`Failed to apply: ${errorMessage}`);
+      console.log(errorMessage);
     }
   };
 
@@ -115,8 +114,7 @@ const JobPage = () => {
     { label: "CTC", value: `${CTC}` },
     { label: "Apply by", value: formatDate(deadLine) },
   ];
-console.log(job);
-console.log(formLink)
+
   return (
     <div className="min-h-screen w-full bg-[#F8FAFC] text-slate-800">
       <NavBar2 />
