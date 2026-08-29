@@ -42,6 +42,7 @@ import AdminEnquiry from './admin/AdminEnquiry';
 import CreateJob from './admin/CreateJob';
 import ViewJobs from './admin/ViewJobs';
 import AdminJobPage from './admin/AdminJobPage';
+import NewsPage from './MainComponents/NewsPage';
 
 
 
@@ -97,6 +98,7 @@ function App() {
       <Route path="/about-us" element={<AboutUs/>}/>
       <Route path="/resume-builder" element={<ResumeMasterclass/>}/>
        <Route path="/workforce-insights" element={<WorkForce/>}/>
+       <Route path="/news-page" element={<NewsPage/>}/>
      </Routes> 
     </>
   )

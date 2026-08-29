@@ -84,19 +84,24 @@ const NavBar2 = () => {
       type: "link",
       path: "/job-placements",
     },
-   
      {
-      name: "For Employees",
-      type: "dropdown",
-      id: "resources",
-      options: [
-        { label: "Job Placements", path: "/job-placements" },
-         {
-          label: "Certification Cources",
-          path: "/soft-skills-training",
-        },
-      ],
+      name: "Business News",
+      type: "link",
+      path: "/news-page",
     },
+   
+    //  {
+    //   name: "For Employees",
+    //   type: "dropdown",
+    //   id: "resources",
+    //   options: [
+    //     { label: "Job Placements", path: "/job-placements" },
+    //      {
+    //       label: "Certification Cources",
+    //       path: "/soft-skills-training",
+    //     },
+    //   ],
+    // },
     {
       name: "For Student",
       type: "dropdown",
