@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Card from '../MainComponents/Card'
-import { getBlog, getIndustry, getworkforce } from '../services/blog.api'
+import { getBlog } from '../services/blog.api'
 import { deleteBlog } from '../services/admin.api'
 import { useToast } from '../MainComponents/AlertNotification'
 
@@ -9,22 +9,23 @@ const ViewBlogs = () => {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState(null)
-  const [activeCategory, setActiveCategory] = useState('blog')
+  const [activeCategory, setActiveCategory] = useState('All')
 
-  const categories = [
-    { id: 'blog', name: 'Blogs', fetch: getBlog, deleteApi: deleteBlog },
-    { id: 'industry', name: 'Industry Insights', fetch: getIndustry, deleteApi: deleteBlog },
-    { id: 'workforce', name: 'Workforce', fetch: getworkforce, deleteApi: deleteBlog }
-  ]
+  const categories = useMemo(() => {
+    const uniqueCategories = Array.from(
+      new Set(items.map((item) => item.category).filter(Boolean))
+    )
+    return ['All', ...uniqueCategories]
+  }, [items])
 
   const fetchItems = async () => {
     setLoading(true)
     try {
-      const category = categories.find(c => c.id === activeCategory)
-      const response = await category.fetch()
+      const response = await getBlog()
       setItems(response.data || [])
     } catch (err) {
       console.error('Error fetching items:', err)
+      toast.error('Failed to load blogs')
     } finally {
       setLoading(false)
     }
@@ -32,16 +33,16 @@ const ViewBlogs = () => {
 
   useEffect(() => {
     fetchItems()
-  }, [activeCategory])
+  }, [])
 
   const handleDelete = async (id, e) => {
     e.stopPropagation()
     if (window.confirm('Are you sure you want to delete this item?')) {
       setDeletingId(id)
       try {
-        const category = categories.find(c => c.id === activeCategory)
-        await category.deleteApi(id)
+        await deleteBlog(id)
         setItems(prev => prev.filter(item => (item._id || item.id) !== id))
+        toast.success('Blog deleted successfully')
       } catch (err) {
         console.error('Error deleting item:', err)
         toast.error('Failed to delete item')
@@ -51,26 +52,30 @@ const ViewBlogs = () => {
     }
   }
 
+  const filteredItems = activeCategory === 'All'
+    ? items
+    : items.filter(item => item.category === activeCategory)
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] p-8 pt-24">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <h1 className="text-3xl font-bold text-[#0F172A] mb-2">Manage Content</h1>
-          <p className="text-slate-600 mb-6">View and delete blogs, industry insights and workforce articles</p>
+          <h1 className="text-3xl font-bold text-[#0F172A] mb-2">Manage Blogs</h1>
+          <p className="text-slate-600 mb-6">View, filter, and delete blog articles</p>
           
           {/* Category Tabs */}
           <div className="flex gap-3 flex-wrap">
             {categories.map((category) => (
               <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className={`px-6 py-3 rounded-full font-medium transition-all ${
-                  activeCategory === category.id
-                    ? 'bg-[#22D3EE] text-[#0F172A] shadow-md'
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`px-6 py-3 rounded-full font-medium transition-all text-sm ${
+                  activeCategory === category
+                    ? 'bg-[#22D3EE] text-[#0F172A] shadow-md font-semibold'
                     : 'bg-white text-slate-700 border border-slate-200 hover:border-[#22D3EE]'
                 }`}
               >
-                {category.name}
+                {category}
               </button>
             ))}
           </div>
@@ -80,13 +85,13 @@ const ViewBlogs = () => {
           <div className="flex justify-center items-center py-32">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22D3EE]"></div>
           </div>
-        ) : items.length === 0 ? (
+        ) : filteredItems.length === 0 ? (
           <div className="text-center py-20 text-slate-500">
             No items found in this category
           </div>
         ) : (
           <div className="flex flex-wrap gap-8 justify-center">
-            {items.map((item) => (
+            {filteredItems.map((item) => (
               <div key={item._id || item.id} className="relative group">
                 <Card 
                   id={item._id || item.id}

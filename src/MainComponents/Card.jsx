@@ -34,13 +34,12 @@ const Card = ({ id, title, img, itm }) => {
     >
       {/* Offset Category Tag */}
       <div className="absolute -left-3 top-8 z-20 bg-gradient-to-r from-[#F2A93C] to-[#E8791E] px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-md max-sm:left-4">
-        {itm?.subCategory || "Article"}
+        {itm?.category || itm?.subCategory || "Article"}
       </div>
 
       {/* Floating Offset Image Container */}
       <div className="relative -mr-12 mb-6 h-48 w-[130%] overflow-hidden rounded-2xl border-4 border-white shadow-2xl max-sm:mr-0 max-sm:w-full">
         <div className="absolute -bottom-3 -left-3 h-full w-full rounded-2xl bg-[#E8791E]/15" />
-        
         <img
           src={img}
           alt={title}

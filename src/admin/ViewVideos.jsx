@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import VideoCard from '../MainComponents/VideoCard'
-import { getVideo, getIndustryVideo, getworkforceVideo } from '../services/video.api'
+import { getVideo } from '../services/video.api'
 import { deleteVideo } from '../services/admin.api'
 import { useToast } from '../MainComponents/AlertNotification'
 
@@ -9,22 +9,23 @@ const ViewVideos = () => {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState(null)
-  const [activeCategory, setActiveCategory] = useState('video')
+  const [activeCategory, setActiveCategory] = useState('All')
 
-  const categories = [
-    { id: 'video', name: 'Videos', fetch: getVideo, deleteApi: deleteVideo },
-    { id: 'industry', name: 'Industry Videos', fetch: getIndustryVideo, deleteApi: deleteVideo },
-    { id: 'workforce', name: 'Workforce Videos', fetch: getworkforceVideo, deleteApi: deleteVideo }
-  ]
+  const categories = useMemo(() => {
+    const uniqueCategories = Array.from(
+      new Set(items.map((item) => item.category).filter(Boolean))
+    )
+    return ['All', ...uniqueCategories]
+  }, [items])
 
   const fetchItems = async () => {
     setLoading(true)
     try {
-      const category = categories.find(c => c.id === activeCategory)
-      const response = await category.fetch()
+      const response = await getVideo()
       setItems(response.data ? response.data : Array.isArray(response) ? response : [])
     } catch (err) {
       console.error('Error fetching videos:', err)
+      toast.error('Failed to load videos')
     } finally {
       setLoading(false)
     }
@@ -32,16 +33,16 @@ const ViewVideos = () => {
 
   useEffect(() => {
     fetchItems()
-  }, [activeCategory])
+  }, [])
 
   const handleDelete = async (id, e) => {
     e.stopPropagation()
     if (window.confirm('Are you sure you want to delete this video?')) {
       setDeletingId(id)
       try {
-        const category = categories.find(c => c.id === activeCategory)
-        await category.deleteApi(id)
+        await deleteVideo(id)
         setItems(prev => prev.filter(item => (item._id || item.id) !== id))
+        toast.success('Video deleted successfully')
       } catch (err) {
         console.error('Error deleting video:', err)
         toast.error('Failed to delete video')
@@ -50,6 +51,10 @@ const ViewVideos = () => {
       }
     }
   }
+
+  const filteredItems = activeCategory === 'All'
+    ? items
+    : items.filter(item => item.category === activeCategory)
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] p-8 pt-24">
@@ -62,15 +67,15 @@ const ViewVideos = () => {
           <div className="flex gap-3 flex-wrap">
             {categories.map((category) => (
               <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className={`px-6 py-3 rounded-full font-medium transition-all ${
-                  activeCategory === category.id
-                    ? 'bg-[#22D3EE] text-[#0F172A] shadow-md'
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`px-6 py-3 rounded-full font-medium transition-all text-sm ${
+                  activeCategory === category
+                    ? 'bg-[#22D3EE] text-[#0F172A] shadow-md font-semibold'
                     : 'bg-white text-slate-700 border border-slate-200 hover:border-[#22D3EE]'
                 }`}
               >
-                {category.name}
+                {category}
               </button>
             ))}
           </div>
@@ -80,18 +85,18 @@ const ViewVideos = () => {
           <div className="flex justify-center items-center py-32">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22D3EE]"></div>
           </div>
-        ) : items.length === 0 ? (
+        ) : filteredItems.length === 0 ? (
           <div className="text-center py-20 text-slate-500">
             No videos found in this category
           </div>
         ) : (
           <div className="flex flex-wrap gap-8 justify-center">
-            {items.map((item) => (
+            {filteredItems.map((item) => (
               <div key={item._id || item.id} className="relative group">
                 <VideoCard 
                   youtubeLink={item.vid_link}
                   title={item.title}
-                  category={item.subCategory}
+                  category={item.category || item.subCategory}
                   createdAt={new Date(item.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
                 />
                 

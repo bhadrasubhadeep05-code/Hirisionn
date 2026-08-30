@@ -68,6 +68,16 @@ const statusMeta = {
     badge: "bg-sky-500/10 text-sky-400 border-sky-500/30",
     dot: "bg-sky-400",
   },
+  Shortlisted: {
+    label: "Shortlisted",
+    badge: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+    dot: "bg-amber-400",
+  },
+  Sortlisted: {
+    label: "Shortlisted",
+    badge: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+    dot: "bg-amber-400",
+  },
   Selected: {
     label: "Selected",
     badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
@@ -271,16 +281,14 @@ const JobDetailsPanel = ({ job, loading, active, onToggleActive, toggling, onBac
           disabled={toggling}
           aria-pressed={active}
           aria-label="Toggle job active status"
-          className={`relative h-8 w-14 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#F2A93C]/50 focus:ring-offset-2 focus:ring-offset-[#0F172A] ${
-            active ? "bg-emerald-500/80" : "bg-slate-600/60"
-          } ${toggling ? "cursor-wait opacity-60" : "cursor-pointer"}`}
+          className={`relative h-8 w-14 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#F2A93C]/50 focus:ring-offset-2 focus:ring-offset-[#0F172A] ${active ? "bg-emerald-500/80" : "bg-slate-600/60"
+            } ${toggling ? "cursor-wait opacity-60" : "cursor-pointer"}`}
         >
           <motion.span
             layout
             transition={{ type: "spring", stiffness: 500, damping: 32 }}
-            className={`absolute top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-md ${
-              active ? "right-1" : "left-1"
-            }`}
+            className={`absolute top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-md ${active ? "right-1" : "left-1"
+              }`}
           >
             {toggling ? (
               <svg className="h-3.5 w-3.5 animate-spin text-slate-500" fill="none" viewBox="0 0 24 24">
@@ -345,8 +353,8 @@ const JobDetailsPanel = ({ job, loading, active, onToggleActive, toggling, onBac
         {job.formLink && (
           <div key="formLink" className="flex items-center gap-3 text-sm">
             <span className="text-slate-400">Form Link</span>
-            <a href={job.formLink} 
-              target="_blank" 
+            <a href={job.formLink}
+              target="_blank"
               rel="noopener noreferrer" className="ml-auto text-right font-semibold text-slate-100">click me</a>
           </div>
         )}
@@ -403,18 +411,21 @@ const ApplicantCard = ({ applicant, onStatusChange, updating }) => {
         <div className="relative flex-1">
           <select
             id={`status-${applicant.userId}`}
-            value={applicant.status}
+            value={applicant.status === "Sortlisted" ? "Shortlisted" : applicant.status}
             onChange={handleStatusChange}
             disabled={updating}
             className={`w-full cursor-pointer appearance-none rounded-xl border bg-white px-4 py-2.5 pr-10 text-sm font-semibold shadow-sm transition-all focus:outline-none focus:ring-2 disabled:cursor-wait disabled:opacity-60 ${
               applicant.status === "Selected"
                 ? "border-emerald-500/40 text-emerald-700 focus:ring-emerald-500/30"
-                : applicant.status === "Rejected"
-                ? "border-rose-500/40 text-rose-700 focus:ring-rose-500/30"
-                : "border-slate-200 text-slate-700 focus:ring-[#F2A93C]/40"
+                : applicant.status === "Shortlisted" || applicant.status === "Sortlisted"
+                  ? "border-amber-500/40 text-amber-700 focus:ring-amber-500/30"
+                  : applicant.status === "Rejected"
+                    ? "border-rose-500/40 text-rose-700 focus:ring-rose-500/30"
+                    : "border-slate-200 text-slate-700 focus:ring-[#F2A93C]/40"
             }`}
           >
             <option value="Applied">Applied</option>
+            <option value="Shortlisted">Shortlisted</option>
             <option value="Selected">Selected</option>
             <option value="Rejected">Rejected</option>
           </select>
@@ -448,7 +459,7 @@ const EditJobModal = ({ job, saving, onSave, onClose }) => {
       deadLine: toDateInputValue(currentJob?.deadLine),
       location: currentJob?.location || "",
       active: currentJob?.active ?? true,
-       formLink: currentJob?.formLink || "",
+      formLink: currentJob?.formLink || "",
     };
     const customValues = {};
     const showCustomInput = {};
@@ -700,17 +711,17 @@ const EditJobModal = ({ job, saving, onSave, onClose }) => {
               )}
             </div>
           ))}
-           <div className="space-y-2">
-              <label className={labelClass}>form link</label>
-              <input
-                type="url"
-                name="formLink"
-                value={formData.formLink}
-                onChange={handleChange}
-                placeholder="e.g. https://......"
-                className={inputClass}
-              />
-            </div>
+          <div className="space-y-2">
+            <label className={labelClass}>form link</label>
+            <input
+              type="url"
+              name="formLink"
+              value={formData.formLink}
+              onChange={handleChange}
+              placeholder="e.g. https://......"
+              className={inputClass}
+            />
+          </div>
 
           {/* Active toggle */}
           <div
@@ -730,16 +741,14 @@ const EditJobModal = ({ job, saving, onSave, onClose }) => {
             </div>
             <div
               aria-pressed={formData.active}
-              className={`relative h-8 w-14 shrink-0 rounded-full transition-colors duration-300 ${
-                formData.active ? "bg-emerald-500/80" : "bg-slate-300"
-              }`}
+              className={`relative h-8 w-14 shrink-0 rounded-full transition-colors duration-300 ${formData.active ? "bg-emerald-500/80" : "bg-slate-300"
+                }`}
             >
               <motion.span
                 layout
                 transition={{ type: "spring", stiffness: 500, damping: 32 }}
-                className={`absolute top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-md ${
-                  formData.active ? "right-1" : "left-1"
-                }`}
+                className={`absolute top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-md ${formData.active ? "right-1" : "left-1"
+                  }`}
               >
                 {formData.active ? (
                   <svg className="h-3.5 w-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -934,12 +943,16 @@ const AdminJobPage = () => {
   /* Filtering --------------------------------------------------------------------- */
   const filteredApplicants = applicants.filter((app) => {
     if (filter === "all") return true;
+    if (filter === "Shortlisted" || filter === "Sortlisted") {
+      return app.status === "Shortlisted" || app.status === "Sortlisted";
+    }
     return app.status === filter;
   });
 
   const counts = {
     all: applicants.length,
     Applied: applicants.filter((a) => a.status === "Applied").length,
+    Shortlisted: applicants.filter((a) => a.status === "Shortlisted" || a.status === "Sortlisted").length,
     Selected: applicants.filter((a) => a.status === "Selected").length,
     Rejected: applicants.filter((a) => a.status === "Rejected").length,
   };
@@ -947,6 +960,7 @@ const AdminJobPage = () => {
   const filterTabs = [
     { key: "all", label: "All", color: "text-slate-600" },
     { key: "Applied", label: "Applied", color: "text-sky-500" },
+    { key: "Shortlisted", label: "Shortlisted", color: "text-amber-500" },
     { key: "Selected", label: "Selected", color: "text-emerald-500" },
     { key: "Rejected", label: "Rejected", color: "text-rose-500" },
   ];
@@ -966,11 +980,10 @@ const AdminJobPage = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-2xl px-5 py-3.5 shadow-2xl ${
-              toast.type === "error"
+            className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-2xl px-5 py-3.5 shadow-2xl ${toast.type === "error"
                 ? "bg-rose-600 text-white"
                 : "bg-[#0F172A] text-white"
-            }`}
+              }`}
           >
             {toast.type === "error" ? (
               <svg className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1048,7 +1061,7 @@ const AdminJobPage = () => {
           {/* Right – Applicants */}
           <motion.div variants={fadeUp} className="min-w-0">
             {/* Stats row */}
-            <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
               {filterTabs.map((tab, idx) => (
                 <motion.button
                   key={tab.key}
@@ -1056,11 +1069,10 @@ const AdminJobPage = () => {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.15 + idx * 0.05 }}
-                  className={`rounded-2xl border px-4 py-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md ${
-                    filter === tab.key
+                  className={`rounded-2xl border px-4 py-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md ${filter === tab.key
                       ? "border-[#F2A93C] bg-[#0F172A] text-white"
                       : "border-slate-200 bg-white text-slate-700"
-                  }`}
+                    }`}
                 >
                   <p className={`text-2xl font-extrabold ${filter === tab.key ? "text-[#F2A93C]" : tab.color}`}>
                     {counts[tab.key] ?? 0}

@@ -1,30 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react'
-// eslint-disable-next-line no-unused-vars
+import React, { useState, useEffect, useContext, useMemo } from 'react'
 import { motion } from 'framer-motion';
 import Card from './Card'
 import NavBar2 from './NavBar2'
 import { getBlog } from '../services/blog.api';
 import AppContext from '../context/AppContext';
 
-
 const BlogPage = () => {
   const { startLoading, stopLoading } = useContext(AppContext);
-  const [activeCategory, setActiveCategory] = useState(1);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  // Blogs Category Subcategories (exactly as specified)
-  const categories = [
-    { id: 1, name: "All Blogs", description: "View all blog articles", isLive: false },
-    { id: 2, name: "Company Updates", description: "Announcements & behind-the-scenes", isLive: true },
-    { id: 3, name: "Leadership Perspectives", description: "Founder & executive insights", isLive: true },
-    { id: 4, name: "Opinion Pieces", description: "Trends & industry opinions", isLive: false },
-    { id: 5, name: "Case Studies", description: "Success stories & learnings", isLive: true },
-    { id: 6, name: "Event Recaps", description: "Partnerships, milestones & events", isLive: false },
-    { id: 7, name: "Problem Solving", description: "How we solved challenges", isLive: true },
-  ];
 
   useEffect(() => {
     const loadBlogs = async () => {
@@ -47,20 +35,27 @@ const BlogPage = () => {
     loadBlogs();
   }, [page, startLoading, stopLoading]);
 
-  // Filter blogs based on selected subcategory
-  const filteredBlogs = activeCategory === 1 
-    ? blogs 
-    : blogs.filter(blog => {
-        const subcategoryMap = {
-          2: "Company Updates & Announcements",
-          3: "Leadership Perspectives",
-          4: "Opinion Pieces & Trends",
-          5: "Case Studies & Success Stories",
-          6: "Event Recaps & Milestones",
-          7: "Problem Solving Narratives"
-        };
-        return blog.subCategory === subcategoryMap[activeCategory];
-      });
+  const categories = useMemo(() => {
+    const uniqueCategories = Array.from(
+      new Set(blogs.map((item) => item.category).filter(Boolean))
+    );
+    return ['All', ...uniqueCategories];
+  }, [blogs]);
+
+  // Filter blogs based on selected category & search
+  const filteredBlogs = useMemo(() => {
+    return blogs.filter((blog) => {
+      const matchesCategory =
+        activeCategory === 'All' || blog.category === activeCategory;
+      const matchesSearch =
+        !searchQuery.trim() ||
+        blog.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        blog.authorName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        blog.category?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [blogs, activeCategory, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -103,6 +98,8 @@ const BlogPage = () => {
           >
             <input 
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search articles..."
               className="w-full px-6 py-4 bg-white/10 backdrop-blur-md border border-[#F2A93C]/40 rounded-full text-white placeholder-[#AAB5BA] focus:outline-none focus:border-[#F2A93C] focus:shadow-[0_0_20px_rgba(242,169,60,0.2)] transition-all shadow-lg"
             />
@@ -119,33 +116,25 @@ const BlogPage = () => {
           <div className="space-y-2">
             {categories.map((category) => (
               <motion.button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
+                key={category}
+                onClick={() => setActiveCategory(category)}
                 whileHover={{ x: 4 }}
                 className={`w-full text-left p-4 rounded-xl transition-all relative ${
-                  activeCategory === category.id 
+                  activeCategory === category 
                     ? 'bg-white shadow-md' 
                     : 'bg-transparent hover:bg-white/50'
                 }`}
               >
-                {activeCategory === category.id && (
+                {activeCategory === category && (
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#E8791E] rounded-l-xl" />
                 )}
                 
                 <div className="flex items-center gap-3">
-                  <span className="text-lg">{category.icon}</span>
                   <div>
-                    <p className={`font-medium ${activeCategory === category.id ? 'text-[#0F172A] font-bold' : 'text-slate-700'}`}>
-                      {category.name}
+                    <p className={`font-medium ${activeCategory === category ? 'text-[#0F172A] font-bold' : 'text-slate-700'}`}>
+                      {category}
                     </p>
-                    <p className="text-xs text-slate-400 mt-1">{category.description}</p>
                   </div>
-                  {category.isLive && (
-                    <span className="ml-auto flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#E8791E] opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E8791E]"></span>
-                    </span>
-                  )}
                 </div>
               </motion.button>
             ))}
@@ -157,18 +146,17 @@ const BlogPage = () => {
           <div className="flex gap-3 w-max">
             {categories.map((category) => (
               <motion.button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
+                key={category}
+                onClick={() => setActiveCategory(category)}
                 whileTap={{ scale: 0.95 }}
                 className={`px-5 py-3 rounded-full whitespace-nowrap transition-all ${
-                  activeCategory === category.id 
+                  activeCategory === category 
                     ? 'bg-[#E8791E] text-[#0F172A] font-medium shadow-md' 
                     : 'bg-white text-slate-700 border border-slate-200'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  {category.icon} {category.name}
-                  {category.isLive && <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>}
+                  {category}
                 </span>
               </motion.button>
             ))}
@@ -193,7 +181,7 @@ const BlogPage = () => {
                       key={blog._id || blog.id}
                       id={blog._id || blog.id}
                       title={blog.title}
-                      img={blog.thumbnail.url }
+                      img={blog.thumbnail?.url}
                       itm={blog}
                     />
                   ))}

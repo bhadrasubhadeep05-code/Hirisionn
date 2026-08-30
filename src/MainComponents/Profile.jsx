@@ -94,6 +94,13 @@ const Profile = () => {
       .trim()
       .toLowerCase();
 
+    if (normalizedStatus === "shortlisted" || normalizedStatus === "sortlisted") {
+      return {
+        className: "bg-amber-100 text-amber-700",
+        label: "⭐ Shortlisted",
+      };
+    }
+
     if (normalizedStatus === "selected") {
       return {
         className: "bg-emerald-100 text-emerald-700",

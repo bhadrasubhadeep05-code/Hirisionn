@@ -17,38 +17,20 @@ const CreateBlog = () => {
     content: "",
     authorName: "",
     category: "",
-    subCategory: "",
     imageUrl: "",
   });
 
-  // Category to Subcategory mapping
-  const categorySubcategories = {
-    Blog: [
-      "Company Updates & Announcements",
-      "Leadership Perspectives",
-      "Opinion Pieces & Trends",
-      "Case Studies & Success Stories",
-      "Event Recaps & Milestones",
-      "Problem Solving Narratives",
-    ],
-    Marketing: [
-      "Hiring Trends & Talent Insights",
-      "Employee Engagement & Retention",
-      "Remote/Hybrid Work Strategies",
-      "Leadership & Management Best Practices",
-      "DEI Initiatives",
-      "Upskilling & Training Programs",
-      "Compensation & Workplace Expectations",
-    ],
-    Finance: [
-      "Industry Reports & Forecasts",
-      "Market Trends & Emerging Technologies",
-      "Competitor & Ecosystem Analysis",
-      "Regulatory & Policy Updates",
-      "Economic Factor Analysis",
-      "Vertical Deep Dives (Fintech, Healthcare, etc.)",
-    ],
-  };
+  const categories = [
+    "Career Insights",
+    "Jobs & Opportunities",
+    "Skills & Employability",
+    "Internships & Early Careers",
+    "Recruitment Insights",
+    "Workplace & HR",
+    "Industry & Hiring Trends",
+    "People & Workplace Stories",
+    "Hirisionn Knowledge Hub",
+  ];
 
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -64,20 +46,10 @@ const CreateBlog = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Reset subcategory when main category changes
-    if (name === "category") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-        subCategory: "", // Clear subcategory selection
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -116,7 +88,6 @@ const CreateBlog = () => {
         content: formData.content,
         authorName: formData.authorName,
         category: formData.category,
-        subCategory: formData.subCategory,
         thumbnail: thumbnailData,
       };
 
@@ -131,7 +102,6 @@ const CreateBlog = () => {
         content: "",
         authorName: "",
         category: "",
-        subCategory: "",
         imageUrl: "",
       });
       setImage(null);
@@ -244,44 +214,11 @@ const CreateBlog = () => {
                   className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#818CF8] focus:border-transparent focus:bg-white shadow-sm appearance-none"
                 >
                   <option value="">-- Select a category --</option>
-                  <option value="Blog">
-                    Blogs (General Thought Leadership & Updates)
-                  </option>
-                  <option value="Marketing">
-                    Workforce Insights (People, Hiring, Culture)
-                  </option>
-                  <option value="Finance">
-                    Industry Insights (Market Trends & Analysis)
-                  </option>
-                </select>
-              </div>
-
-              {/* subCategory */}
-              <div className="space-y-2">
-                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">
-                  Sub Category
-                </label>
-                <select
-                  name="subCategory"
-                  value={formData.subCategory}
-                  onChange={handleChange}
-                  required
-                  disabled={!formData.category}
-                  className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#818CF8] focus:border-transparent focus:bg-white shadow-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <option value="">
-                    {formData.category
-                      ? "-- Select a subcategory --"
-                      : "-- First select category above --"}
-                  </option>
-                  {formData.category &&
-                    categorySubcategories[formData.category]?.map(
-                      (subcat, index) => (
-                        <option key={index} value={subcat}>
-                          {subcat}
-                        </option>
-                      ),
-                    )}
+                  {categories.map((cat, index) => (
+                    <option key={index} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
                 </select>
               </div>
 

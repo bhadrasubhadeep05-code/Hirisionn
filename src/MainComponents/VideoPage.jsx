@@ -1,22 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion as Motion } from 'framer-motion';
 import NavBar2 from './NavBar2';
 import VideoCard from './VideoCard';
 import { getVideo } from '../services/video.api';
 
-
-const videoCategories = [
-  { id: 1, name: 'All Videos', description: 'View all video content', isLive: false },
-  { id: 2, name: 'Company Updates', description: 'Announcements & behind-the-scenes', isLive: true },
-  { id: 3, name: 'Leadership Perspectives', description: 'Founder & executive insights', isLive: true },
-  { id: 4, name: 'Opinion Pieces', description: 'Trends & industry opinions', isLive: false },
-  { id: 5, name: 'Case Studies', description: 'Success stories & learnings', isLive: true },
-  { id: 6, name: 'Event Recaps', description: 'Partnerships, milestones & events', isLive: false },
-  { id: 7, name: 'Problem Solving', description: 'How we solved challenges', isLive: true },
-];
-
 const VideoPage = () => {
-  const [activeCategory, setActiveCategory] = useState(1);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -37,26 +27,29 @@ const VideoPage = () => {
   }, [page]);
 
   useEffect(() => {
-    const loadVideos = async () => {
-      await fetchVideos();
-    };
-
-    loadVideos();
+    fetchVideos();
   }, [fetchVideos]);
 
-  const filteredVideos = activeCategory === 1
-    ? videos
-    : videos.filter((videoItem) => {
-        const subcategoryMap = {
-          2: 'Company Updates & Announcements',
-          3: 'Leadership Perspectives',
-          4: 'Opinion Pieces & Trends',
-          5: 'Case Studies & Success Stories',
-          6: 'Event Recaps & Milestones',
-          7: 'Problem Solving Narratives',
-        };
-        return videoItem.subCategory === subcategoryMap[activeCategory];
-      });
+  const categories = useMemo(() => {
+    const uniqueCategories = Array.from(
+      new Set(videos.map((item) => item.category).filter(Boolean))
+    );
+    return ['All', ...uniqueCategories];
+  }, [videos]);
+
+  const filteredVideos = useMemo(() => {
+    return videos.filter((videoItem) => {
+      const matchesCategory =
+        activeCategory === 'All' || videoItem.category === activeCategory;
+      const matchesSearch =
+        !searchQuery.trim() ||
+        videoItem.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        videoItem.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        videoItem.category?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [videos, activeCategory, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800">
@@ -68,7 +61,6 @@ const VideoPage = () => {
         transition={{ duration: 0.6 }}
         className="relative mt-16 flex min-h-[60vh] items-center justify-center overflow-hidden bg-[radial-gradient(120%_160%_at_100%_0%,#1c5872,#12171B_70%)] px-6 py-24 md:mt-24 md:py-52"
       >
-      
         <div className="pointer-events-none absolute right-0 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(232,121,30,0.25)_0%,transparent_68%)] blur-[10px] sm:-right-20 sm:-top-20 sm:h-[420px] sm:w-[420px] lg:-right-[6%] lg:-top-[10%] lg:h-[520px] lg:w-[520px]" />
 
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
@@ -105,6 +97,8 @@ const VideoPage = () => {
           >
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search videos, themes or speakers..."
               className="w-full rounded-full border border-white/20 bg-white/10 px-6 py-4 text-white outline-none backdrop-blur-md placeholder:text-white/50 focus:border-[#F2A93C]"
             />
@@ -117,68 +111,66 @@ const VideoPage = () => {
 
       <div className="mx-auto max-w-7xl px-4 pb-16 pt-12 md:px-8">
         <div className="flex flex-col gap-12 lg:flex-row">
+          {/* Desktop Sticky Sidebar */}
           <div className="sticky top-32 hidden w-64 self-start lg:block">
-            <h3 className="mb-6 text-lg font-bold text-[#0F172A]">Video channels</h3>
+            <h3 className="mb-6 text-lg font-bold text-[#0F172A]">Video Categories</h3>
             <div className="space-y-2">
-              {videoCategories.map((category) => (
+              {categories.map((category) => (
                 <Motion.button
-                  key={category.id}
-                  onClick={() => setActiveCategory(category.id)}
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
                   whileHover={{ x: 4 }}
                   className={`relative w-full overflow-hidden rounded-xl p-4 text-left transition-all ${
-                    activeCategory === category.id ? 'bg-white shadow-md' : 'bg-transparent hover:bg-white/50'
+                    activeCategory === category ? 'bg-white shadow-md' : 'bg-transparent hover:bg-white/50'
                   }`}
                 >
-                  {activeCategory === category.id && <div className="absolute bottom-0 left-0 top-0 w-1 rounded-l-xl bg-[#E8791E]" />}
+                  {activeCategory === category && (
+                    <div className="absolute bottom-0 left-0 top-0 w-1 rounded-l-xl bg-[#E8791E]" />
+                  )}
                   <div className="flex items-center gap-3">
                     <div>
-                      <p className={`font-medium transition-colors ${activeCategory === category.id ? 'font-bold text-[#0F172A]' : 'text-slate-700 hover:text-[#E8791E]'}`}>
-                        {category.name}
+                      <p className={`font-medium transition-colors ${activeCategory === category ? 'font-bold text-[#0F172A]' : 'text-slate-700 hover:text-[#E8791E]'}`}>
+                        {category}
                       </p>
-                      <p className="mt-1 text-xs text-slate-400">{category.description}</p>
                     </div>
-                    {category.isLive && (
-                      <span className="ml-auto flex h-2 w-2">
-                        <span className="absolute inline-flex h-2 w-2 rounded-full bg-[#E8791E] opacity-75 animate-ping" />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-[#E8791E]" />
-                      </span>
-                    )}
                   </div>
                 </Motion.button>
               ))}
             </div>
           </div>
 
+          {/* Mobile Horizontal Scrollable Categories */}
           <div className="-mx-4 overflow-x-auto px-4 py-4 lg:hidden">
             <div className="flex w-max gap-3">
-              {videoCategories.map((category) => (
+              {categories.map((category) => (
                 <Motion.button
-                  key={category.id}
-                  onClick={() => setActiveCategory(category.id)}
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
                   whileTap={{ scale: 0.95 }}
                   className={`whitespace-nowrap rounded-full px-5 py-3 transition-all ${
-                    activeCategory === category.id ? 'bg-[#E8791E] font-medium text-white shadow-md' : 'border border-slate-200 bg-white text-slate-700'
+                    activeCategory === category ? 'bg-[#E8791E] font-medium text-white shadow-md' : 'border border-slate-200 bg-white text-slate-700'
                   }`}
                 >
-                  {category.name}
+                  {category}
                 </Motion.button>
               ))}
             </div>
           </div>
 
+          {/* Videos Grid */}
           <div className="flex-1 lg:pl-10 lg:pr-16">
             {loading ? (
               <div className="flex items-center justify-center py-20">
                 <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#E8791E]" />
               </div>
-            ) : videos.length === 0 ? (
+            ) : filteredVideos.length === 0 ? (
               <div className="py-20 text-center text-slate-500">No videos found</div>
             ) : (
               <>
                 <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
                   {filteredVideos.map((item, index) => (
                     <Motion.div
-                      key={item._id}
+                      key={item._id || index}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 * index }}
@@ -186,9 +178,9 @@ const VideoPage = () => {
                     >
                       <VideoCard
                         title={item.title}
-                        category={item.subCategory}
+                        category={item.category || item.subCategory}
                         youtubeLink={item.vid_link}
-                        createdAt={item.createdAt}
+                        createdAt={item.createdAt ? new Date(item.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : undefined}
                       />
                     </Motion.div>
                   ))}

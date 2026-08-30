@@ -9,68 +9,37 @@ import { useToast } from '../MainComponents/AlertNotification';
 const CreateVideo = () => {
   const navigate = useNavigate();
   const toast = useToast();
-  const [formData, SetFormData] = useState({
+  const [formData, setFormData] = useState({
     title: "",
     desc: "",
     url: "",
     category: "",
-    subCategory: "",
   });
 
-  // Category to Subcategory mapping
-  const categorySubcategories = {
-    "Video": [
-      "Company Updates & Announcements",
-      "Leadership Perspectives",
-      "Opinion Pieces & Trends",
-      "Case Studies & Success Stories",
-      "Event Recaps & Milestones",
-      "Problem Solving Narratives",
-    ],
-    "Marketing": [
-      "Hiring Trends & Talent Insights",
-      "Employee Engagement & Retention",
-      "Remote/Hybrid Work Strategies",
-      "Leadership & Management Best Practices",
-      "DEI Initiatives",
-      "Upskilling & Training Programs",
-      "Compensation & Workplace Expectations"
-    ],
-    "Finance": [
-      "Industry Reports & Forecasts",
-      "Market Trends & Emerging Technologies",
-      "Competitor & Ecosystem Analysis",
-      "Regulatory & Policy Updates",
-      "Economic Factor Analysis",
-      "Vertical Deep Dives (Fintech, Healthcare, etc.)"
-    ]
-  };
+  const categories = [
+    "Hiring Trends & Talent Insights",
+    "Employee Engagement & Retention",
+    "Remote/Hybrid Work Strategies",
+    "Leadership & Management Best Practices",
+    "DEI Initiatives",
+    "Upskilling & Training Programs",
+    "Compensation & Workplace Expectations",
+  ];
   const [loading, setLoading] = useState(false);
 
-  const handelChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    // Reset subcategory when main category changes
-    if (name === "category") {
-      SetFormData((prev) => ({
-        ...prev,
-        [name]: value,
-        subCategory: "" // Clear subcategory selection
-      }));
-    } else {
-      SetFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(e);
-    
+    e.preventDefault();
+
     try {
       setLoading(true);
-     
 
       //create video
       const videoPayload = {
@@ -78,17 +47,15 @@ const CreateVideo = () => {
         description: formData.desc,
         vid_link: formData.url,
         category: formData.category,
-        subCategory: formData.subCategory,
       };
       await createVideo(videoPayload);
       toast.success("Video is created ✅");
 
-      SetFormData({
+      setFormData({
         title: "",
         desc: "",
         url: "",
         category: "",
-        subCategory: "",
       });
     } catch (err) {
       console.log("error message: " + err);
@@ -101,7 +68,7 @@ const CreateVideo = () => {
   return (
     <div className="min-h-screen w-full bg-[#F8FAFC] flex flex-col relative overflow-hidden">
       <NavBar2 progress={1} />
-      
+
       <main className="flex-grow relative flex items-center justify-center px-4 py-20 mt-20">
         {/* Background Effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -111,7 +78,7 @@ const CreateVideo = () => {
 
         <div className="relative z-10 w-full max-w-3xl">
           {/* Header */}
-          <motion.div 
+          <motion.div
             className="text-center mb-10"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -138,13 +105,13 @@ const CreateVideo = () => {
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#22D3EE] via-[#06B6D4] to-[#22D3EE] rounded-t-[3rem]" />
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              
+
               {/* Title */}
               <div className="space-y-2">
                 <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Video Title</label>
-                <input 
+                <input
                   type="text" name="title" required
-                  value={formData.title} onChange={handelChange}
+                  value={formData.title} onChange={handleChange}
                   placeholder="Enter video title"
                   className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent focus:bg-white shadow-sm"
                 />
@@ -153,9 +120,9 @@ const CreateVideo = () => {
               {/* Description */}
               <div className="space-y-2">
                 <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Video Description</label>
-                <textarea 
+                <textarea
                   name="desc" required rows={6}
-                  value={formData.desc} onChange={handelChange}
+                  value={formData.desc} onChange={handleChange}
                   placeholder="Write video description here..."
                   className="w-full px-5 py-4 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent focus:bg-white shadow-sm resize-none"
                 />
@@ -164,9 +131,9 @@ const CreateVideo = () => {
               {/* Youtube Link */}
               <div className="space-y-2">
                 <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Youtube Video Link</label>
-                <input 
+                <input
                   type="text" name="url" required
-                  value={formData.url} onChange={handelChange}
+                  value={formData.url} onChange={handleChange}
                   placeholder="https://youtube.com/watch?v=..."
                   className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] placeholder-slate-400 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent focus:bg-white shadow-sm"
                 />
@@ -178,33 +145,13 @@ const CreateVideo = () => {
                 <select
                   name="category"
                   value={formData.category}
-                  onChange={handelChange}
+                  onChange={handleChange}
                   required
                   className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent focus:bg-white shadow-sm appearance-none"
                 >
                   <option value="">-- Select a category --</option>
-                  <option value="Video">Video (General Thought Leadership & Updates)</option>
-                  <option value="Marketing">Workforce Insights (People, Hiring, Culture)</option>
-                  <option value="Finance">Industry Insights (Market Trends & Analysis)</option>
-                </select>
-              </div>
-
-             {/* subCategory */}
-              <div className="space-y-2">
-                <label className="block text-xs uppercase tracking-widest font-bold text-slate-500 ml-1">Sub Category</label>
-                <select
-                  name="subCategory"
-                  value={formData.subCategory}
-                  onChange={handelChange}
-                  required
-                  disabled={!formData.category}
-                  className="w-full px-5 py-3.5 rounded-2xl bg-white/50 border border-slate-200 text-[#0F172A] font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#22D3EE] focus:border-transparent focus:bg-white shadow-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <option value="">
-                    {formData.category ? "-- Select a subcategory --" : "-- First select category above --"}
-                  </option>
-                  {formData.category && categorySubcategories[formData.category]?.map((subcat, index) => (
-                    <option key={index} value={subcat}>{subcat}</option>
+                  {categories.map((cat, index) => (
+                    <option key={index} value={cat}>{cat}</option>
                   ))}
                 </select>
               </div>
@@ -220,7 +167,7 @@ const CreateVideo = () => {
                 >
                   Cancel
                 </motion.button>
-                
+
                 <motion.button
                   type="submit"
                   whileHover={{ scale: 1.02 }}
