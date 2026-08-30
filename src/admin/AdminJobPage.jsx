@@ -375,6 +375,10 @@ const ApplicantCard = ({ applicant, onStatusChange, updating }) => {
     onStatusChange(applicant.userId, nextState, applicant.fullName);
   };
 
+  const hasEmailNotification = ["Shortlisted", "Sortlisted", "Selected", "Rejected"].includes(
+    applicant.status
+  );
+
   return (
     <motion.div
       variants={applicantCard}
@@ -398,9 +402,19 @@ const ApplicantCard = ({ applicant, onStatusChange, updating }) => {
         </div>
 
         {/* Status badge */}
-        <span className={`shrink-0 rounded-full border px-3 py-1 text-xs font-bold ${meta.badge}`}>
-          {meta.label}
-        </span>
+        <div className="flex flex-col items-end gap-1 shrink-0">
+          <span className={`rounded-full border px-3 py-1 text-xs font-bold ${meta.badge}`}>
+            {meta.label}
+          </span>
+          {hasEmailNotification && (
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400">
+              <svg className="h-3 w-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              Email active
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Status control */}
@@ -425,9 +439,9 @@ const ApplicantCard = ({ applicant, onStatusChange, updating }) => {
             }`}
           >
             <option value="Applied">Applied</option>
-            <option value="Shortlisted">Shortlisted</option>
-            <option value="Selected">Selected</option>
-            <option value="Rejected">Rejected</option>
+            <option value="Shortlisted">Shortlisted (Sends Interview Email)</option>
+            <option value="Selected">Selected (Sends Selection Email)</option>
+            <option value="Rejected">Rejected (Sends Rejection Email)</option>
           </select>
           <svg className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -925,7 +939,10 @@ const AdminJobPage = () => {
     try {
       const res = await stateController({ id: userId, jobId: jobData?._id || id, state });
       console.log("State update response:", res);
-      showToast(`${fullName} marked as ${state}`, "success");
+      const emailNote = ["Shortlisted", "Selected", "Rejected"].includes(state)
+        ? " • Automated email sent to candidate"
+        : "";
+      showToast(`${fullName} marked as ${state}${emailNote}`, "success");
 
       // Refresh to get the latest statuses from the server
       await refreshApplicants();
