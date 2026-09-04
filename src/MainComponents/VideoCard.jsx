@@ -30,7 +30,7 @@ const VideoCard = ({ youtubeLink, title, category, createdAt }) => {
 
   return (
     <div className="group relative flex h-full w-[320px] min-w-[320px] max-w-[320px] flex-col rounded-[2rem] border border-slate-200 bg-white p-6 pt-10 shadow-[0_20px_60px_rgba(15,23,42,0.08)] transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_30px_80px_rgba(15,23,42,0.12)]">
-      <div className="absolute left-4 top-4 z-20 rounded-full bg-[#FDE7D3] px-4 py-1 text-[10px] font-black uppercase tracking-[0.35em] text-[#E8791E]">
+      <div className="absolute left-4 top-4 z-20 rounded-full bg-[#FDE7D3] px-4 py-1 text-[9px] font-black uppercase tracking-[0.35em] text-[#E8791E]">
         {category || 'General'}
       </div>
 
