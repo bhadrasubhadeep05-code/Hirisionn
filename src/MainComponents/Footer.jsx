@@ -43,7 +43,7 @@ const Footer = () => {
           <path d="M23.9999 2.6665H19.9999C18.2318 2.6665 16.5361 3.36888 15.2859 4.61913C14.0356 5.86937 13.3333 7.56506 13.3333 9.33317V13.3332H9.33325V18.6665H13.3333V29.3332H18.6666V18.6665H22.6666L23.9999 13.3332H18.6666V9.33317C18.6666 8.97955 18.8071 8.64041 19.0571 8.39036C19.3072 8.14031 19.6463 7.99984 19.9999 7.99984H23.9999V2.6665Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       ),
-      link: "https://www.facebook.com/share/1BJ82rwhin/",
+      link: "https://www.facebook.com/people/Hirisionn/61594131153235/",
     },
     {
       name: "Instagram",
