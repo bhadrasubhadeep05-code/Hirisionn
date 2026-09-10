@@ -61,11 +61,11 @@ const NewsCard = ({ news }) => {
               />
             </svg>
             <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">
-              Article image
+              Article
             </span>
           </div>
         )}
-
+          
         {/* Bottom scrim for a clean structured seam */}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
 
