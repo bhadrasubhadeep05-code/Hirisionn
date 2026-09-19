@@ -122,7 +122,7 @@ const Placements = () => {
         <div className="pointer-events-none absolute right-0 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(232,121,30,0.25)_0%,transparent_68%)] blur-[10px] sm:-right-20 sm:-top-20 sm:h-[420px] sm:w-[420px] lg:-right-[6%] lg:-top-[10%] lg:h-[520px] lg:w-[520px]" />
         <div className="relative z-10 mx-auto max-w-5xl text-center">
           <div className="mb-5 inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-orange-300">
-            Job postings
+           Current Openings
           </div>
           <h1 className="mb-4 text-4xl font-bold text-white md:text-6xl">
             Discover the next step in your career

@@ -37,7 +37,7 @@ import ViewAudios from './admin/ViewAudios';
 import AdminInternship from './admin/AdminInternship';
 import AdminPlacements from './admin/AdminPlacements';
 import AdminLiveProject from './admin/AdminLiveProject';
-import AdminSoftSkill from './admin/AdminSoftSkill';
+import AdminSoftSkill from './admin/AdminSoftSkill'; 
 import AdminEnquiry from './admin/AdminEnquiry';
 import CreateJob from './admin/CreateJob';
 import ViewJobs from './admin/ViewJobs';
@@ -67,7 +67,7 @@ function App() {
        <Route path="/soft-skills-training/curriculum" element={<Curriculum/>} />
        <Route path="/soft-skills-training/outcomes" element={<LearningOutcomes/>} />
        <Route path="/blog/:id" element={<Blog />} />
-      <Route path="/video/:id" element={<Video />} />
+      <Route path="/video/:id" element={<Video />} />*
       <Route path="/admin" element={<AdminLogin />} />
       <Route path="/admin-panel" element={<AdminPanel />} />
       <Route path="/admin/blogs" element={<ViewBlogs />} />
