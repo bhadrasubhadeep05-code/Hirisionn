@@ -108,7 +108,7 @@ const NavBar2 = () => {
       id: "StudentResources",
       options: [
        { label: "Internship", path: "/internship" },
-        { label: "Job Placements", path: "/job-placements" },
+        { label: "Current Openings", path: "/job-placements" },
         { label: "Blogs", path: "/blog-page" },
         { label: "Videos Library", path: "/video-page" },
          {

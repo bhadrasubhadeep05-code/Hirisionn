@@ -43,6 +43,7 @@ import CreateJob from './admin/CreateJob';
 import ViewJobs from './admin/ViewJobs';
 import AdminJobPage from './admin/AdminJobPage';
 import NewsPage from './MainComponents/NewsPage';
+import AdminEmailsPage from './admin/AdminEmailsPage';
 
 
 
@@ -85,6 +86,7 @@ function App() {
       <Route path="/admin/create-video" element={<CreateVideo />} />
       <Route path="/admin/create-audio" element={<CreateAudio />} />
       <Route path="/admin/create-job" element={<CreateJob />} />
+      <Route path="/admin/emails" element={<AdminEmailsPage />} />
       <Route path="/register" element={<Register/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/forgot-password" element={<ForgetPassword/>}/>
